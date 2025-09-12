@@ -1,0 +1,12 @@
+ext {
+    artifactId = "csv"
+}
+
+dependencies {
+    implementation platform("com.fasterxml.jackson:jackson-bom:${fasterxml_jackson}")
+    implementation project(":common-utils:file")
+    implementation project(":common-utils:core")
+    testImplementation project(":testng-extensions")
+    api 'com.fasterxml.jackson.dataformat:jackson-dataformat-csv'
+    api "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
+}

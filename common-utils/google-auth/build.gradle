@@ -1,0 +1,8 @@
+ext {
+    artifactId = "google-auth"
+}
+
+dependencies {
+    implementation project(":common-utils")
+    implementation "com.warrenstrange:googleauth:${googleauth}"
+}

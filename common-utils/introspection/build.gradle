@@ -1,0 +1,9 @@
+ext {
+    artifactId = "introspection"
+}
+
+dependencies {
+    implementation project(":common-utils")
+    implementation "org.reflections:reflections:${reflections}"
+    implementation "io.github.classgraph:classgraph:${classgraph}"
+}

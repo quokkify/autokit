@@ -1,0 +1,24 @@
+ext {
+    artifactId = "api"
+}
+
+dependencies {
+    implementation project(":common-utils:core")
+    implementation project(":common-utils:config")
+    implementation project(":common-utils:json")
+    implementation project(":common-utils:http")
+    implementation project(":testng-extensions")
+    implementation "com.github.reinert:jjschema:${jjschema}"
+
+    implementation "org.aeonbits.owner:owner:${aeonbits}"
+    implementation "io.rest-assured:rest-assured:${rest_assured}"
+    implementation "io.rest-assured:json-schema-validator:${rest_assured}"
+    implementation "io.qameta.allure:allure-rest-assured:${allure}"
+
+    testImplementation"io.qameta.allure:allure-testng:${allure}"
+
+    implementation platform("com.fasterxml.jackson:jackson-bom:${fasterxml_jackson}")
+    api "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
+    api "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
+    api "org.assertj:assertj-core"
+}

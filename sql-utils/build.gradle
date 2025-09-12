@@ -1,0 +1,17 @@
+ext {
+    artifactId = "database"
+}
+
+dependencies {
+    implementation project(":common-utils")
+    implementation "org.hibernate:hibernate-core:${hibernate}"
+    implementation "org.hibernate:hibernate-hikaricp:${hibernate}"
+    implementation "com.querydsl:querydsl-apt:${querydsl}"
+    implementation "com.querydsl:querydsl-jpa:${querydsl}"
+    implementation "dev.morphia.morphia:morphia-core:${morphia}"
+    implementation "org.hsqldb:hsqldb:${hsqldb}"
+    implementation "com.vladmihalcea:hibernate-types-55:${hibernate_type}"
+    implementation "redis.clients:jedis:${jedis}"
+}
+
+compileJava.options.generatedSourceOutputDirectory = layout.buildDirectory.dir("generated/source/apt").get().asFile

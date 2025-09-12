@@ -1,0 +1,8 @@
+ext {
+    artifactId = "http"
+}
+
+dependencies {
+    implementation project(":common-utils:core")
+    implementation"org.apache.httpcomponents.core5:httpcore5:${httpcore5}"
+}

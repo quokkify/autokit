@@ -1,0 +1,91 @@
+ext {
+    aeonbits = "1.0.12"
+    assertj = "3.27.3"
+    hamcrest = "3.0"
+    testng = "7.11.0"
+    faker = "2.4.3"
+    selenide = "7.9.2"
+    selenium = "4.32.0"
+    aeonbits = "1.0.12"
+    log4j = "2.24.3"
+    slf4j = "2.0.17"
+    allure = "2.29.1"
+    httpcore5 = "5.3.4"
+    restAssured = "5.5.1"
+    awaitility = "4.3.0"
+    spotbugs_annotations = "4.9.3"
+    bouncy_castle = "1.80"
+    snakeyaml = "2.2"
+    gson = "2.13.0"
+    htmlcleaner = "2.29"
+    guava = "33.3.1-jre"
+    googleauth = "1.5.0"
+    json = "20250107"
+    jira_rest_client_core = "6.0.2"
+    fugue = "6.0.1"
+    opencsv = "5.10"
+    commons_io = "2.19.0"
+    jcabi_ssh = "1.9.0"
+    modelmapper = "3.2.2"
+    aspectj = "1.9.24"
+    reflections = "0.10.2"
+    fasterxml_jackson = "2.18.3"
+    jakarta_xml = "4.0.2"
+    jakarta_activation = "2.1.3"
+    jaxb = "4.0.5"
+    guice = "7.0.0"
+    jjwt = "0.12.6"
+    rest_assured = "5.5.1"
+    jjschema = "1.16"
+    report_portal_rest_assured = "5.3.4"
+    report_portal_client_java = "5.2.15"
+    hibernate = "5.6.15.Final"
+    hibernate_type = "2.21.1"
+    querydsl = "5.0.0"
+    jedis = "5.2.0"
+    morphia = "2.2.9"
+    reportportal = "5.4.3"
+    java_websocket = "1.6.0"
+    kafka = "4.0.0"
+    hsqldb = "2.7.4"
+    classgraph = "4.8.181"
+}
+
+subprojects {
+    repositories {
+        mavenCentral()
+        maven {
+            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+            mavenContent {
+                snapshotsOnly()
+            }
+        }
+        maven {
+            url = "https://packages.atlassian.com/maven/repository/public"
+            name = "atlassian-public"
+        }
+    }
+
+    dependencies {
+        constraints {
+            api "com.fasterxml.jackson:jackson-bom:${fasterxml_jackson}"
+            api "org.aeonbits.owner:owner:${aeonbits}"
+            api "org.slf4j:slf4j-api:${slf4j}"
+            api "org.slf4j:jcl-over-slf4j:${slf4j}"
+            api "org.apache.logging.log4j:log4j-api:${log4j}"
+            api "org.apache.logging.log4j:log4j-core:${log4j}"
+            api "org.apache.logging.log4j:log4j-slf4j2-impl:${log4j}"
+            api "org.assertj:assertj-core:${assertj}"
+            api "org.hamcrest:hamcrest:${hamcrest}"
+            api "org.awaitility:awaitility:${awaitility}"
+            api "org.testng:testng:${testng}"
+            api "io.qameta.allure:allure-testng:${allure}"
+            api "commons-io:commons-io:${commons_io}"
+            api "org.apache.commons:commons-lang3:3.14.0"
+            api "org.apache.commons:commons-text:1.12.0"
+        }
+
+        compileOnly "com.github.spotbugs:spotbugs-annotations:${spotbugs_annotations}"
+        testCompileOnly "com.github.spotbugs:spotbugs-annotations:${spotbugs_annotations}"
+    }
+}

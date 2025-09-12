@@ -1,0 +1,2 @@
+io.automation.listener.lifecycle.TestListener
+io.qameta.allure.testng.AllureTestNg
