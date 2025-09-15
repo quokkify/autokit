@@ -1,7 +1,6 @@
 package io.automation.step;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import io.automation.step.AbstractSteps;
 import io.automation.verification.ApiVerification;
 
 /**

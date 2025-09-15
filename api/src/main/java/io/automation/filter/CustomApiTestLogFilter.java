@@ -13,7 +13,8 @@ public class CustomApiTestLogFilter extends ApiLogFilter implements Filter {
 
   @Override
   public Response filter(FilterableRequestSpecification requestSpec,
-                         FilterableResponseSpecification responseSpec, FilterContext context) {
+                         FilterableResponseSpecification responseSpec,
+                         FilterContext context) {
     Response response = context.next(requestSpec, responseSpec);
     return processFilter(requestSpec, response);
   }

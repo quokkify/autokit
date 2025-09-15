@@ -14,7 +14,8 @@ public class CustomExternalServiceLogFilter extends ApiLogFilter implements Filt
 
   @Override
   public Response filter(FilterableRequestSpecification requestSpec,
-                         FilterableResponseSpecification responseSpec, FilterContext context) {
+                         FilterableResponseSpecification responseSpec,
+                         FilterContext context) {
     Response response = context.next(requestSpec, responseSpec);
     if (response.statusCode() >= HttpStatus.SC_BAD_REQUEST) {
       processFilter(requestSpec, response);
