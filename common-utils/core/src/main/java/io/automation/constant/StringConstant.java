@@ -7,6 +7,7 @@ public class StringConstant {
   public static final String DOT = ".";
   public static final String COMMA = ",";
   public static final String COMMA_SPACE = ", ";
+  public static final String DOUBLE_APOSTROPHE = "''";
   public static final String APOSTROPHE = "'";
   public static final String SEMICOLON = ";";
   public static final String SEMICOLON_SPACE = "; ";

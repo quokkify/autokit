@@ -13,7 +13,7 @@ include(":integrations:rest-assured")    // Wrapper around Rest Assured for HTTP
 // ============================================================================
 // DATA ACCESS MODULES (SQL / NoSQL)
 // ============================================================================
-//include(":data-utils:sql")               // Utilities for relational databases (JDBC, migrations, etc.)
+include(":data-utils:sql")               // Utilities for relational databases (JDBC, migrations, etc.)
 //include(":data-utils:nosql")             // Utilities for non-relational databases (Mongo, Redis, etc.)
 
 // ============================================================================

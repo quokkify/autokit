@@ -37,6 +37,15 @@ public class RegexParser {
     }
   }
 
+  public static String parse(Pattern pattern, String text, int group) {
+    Matcher matcher = pattern.matcher(text);
+    if (matcher.find()) {
+      return matcher.group(group);
+    } else {
+      throw new RuntimeException("Parsing failed.%nPattern: '%s'%nText:'%s'".formatted(pattern.pattern(), text));
+    }
+  }
+
   public static List<String> parseAllMatches(String regex, String text) {
     List<String> allMatches = new ArrayList<>();
     Pattern pattern = Pattern.compile(regex);
@@ -51,5 +60,14 @@ public class RegexParser {
     Pattern pattern = Pattern.compile(regex);
     Matcher matcher = pattern.matcher(text);
     return matcher.find();
+  }
+
+  public static boolean nonMatched(Pattern pattern, String text) {
+    return !pattern.matcher(text).find();
+  }
+
+  public static String replaceFirst(Pattern pattern, String text, String replacement) {
+    Matcher matcher = pattern.matcher(text);
+    return matcher.replaceFirst(Matcher.quoteReplacement(replacement));
   }
 }

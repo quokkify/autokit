@@ -12,7 +12,9 @@ import org.hamcrest.Matchers;
 /**
  * Base validation steps for Api tests.
  */
-public class BaseApiVerification<T extends BaseApiVerification<T>> implements ApiVerification {
+public abstract class BaseApiVerification<T extends BaseApiVerification<T>> implements ApiVerification {
+
+  protected abstract T self();
 
   /**
    * Verify responses status code.
@@ -21,13 +23,13 @@ public class BaseApiVerification<T extends BaseApiVerification<T>> implements Ap
    * @param statusCode expected status code as {@link Integer}
    * @return verification api steps chain
    */
-  @Step("Verify responses status code")
+  @Step("Verify responses statusrfr code")
   public T verifyResponseStatusCode(List<ValidatableResponse> responses, int statusCode) {
     SoftAssertions.assertSoftly(softly ->
         responses.forEach(response -> softly.assertThat(response.extract().statusCode())
             .as("Status code is incorrect")
             .isEqualTo(statusCode)));
-    return (T) this;
+    return self();
   }
 
   /**
@@ -40,7 +42,7 @@ public class BaseApiVerification<T extends BaseApiVerification<T>> implements Ap
   @Step("Verify response status code")
   public T verifyResponseStatusCode(ValidatableResponse response, int expectedStatusCode) {
     response.statusCode(expectedStatusCode);
-    return (T) this;
+    return self();
   }
 
   /**
@@ -56,7 +58,7 @@ public class BaseApiVerification<T extends BaseApiVerification<T>> implements Ap
         responses.forEach(response -> softly.assertThat(ResponseHelper.extractBodyAsString(response))
             .as("Body code is incorrect")
             .isEqualTo(expectedBodyString)));
-    return (T) this;
+    return self();
   }
 
   /**
@@ -69,7 +71,7 @@ public class BaseApiVerification<T extends BaseApiVerification<T>> implements Ap
   @Step("Verify responses body")
   public T verifyResponseBody(ValidatableResponse response, String expectedBodyString) {
     response.assertThat().body(Matchers.is(expectedBodyString));
-    return (T) this;
+    return self();
   }
 
   /**
@@ -82,6 +84,6 @@ public class BaseApiVerification<T extends BaseApiVerification<T>> implements Ap
   @Step("Verify response schema")
   public T verifyResponseSchema(ValidatableResponse response, JsonValidation jsonSchema) {
     ResponseHelper.validateSchema(response, jsonSchema);
-    return (T) this;
+    return self();
   }
 }
