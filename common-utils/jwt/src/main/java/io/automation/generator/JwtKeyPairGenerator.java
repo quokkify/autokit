@@ -4,7 +4,6 @@ import java.security.KeyPair;
 
 import io.automation.formatter.KeyPairFormatter;
 import io.automation.model.JwtKeyPair;
-
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.SignatureAlgorithm;
 

@@ -1,19 +1,18 @@
 package io.automation.formatter;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Objects;
+
 import io.automation.model.Header;
 import io.automation.model.JwtKeyPair;
 import io.automation.model.Payload;
 import io.automation.util.JsonConverter;
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwe;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwsHeader;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
-
-import java.nio.charset.StandardCharsets;
-import java.util.Objects;
 
 /**
  * Format JWT tokens from/into specified types.

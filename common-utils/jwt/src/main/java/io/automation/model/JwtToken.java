@@ -7,4 +7,6 @@ public record JwtToken(
     Header header,
     Payload payload,
     String token
-) { }
+) {
+
+}

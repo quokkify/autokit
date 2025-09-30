@@ -3,7 +3,6 @@ package io.automation.verification;
 import java.util.List;
 
 import io.automation.helper.ResponseHelper;
-
 import io.automation.model.JsonValidation;
 import io.qameta.allure.Step;
 import io.restassured.response.ValidatableResponse;

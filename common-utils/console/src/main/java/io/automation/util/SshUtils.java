@@ -2,14 +2,13 @@ package io.automation.util;
 
 import java.io.IOException;
 
-import io.automation.model.ConstantFormat;
-import io.automation.config.SshPortForwardConfig;
-import io.automation.parser.RegexParser;
-
 import com.jcabi.ssh.Shell;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
+import io.automation.config.SshPortForwardConfig;
+import io.automation.model.ConstantFormat;
+import io.automation.parser.RegexParser;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;

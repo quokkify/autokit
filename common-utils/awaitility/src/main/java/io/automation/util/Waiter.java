@@ -9,7 +9,6 @@ import java.util.concurrent.TimeUnit;
 import io.automation.constant.PollingInterval;
 import io.automation.constant.Timeout;
 import io.automation.generator.LocalDateTimeGenerator;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.awaitility.Awaitility;

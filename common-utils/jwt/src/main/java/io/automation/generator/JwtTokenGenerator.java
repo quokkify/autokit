@@ -8,7 +8,6 @@ import io.automation.model.JwtPayload;
 import io.automation.model.JwtToken;
 import io.automation.model.Payload;
 import io.automation.util.JsonConverter;
-
 import io.jsonwebtoken.Jwts;
 
 /**
@@ -22,9 +21,9 @@ public class JwtTokenGenerator {
   /**
    * Generate JWT token as obj.
    *
-   * @param jwtKeyPair JWT key pair with specified key and algorithm
-   * @param jwtHeader  JWT header
-   * @param jwtPayload JWT payload
+   * @param keyPair JWT key pair with specified key and algorithm
+   * @param header  JWT header
+   * @param payload JWT payload
    * @return {@link JwtToken}
    */
   public static JwtToken generate(JwtKeyPair keyPair, JwtHeader header, JwtPayload payload) {

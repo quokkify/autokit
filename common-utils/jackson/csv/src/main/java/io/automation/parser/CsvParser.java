@@ -1,15 +1,13 @@
 package io.automation.parser;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.dataformat.csv.CsvSchema;
-import io.automation.converter.CsvConverter;
-import io.automation.model.CsvSchemas;
-import io.automation.util.FileUtils;
-
 import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.dataformat.csv.CsvSchema;
+import io.automation.converter.CsvConverter;
 
 /**
  * High-level CSV parser built on top of Jackson CSV.
@@ -19,13 +17,18 @@ import java.util.Objects;
  */
 public final class CsvParser {
 
-  private CsvParser() {}
+  private CsvParser() {
+  }
 
-  /* =========================
-     CORE (schema-first)
-     ========================= */
+  /*
+    =========================
+    CORE (schema-first)
+    =========================
+    */
 
-  /** Reads all rows as String[] using a custom schema (header/no-header, separators, etc.). */
+  /**
+   * Reads all rows as String[] using a custom schema (header/no-header, separators, etc.).
+   */
   public static List<String[]> readAllLines(File file, CsvSchema schema) {
     Objects.requireNonNull(file, "file must not be null");
     Objects.requireNonNull(schema, "schema must not be null");
@@ -33,7 +36,9 @@ public final class CsvParser {
     return CsvConverter.readRows(file, schema);
   }
 
-  /** Reads all rows as maps using a header-based schema. */
+  /**
+   * Reads all rows as maps using a header-based schema.
+   */
   public static List<Map<String, String>> readLinesDataHeaderAware(File file, CsvSchema headerSchema) {
     Objects.requireNonNull(file, "file must not be null");
     Objects.requireNonNull(headerSchema, "headerSchema must not be null");
@@ -41,7 +46,9 @@ public final class CsvParser {
     return CsvConverter.mapsFromFile(file, headerSchema);
   }
 
-  /** Parses CSV into beans/records using a custom schema. */
+  /**
+   * Parses CSV into beans/records using a custom schema.
+   */
   public static <T> List<T> parse(File file, Class<T> cls, CsvSchema schema) {
     Objects.requireNonNull(file, "file must not be null");
     Objects.requireNonNull(cls, "cls must not be null");
@@ -50,7 +57,9 @@ public final class CsvParser {
     return CsvConverter.readBeans(file, cls, schema);
   }
 
-  /** Parses CSV into an arbitrary generic target using a custom schema. */
+  /**
+   * Parses CSV into an arbitrary generic target using a custom schema.
+   */
   public static <T> T parse(File file, TypeReference<T> typeRef, CsvSchema schema) {
     Objects.requireNonNull(file, "file must not be null");
     Objects.requireNonNull(typeRef, "typeRef must not be null");
@@ -59,7 +68,9 @@ public final class CsvParser {
     return CsvConverter.readBeans(file, typeRef, schema);
   }
 
-  /** Writes beans/records using a custom schema. */
+  /**
+   * Writes beans/records using a custom schema.
+   */
   public static <T> File write(File csvFile, List<T> rows, Class<T> cls, CsvSchema schema) {
     Objects.requireNonNull(csvFile, "csvFile must not be null");
     Objects.requireNonNull(rows, "rows must not be null");
@@ -69,7 +80,9 @@ public final class CsvParser {
     return CsvConverter.toCsvFile(csvFile, rows, cls, schema);
   }
 
-  /** Writes List<Map> using a custom (usually header-based) schema. */
+  /**
+   * Writes List<Map> using a custom (usually header-based) schema.
+   */
   public static File write(File csvFile, List<Map<String, ?>> rows, CsvSchema schema) {
     Objects.requireNonNull(csvFile, "csvFile must not be null");
     Objects.requireNonNull(rows, "rows must not be null");

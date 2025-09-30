@@ -13,7 +13,6 @@ import java.util.Objects;
 
 import io.automation.constant.StringConstant;
 import io.automation.model.ConstantFormat;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

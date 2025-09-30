@@ -1,7 +1,6 @@
 package io.automation.generator;
 
 import io.automation.model.Header;
-
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.SignatureAlgorithm;
 

@@ -1,9 +1,9 @@
 package io.automation.model;
 
-import com.fasterxml.jackson.dataformat.csv.CsvSchema;
-
 import java.util.Arrays;
 import java.util.List;
+
+import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 
 /**
  * Contract for CSV column enums.
@@ -22,12 +22,16 @@ public interface CsvHeaderEnum {
 
   /* ---------- static helpers ---------- */
 
-  /** Returns column titles in the enum declaration order. */
+  /**
+   * Returns column titles in the enum declaration order.
+   */
   static <E extends Enum<E> & CsvHeaderEnum> List<String> titles(Class<E> enumClass) {
     return Arrays.stream(enumClass.getEnumConstants()).map(CsvHeaderEnum::title).toList();
   }
 
-  /** Builds a header-based CsvSchema with columns taken from the enum titles, in order. */
+  /**
+   * Builds a header-based CsvSchema with columns taken from the enum titles, in order.
+   */
   static <E extends Enum<E> & CsvHeaderEnum> CsvSchema headerSchema(Class<E> enumClass) {
     CsvSchema.Builder b = CsvSchema.builder().setUseHeader(true);
     for (String t : titles(enumClass)) b.addColumn(t);
@@ -44,12 +48,16 @@ public interface CsvHeaderEnum {
     return b.build();
   }
 
-  /** Header schema with a custom separator. */
+  /**
+   * Header schema with a custom separator.
+   */
   static <E extends Enum<E> & CsvHeaderEnum> CsvSchema headerSchema(Class<E> enumClass, char separator) {
     return headerSchema(enumClass).rebuild().setColumnSeparator(separator).build();
   }
 
-  /** No-header schema with a custom separator. */
+  /**
+   * No-header schema with a custom separator.
+   */
   static <E extends Enum<E> & CsvHeaderEnum> CsvSchema noHeaderSchema(Class<E> enumClass, char separator) {
     return noHeaderSchema(enumClass).rebuild().setColumnSeparator(separator).build();
   }

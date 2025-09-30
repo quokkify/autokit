@@ -8,7 +8,6 @@ import io.automation.config.ConfigRegistry;
 import io.automation.config.Configuration;
 import io.automation.filter.CustomApiTestLogFilter;
 import io.automation.model.FileParams;
-
 import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.builder.ResponseSpecBuilder;

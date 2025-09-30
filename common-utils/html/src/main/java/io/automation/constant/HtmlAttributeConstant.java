@@ -3,9 +3,8 @@ package io.automation.constant;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import io.automation.model.ConstantFormat;
-
 import com.google.common.base.Joiner;
+import io.automation.model.ConstantFormat;
 
 public enum HtmlAttributeConstant implements ConstantFormat {
   CLASS, CLASS_NAME, CONTENT, DATA, DISABLED, FORM, HREF, ID, METHOD, SPAN, SRC, STYLE, TITLE, TYPE, VALUE, BODY,

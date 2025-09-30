@@ -47,14 +47,29 @@ public abstract class ApiLogFilter {
   }
 
   private void logRequest(FilterableRequestSpecification requestSpec) {
-    logEntity((fakePrintStream) -> RequestPrinter.print(requestSpec, requestSpec.getMethod(),
-        requestSpec.getURI(), LogDetail.ALL, blacklistedHeaders, fakePrintStream, PRETTY_PRINT));
+    logEntity(fakePrintStream ->
+        RequestPrinter.print(
+            requestSpec,
+            requestSpec.getMethod(),
+            requestSpec.getURI(),
+            LogDetail.ALL,
+            blacklistedHeaders,
+            fakePrintStream,
+            PRETTY_PRINT)
+    );
   }
 
   private void logResponse(Response response, LogDetail logDetail) {
     LOG.debug("{}:\n", StringUtils.capitalize(logDetail.name().toLowerCase()));
-    logEntity((fakePrintStream) -> ResponsePrinter.print(response, response, fakePrintStream, logDetail, PRETTY_PRINT,
-        blacklistedHeaders));
+    logEntity(fakePrintStream ->
+        ResponsePrinter.print(
+            response,
+            response,
+            fakePrintStream,
+            logDetail,
+            PRETTY_PRINT,
+            blacklistedHeaders)
+    );
   }
 
   private void logEntity(Function<PrintStream, String> function) {

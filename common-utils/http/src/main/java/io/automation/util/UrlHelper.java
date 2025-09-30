@@ -14,7 +14,6 @@ import java.util.Map;
 import java.util.Objects;
 
 import io.automation.constant.StringConstant;
-
 import org.apache.hc.core5.http.NameValuePair;
 import org.apache.hc.core5.http.message.BasicNameValuePair;
 import org.apache.hc.core5.net.URIBuilder;
@@ -82,8 +81,8 @@ public final class UrlHelper {
   /**
    * Convert URL {@link String} to {@link URL} using provided charset for decoding.
    *
-   * @param url            URL string to convert
-   * @param decodeCharset  charset for decoding
+   * @param url           URL string to convert
+   * @param decodeCharset charset for decoding
    * @return {@link URL}
    * @throws MalformedURLException if malformed
    */
@@ -115,8 +114,8 @@ public final class UrlHelper {
   /**
    * Convert URL {@link String} to {@link URI} using provided charset for decoding.
    *
-   * @param url            URL string to convert
-   * @param decodeCharset  charset for decoding
+   * @param url           URL string to convert
+   * @param decodeCharset charset for decoding
    * @return {@link URI}
    */
   public static URI convertToUri(String url, Charset decodeCharset) {

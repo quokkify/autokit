@@ -4,21 +4,20 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Optional;
 
-import io.automation.parser.RegexParser;
-import io.automation.model.JsonValidation;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.reinert.jjschema.v1.JsonSchemaV4Factory;
+import io.automation.model.JsonValidation;
+import io.automation.parser.RegexParser;
 import io.restassured.http.Header;
 import io.restassured.module.jsv.JsonSchemaValidator;
+import io.restassured.path.json.exception.JsonPathException;
+import io.restassured.path.xml.exception.XmlPathException;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import io.restassured.response.ResponseBodyExtractionOptions;
 import io.restassured.response.ValidatableResponse;
-import io.restassured.path.json.exception.JsonPathException;
-import io.restassured.path.xml.exception.XmlPathException;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -246,7 +245,7 @@ public final class ResponseHelper {
   private static boolean isJson(String s) {
     if (s == null) return false;
     String t = s.trim();
-    return (t.startsWith("{") && t.endsWith("}")) || (t.startsWith("[") && t.endsWith("]"));
+    return t.startsWith("{") && t.endsWith("}") || t.startsWith("[") && t.endsWith("]");
   }
 
   private static Optional<String> tryExtractHtmlBody(String raw) {

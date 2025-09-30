@@ -1,7 +1,6 @@
 package io.automation.service;
 
 import io.automation.filter.CustomApiTestLogFilter;
-
 import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;

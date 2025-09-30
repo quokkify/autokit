@@ -7,7 +7,6 @@ import java.util.NoSuchElementException;
 
 import io.automation.model.ScaleSettings;
 
-
 /**
  * Utils for numerical calculations.
  */

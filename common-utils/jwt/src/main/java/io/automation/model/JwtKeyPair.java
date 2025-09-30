@@ -11,4 +11,5 @@ public record JwtKeyPair(
     SignatureAlgorithm algorithm,
     KeyPair keyPair
 ) {
+
 }

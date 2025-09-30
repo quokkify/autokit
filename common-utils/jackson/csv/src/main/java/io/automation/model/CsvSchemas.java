@@ -1,8 +1,8 @@
 package io.automation.model;
 
-import com.fasterxml.jackson.dataformat.csv.CsvSchema;
-
 import java.util.List;
+
+import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 
 /**
  * Factory class for building {@link CsvSchema} configurations for Jackson CSV.
@@ -12,9 +12,12 @@ import java.util.List;
  */
 public final class CsvSchemas {
 
-  private CsvSchemas() { }
+  private CsvSchemas() {
+  }
 
-  /** Builds a header-based schema with custom separator, quote, and escape characters. */
+  /**
+   * Builds a header-based schema with custom separator, quote, and escape characters.
+   */
   public static CsvSchema header(char separator, char quoteChar, char escapeChar) {
     return CsvSchema.emptySchema()
         .withHeader()
@@ -23,19 +26,25 @@ public final class CsvSchemas {
         .withEscapeChar(escapeChar);
   }
 
-  /** Builds a header-based schema with custom column separator. */
+  /**
+   * Builds a header-based schema with custom column separator.
+   */
   public static CsvSchema header(char separator) {
     return CsvSchema.emptySchema()
         .withHeader()
         .withColumnSeparator(separator);
   }
 
-  /** Builds a default header-based schema (comma separator, double quote). */
+  /**
+   * Builds a default header-based schema (comma separator, double quote).
+   */
   public static CsvSchema header() {
     return CsvSchema.emptySchema().withHeader();
   }
 
-  /** Builds a no-header schema with custom separator, quote, and escape characters. */
+  /**
+   * Builds a no-header schema with custom separator, quote, and escape characters.
+   */
   public static CsvSchema noHeader(char separator, char quoteChar, char escapeChar) {
     return CsvSchema.emptySchema()
         .withColumnSeparator(separator)
@@ -43,12 +52,16 @@ public final class CsvSchemas {
         .withEscapeChar(escapeChar);
   }
 
-  /** Builds a no-header schema with custom column separator. */
+  /**
+   * Builds a no-header schema with custom column separator.
+   */
   public static CsvSchema noHeader(char separator) {
     return CsvSchema.emptySchema().withColumnSeparator(separator);
   }
 
-  /** Builds a default no-header schema (comma separator, double quote). */
+  /**
+   * Builds a default no-header schema (comma separator, double quote).
+   */
   public static CsvSchema noHeader() {
     return CsvSchema.emptySchema();
   }
@@ -56,9 +69,9 @@ public final class CsvSchemas {
   /**
    * Builds a header-based schema with explicit column order and custom settings.
    *
-   * @param columns   column names in the desired order
-   * @param separator column separator
-   * @param quoteChar quote character
+   * @param columns    column names in the desired order
+   * @param separator  column separator
+   * @param quoteChar  quote character
    * @param escapeChar escape character
    */
   public static CsvSchema headerWithOrder(List<String> columns, char separator, char quoteChar, char escapeChar) {
@@ -70,14 +83,18 @@ public final class CsvSchemas {
     return b.build();
   }
 
-  /** Builds a header-based schema with explicit column order and custom separator. */
+  /**
+   * Builds a header-based schema with explicit column order and custom separator.
+   */
   public static CsvSchema headerWithOrder(List<String> columns, char separator) {
     CsvSchema.Builder b = CsvSchema.builder().setUseHeader(true).setColumnSeparator(separator);
     for (String c : columns) b.addColumn(c);
     return b.build();
   }
 
-  /** Builds a header-based schema with explicit column order and default settings. */
+  /**
+   * Builds a header-based schema with explicit column order and default settings.
+   */
   public static CsvSchema headerWithOrder(List<String> columns) {
     CsvSchema.Builder b = CsvSchema.builder().setUseHeader(true);
     for (String c : columns) b.addColumn(c);

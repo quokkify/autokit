@@ -7,6 +7,7 @@ import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
 import java.util.Objects;
+import java.util.Optional;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
@@ -19,48 +20,54 @@ public final class ReflectionUtils {
   }
 
   /**
-   * Get generic class type by index.
-   * throw an exception if class not parameterized.
+   * Returns the raw Class for generic parameter at {@code genericIndex} of the given class'
+   * direct superclass. Throws if superclass is not parameterized or index is out of range.
    */
   public static Class<?> getGenericClassType(Class<?> clazz, int genericIndex) {
     Type genericSuperclass = clazz.getGenericSuperclass();
-    if (!(genericSuperclass instanceof ParameterizedType parameterizedType)) {
+    if (!(genericSuperclass instanceof ParameterizedType pt)) {
       throw new IllegalStateException("Superclass of %s is not parameterized."
           .formatted(clazz.getCanonicalName()));
     }
 
-    Type[] args = parameterizedType.getActualTypeArguments();
+    Type[] args = pt.getActualTypeArguments();
     if (genericIndex < 0 || genericIndex >= args.length) {
       throw new IllegalStateException("Generic index %d out of bounds [0..%d] for %s"
           .formatted(genericIndex, args.length - 1, clazz.getCanonicalName()));
     }
-    Type type = args[genericIndex];
-    if (type instanceof Class<?> c) {
-      return c;
-    }
-    if (type instanceof ParameterizedType pt) {
-      Type raw = pt.getRawType();
-      if (raw instanceof Class<?> c) return c;
-    }
-    if (type instanceof TypeVariable<?> tv) {
-      Type[] bounds = tv.getBounds();
-      if (bounds.length > 0) {
-        Type b = bounds[0];
-        if (b instanceof Class<?> c) return c;
-        if (b instanceof ParameterizedType bpt && bpt.getRawType() instanceof Class<?> c2) return c2;
-      }
-    }
-    if (type instanceof WildcardType wt) {
-      Type[] ub = wt.getUpperBounds();
-      if (ub.length > 0) {
-        Type b = ub[0];
-        if (b instanceof Class<?> c) return c;
-        if (b instanceof ParameterizedType bpt && bpt.getRawType() instanceof Class<?> c2) return c2;
-      }
-    }
 
-    throw new IllegalStateException("Cannot resolve generic class for index %d in %s"
-        .formatted(genericIndex, clazz.getCanonicalName()));
+    return toRawClass(args[genericIndex])
+        .orElseThrow(() -> new IllegalStateException(
+            "Cannot resolve generic class for index %d in %s"
+                .formatted(genericIndex, clazz.getCanonicalName())));
+  }
+
+  /**
+   * Tries to normalize any {@link Type} into its raw {@link Class}.
+   * Iteratively unwraps ParameterizedType, TypeVariable (first bound) and WildcardType (first upper bound).
+   */
+  private static Optional<Class<?>> toRawClass(Type type) {
+    Type t = type;
+    while (true) {
+      if (t instanceof Class<?> c) {
+        return Optional.of(c);
+      }
+      if (t instanceof ParameterizedType p) {
+        t = p.getRawType();
+        continue;
+      }
+      if (t instanceof TypeVariable<?> tv) {
+        Type[] bounds = tv.getBounds();
+        t = bounds.length > 0 ? bounds[0] : Object.class;
+        continue;
+      }
+      if (t instanceof WildcardType wt) {
+        Type[] ub = wt.getUpperBounds();
+        t = ub.length > 0 ? ub[0] : Object.class;
+        continue;
+      }
+      return Optional.empty();
+    }
   }
 
   /**

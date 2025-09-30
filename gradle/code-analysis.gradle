@@ -5,6 +5,7 @@ def SpotBugsConfidence = classLoader.findLoadedClass('com.github.spotbugs.snom.C
 subprojects {
     checkstyle {
         toolVersion = "10.23.1"
+        configDirectory.set(rootProject.file("tools/checkstyle"))
     }
 
     tasks.withType(Checkstyle).configureEach {
@@ -19,7 +20,7 @@ subprojects {
     spotbugs {
         effort = SpotBugsEffort.MAX
         reportLevel = SpotBugsConfidence.DEFAULT
-        excludeFilter = rootProject.file('config/spotbugs/excludeFilter.xml')
+        excludeFilter = rootProject.file('tools/spotbugs/excludeFilter.xml')
     }
 
     tasks.named('spotbugsMain').configure {

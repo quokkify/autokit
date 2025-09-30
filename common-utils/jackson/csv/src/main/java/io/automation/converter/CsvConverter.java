@@ -1,5 +1,13 @@
 package io.automation.converter;
 
+import java.io.File;
+import java.io.InputStream;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JavaType;
@@ -11,14 +19,6 @@ import com.fasterxml.jackson.dataformat.csv.CsvParser;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.automation.util.FileUtils;
-
-import java.io.File;
-import java.io.InputStream;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Utilities for CSV serialization and deserialization using Jackson {@link CsvMapper}.
@@ -168,37 +168,38 @@ public final class CsvConverter {
     if (given.size() > 0) {
       return given;
     }
-    CsvSchema schema = CSV.schemaFor(type);
-    schema = given.usesHeader()
-        ? schema.withHeader()
-        : schema.withoutHeader();
-    schema = schema.withColumnSeparator(given.getColumnSeparator());
-    schema = (given.usesQuoteChar())
-        ? schema.withQuoteChar((char) given.getQuoteChar())
-        : schema.withoutQuoteChar();
-    schema = (given.usesEscapeChar())
-        ? schema.withEscapeChar((char) given.getEscapeChar())
-        : schema.withoutEscapeChar();
-    schema = schema.withArrayElementSeparator(given.getArrayElementSeparator());
-    schema = schema.withNullValue(given.getNullValueString());
-    if (given.skipsFirstDataRow()) {
-      schema = schema.withSkipFirstDataRow(true);
-    }
-    if (given.allowsComments()) {
-      schema = schema.withComments();
-    } else {
-      schema = schema.withoutComments();
-    }
-    if (given.strictHeaders()) {
+    CsvSchema schema = CSV.schemaFor(type)
+        .withColumnSeparator(given.getColumnSeparator())
+        .withArrayElementSeparator(given.getArrayElementSeparator())
+        .withNullValue(given.getNullValueString());
 
-      schema = schema.withStrictHeaders(true);
-    }
-    if (given.reordersColumns()) {
-      schema = schema.withColumnReordering(true);
-    }
+    schema = applyHeader(schema, given);
+    schema = applyQuote(schema, given);
+    schema = applyEscape(schema, given);
+    schema = applyComments(schema, given);
+
+    if (given.skipsFirstDataRow()) schema = schema.withSkipFirstDataRow(true);
+    if (given.strictHeaders()) schema = schema.withStrictHeaders(true);
+    if (given.reordersColumns()) schema = schema.withColumnReordering(true);
+
     return schema;
   }
 
+  private static CsvSchema applyHeader(CsvSchema schema, CsvSchema given) {
+    return given.usesHeader() ? schema.withHeader() : schema.withoutHeader();
+  }
+
+  private static CsvSchema applyQuote(CsvSchema schema, CsvSchema given) {
+    return given.usesQuoteChar() ? schema.withQuoteChar((char) given.getQuoteChar()) : schema.withoutQuoteChar();
+  }
+
+  private static CsvSchema applyEscape(CsvSchema schema, CsvSchema given) {
+    return given.usesEscapeChar() ? schema.withEscapeChar((char) given.getEscapeChar()) : schema.withoutEscapeChar();
+  }
+
+  private static CsvSchema applyComments(CsvSchema schema, CsvSchema given) {
+    return given.allowsComments() ? schema.withComments() : schema.withoutComments();
+  }
 
   /**
    * Writes list of maps to a file using the provided (usually header-based) schema.

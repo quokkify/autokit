@@ -1,13 +1,5 @@
 package io.automation.parser;
 
-import io.automation.util.FileUtils;
-import io.automation.util.JsonConverter;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.yaml.snakeyaml.LoaderOptions;
-import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.constructor.SafeConstructor;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -16,6 +8,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import io.automation.util.FileUtils;
+import io.automation.util.JsonConverter;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.yaml.snakeyaml.LoaderOptions;
+import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.constructor.SafeConstructor;
 
 /**
  * Utilities for loading YAML resources from the filesystem or classpath and converting them into
@@ -39,7 +39,8 @@ public final class YamlParser {
 
   private static final Logger LOG = LogManager.getLogger(YamlParser.class);
 
-  private YamlParser() {}
+  private YamlParser() {
+  }
 
   /* =========================
      Public API — typed loaders

@@ -5,7 +5,6 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
@@ -14,7 +13,6 @@ import java.util.stream.IntStream;
 import io.automation.constant.DateFormat;
 import io.automation.constant.StringConstant;
 import io.automation.formatter.LocalDateFormatter;
-
 import io.automation.spi.LocaleProviders;
 import net.datafaker.Faker;
 import org.apache.commons.lang3.StringUtils;
