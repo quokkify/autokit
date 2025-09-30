@@ -22,10 +22,8 @@ error() {
 }
 
 echo "Starting application..."
-# TODO: this run should be flexible (run by profile or smth else)
 SERVICES=(
-#  "spring-webflux-aggregator"
-#  "spring-telegram-webhook"
+  "mock-server"
 )
 
 docker compose \

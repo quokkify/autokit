@@ -1,0 +1,54 @@
+name: "Run tests"
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  run-tests-on-linux:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        gradle-task: ["check"]
+    steps:
+      - name: 🔨Checkout
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
+      - name: 🔨Set up JDK
+        uses: actions/setup-java@dded0888837ed1f317902acf8a20df0ad188d165 # v5
+        with:
+          distribution: "temurin"
+          cache: "gradle"
+          java-version: "25"
+      - name: 🔨Build with Gradle
+        uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a # v4
+      - name: 🟢Start Application
+        run: |
+          ./tools/scripts/mock/run_mock_server.sh
+          ./tools/scripts/mock/upload_expectations.sh
+        shell: bash
+      - name: 🚀Run the unit tests
+        run: ./gradlew ${{ matrix.gradle-task }} --no-parallel --no-daemon --console=plain
+      - name: 🐳 Collecting logs from all docker containers
+        uses: jwalton/gh-docker-logs@2741064ab9d7af54b0b1ffb6076cf64c16f0220e # v2
+        with:
+          dest: logs
+      - name: 🛑Stop Application
+        run: ./tools/scripts/dev/stop_app.sh
+        shell: bash
+      - name: 📦 Packing docker compose logs as artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: docker-logs
+          retention-days: 3
+          path: logs
+      - name: 📦Packing test results as artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: test-report-linux-${{ matrix.gradle-task }}
+          retention-days: 3
+          path: |
+            **/build/reports
+            **/build/test-results
