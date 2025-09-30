@@ -2,7 +2,6 @@ package io.automation.test;
 
 import io.automation.annotation.TestGroup;
 import io.automation.step.AbstractSteps;
-
 import io.qameta.allure.Step;
 import io.qameta.allure.TmsLink;
 import org.assertj.core.api.Assertions;

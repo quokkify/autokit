@@ -13,7 +13,6 @@ import io.automation.model.Header;
 import io.automation.model.JwtKeyPair;
 import io.automation.model.JwtToken;
 import io.automation.model.Payload;
-
 import io.automation.util.JsonConverter;
 import io.qameta.allure.TmsLink;
 import net.datafaker.Faker;

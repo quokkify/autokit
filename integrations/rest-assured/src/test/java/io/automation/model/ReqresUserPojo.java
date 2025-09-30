@@ -11,7 +11,9 @@ public final class ReqresUserPojo {
   public record Request(
       String name,
       String job
-  ) { }
+  ) {
+
+  }
 
   /**
    * Response payload returned after creating/updating a user.
@@ -21,5 +23,7 @@ public final class ReqresUserPojo {
       String name,
       String id,
       String job
-  ) { }
+  ) {
+
+  }
 }

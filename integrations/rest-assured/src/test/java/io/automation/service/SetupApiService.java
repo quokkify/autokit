@@ -1,7 +1,6 @@
 package io.automation.service;
 
 import io.automation.config.app.InnerTestsConfig;
-
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;

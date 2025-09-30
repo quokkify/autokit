@@ -1,7 +1,6 @@
 package io.automation.service;
 
 import io.automation.model.ReqresUserPojo;
-
 import io.automation.util.JsonConverter;
 import io.restassured.response.ValidatableResponse;
 

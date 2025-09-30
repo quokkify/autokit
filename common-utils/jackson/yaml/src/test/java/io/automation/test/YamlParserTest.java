@@ -8,7 +8,6 @@ import java.util.Map;
 
 import io.automation.annotation.TestGroup;
 import io.automation.parser.YamlParser;
-
 import io.qameta.allure.TmsLink;
 import org.assertj.core.api.Assertions;
 import org.testng.annotations.Test;

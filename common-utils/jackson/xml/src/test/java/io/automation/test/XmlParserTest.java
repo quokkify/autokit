@@ -7,7 +7,6 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import io.automation.annotation.TestGroup;
 import io.automation.parser.XmlParser;
-
 import io.qameta.allure.TmsLink;
 import org.assertj.core.api.Assertions;
 import org.testng.annotations.Test;

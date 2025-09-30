@@ -3,7 +3,6 @@ package io.automation.helper;
 import io.automation.model.CatFactPojo;
 import io.automation.model.ReqresUserPojo;
 import io.automation.service.MockApiService;
-
 import io.automation.util.JsonConverter;
 import io.restassured.response.ValidatableResponse;
 import org.apache.commons.lang3.RandomStringUtils;

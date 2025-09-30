@@ -1,5 +1,11 @@
 package io.automation.test;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
@@ -11,12 +17,6 @@ import io.automation.util.FileUtils;
 import io.qameta.allure.TmsLink;
 import org.assertj.core.api.Assertions;
 import org.testng.annotations.Test;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Tests for CSV parsing/serialization based on Jackson CSV stack:

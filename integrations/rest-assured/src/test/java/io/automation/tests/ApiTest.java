@@ -13,7 +13,6 @@ import io.automation.model.CatFactPojo;
 import io.automation.model.ReqresUserPojo;
 import io.automation.parser.LocalDateTimeParser;
 import io.automation.step.CatFactApiSteps;
-
 import io.qameta.allure.TmsLink;
 import io.restassured.response.ValidatableResponse;
 import org.apache.http.HttpStatus;

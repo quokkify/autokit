@@ -6,7 +6,6 @@ import java.util.Base64;
 import io.automation.annotation.TestGroup;
 import io.automation.config.ConfigRegistry;
 import io.automation.config.TestConfig;
-
 import io.qameta.allure.TmsLink;
 import org.assertj.core.api.Assertions;
 import org.testng.annotations.Test;
