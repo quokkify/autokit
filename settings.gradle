@@ -31,7 +31,7 @@ include(":common-utils:file")             // File I/O utilities
 include(":common-utils:html")             // HTML utilities (rendering, parsing)
 include(":common-utils:http")             // HTTP helpers (URL building, query parameters, conversions)
 include(":common-utils:jwt")              // JWT utilities (token handling with Nimbus JOSE/JWT)
-include(":common-utils:aspects")          // Runtime AOP helpers (cross-cutting concerns, reporting)
+//include(":common-utils:aspects")          // Runtime AOP helpers (cross-cutting concerns, reporting)
 include(":common-utils:config")           // Configuration utilities (YAML/JSON configs, property mapping)
 include(":common-utils:signature")        // Cryptographic signature utilities
 include(":common-utils:console")          // Java wrapper for executing shell/console commands

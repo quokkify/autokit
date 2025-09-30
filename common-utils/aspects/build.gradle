@@ -1,9 +1,0 @@
-ext {
-    artifactId = "aspects"
-}
-
-dependencies {
-    implementation project(":common-utils:core")
-    implementation "org.aspectj:aspectjweaver:${aspectj}"
-    implementation "org.aspectj:aspectjrt:${aspectj}"
-}
