@@ -5,7 +5,7 @@ ext {
 dependencies {
     implementation project(":common-utils:core")
     implementation project(":common-utils:config")
-    implementation project(":common-utils:json")
+    implementation project(":common-utils:jackson:json")
     implementation project(":common-utils:http")
     implementation project(":testng-extensions")
     implementation "com.github.reinert:jjschema:${jjschema}"

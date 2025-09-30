@@ -11,12 +11,11 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import io.automation.config.ConfigRegistry;
-import io.automation.config.LocaleConfig;
 import io.automation.constant.DateFormat;
 import io.automation.constant.StringConstant;
 import io.automation.formatter.LocalDateFormatter;
 
+import io.automation.spi.LocaleProviders;
 import net.datafaker.Faker;
 import org.apache.commons.lang3.StringUtils;
 
@@ -29,9 +28,7 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class CommonRandomData {
 
-  private static final LocaleConfig CONFIG = ConfigRegistry.get(LocaleConfig.class);
-
-  protected static final Faker FAKER = new Faker(Locale.of(CONFIG.locale()));
+  protected static final Faker FAKER = new Faker(LocaleProviders.get());
   protected static final String TEMPLATE_EMAIL = "%s.%s@%s";
   protected static final String TEMPLATE_WITH_DOT = "%s.%s";
   protected static final String TEMPLATE_WITH_SPACE = "%s %s";

@@ -1,0 +1,7 @@
+ext {
+    artifactId = 'jackson-json'
+}
+
+dependencies {
+    api project(":common-utils:jackson:parent")
+}

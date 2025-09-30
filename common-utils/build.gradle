@@ -1,5 +1,0 @@
-description = "Parent for common utility modules"
-
-ext {
-    artifactId = 'common-utils'
-}

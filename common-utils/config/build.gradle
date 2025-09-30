@@ -3,6 +3,7 @@ ext {
 }
 
 dependencies {
+    api project(":common-utils:core")
     api "org.aeonbits.owner:owner"
     api "org.slf4j:slf4j-api"
     api "org.slf4j:jcl-over-slf4j"

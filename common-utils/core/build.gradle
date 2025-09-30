@@ -3,7 +3,6 @@ ext {
 }
 
 dependencies {
-    implementation project(":common-utils:config")
     implementation "org.modelmapper:modelmapper:${modelmapper}"
     api "net.datafaker:datafaker:${faker}"
     api "org.apache.commons:commons-lang3"

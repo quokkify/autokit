@@ -1,22 +1,37 @@
-rootProject.name = 'quokkify'
-include ':api'
-include ':sql-utils'
-include ':testng-extensions'
+rootProject.name = "quokkify"
 
-include ':common-utils'
-include ':common-utils:core'
-include ':common-utils:introspection'
-include ':common-utils:awaitility'
-include ':common-utils:file'
-include ':common-utils:csv'
-include ':common-utils:xml'
-include ':common-utils:json'
-include ':common-utils:html'
-include ':common-utils:yaml'
-include ':common-utils:http'
-include ':common-utils:jwt'
-include ':common-utils:google-auth'
-include ':common-utils:aspects'
-include ':common-utils:config'
-include ':common-utils:signature'
-include ':common-utils:console'
+// ============================================================================
+// TEST EXTENSIONS
+// ============================================================================
+include(":testng-extensions")            // Extensions for TestNG (used as testImplementation)
+
+// ============================================================================
+// INTEGRATIONS WITH EXTERNAL LIBRARIES / SERVICES
+// ============================================================================
+include(":integrations:rest-assured")    // Wrapper around Rest Assured for HTTP testing
+
+// ============================================================================
+// DATA ACCESS MODULES (SQL / NoSQL)
+// ============================================================================
+//include(":data-utils:sql")               // Utilities for relational databases (JDBC, migrations, etc.)
+//include(":data-utils:nosql")             // Utilities for non-relational databases (Mongo, Redis, etc.)
+
+// ============================================================================
+// COMMON UTILS (runtime modules, used in services and tests)
+// ============================================================================
+include(":common-utils:core")             // Core utilities (logging, commons, shared helpers)
+include(":common-utils:jackson:parent")   // Jackson BOM
+include(":common-utils:jackson:csv")      // CSV parsing and handling
+include(":common-utils:jackson:xml")      // XML parsing and transformation utilities
+include(":common-utils:jackson:json")     // JSON utilities (Jackson, serializers, deserializers)
+include(":common-utils:jackson:yaml")     // YAML utilities (SnakeYAML helpers)
+include(":common-utils:introspection")    // Reflection and introspection helpers
+include(":common-utils:awaitility")       // Runtime wrappers for Awaitility (async waiting)
+include(":common-utils:file")             // File I/O utilities
+include(":common-utils:html")             // HTML utilities (rendering, parsing)
+include(":common-utils:http")             // HTTP helpers (URL building, query parameters, conversions)
+include(":common-utils:jwt")              // JWT utilities (token handling with Nimbus JOSE/JWT)
+include(":common-utils:aspects")          // Runtime AOP helpers (cross-cutting concerns, reporting)
+include(":common-utils:config")           // Configuration utilities (YAML/JSON configs, property mapping)
+include(":common-utils:signature")        // Cryptographic signature utilities
+include(":common-utils:console")          // Java wrapper for executing shell/console commands

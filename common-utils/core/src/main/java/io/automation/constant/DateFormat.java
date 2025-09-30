@@ -2,8 +2,7 @@ package io.automation.constant;
 
 import java.util.Locale;
 
-import io.automation.config.ConfigRegistry;
-import io.automation.config.LocaleConfig;
+import io.automation.spi.LocaleProviders;
 
 /**
  * Supported date formats with default locale resolution.
@@ -15,15 +14,13 @@ public enum DateFormat implements DateType {
 
   private final String pattern;
 
-  private static final LocaleConfig CONFIG = ConfigRegistry.get(LocaleConfig.class);
-
   DateFormat(String pattern) {
     this.pattern = pattern;
   }
 
   @Override
   public Locale getDefaultLocale() {
-    return Locale.forLanguageTag(CONFIG.locale());
+    return LocaleProviders.get();
   }
 
   @Override
