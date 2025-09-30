@@ -60,7 +60,6 @@ public final class ResponseHelper {
    * @return message text as {@link Integer}
    */
   public static int getCodeFromResponseBody(ValidatableResponse response) {
-    // 1) Пытаемся достать через jsonPath, если контент — JSON
     if (isJson(response)) {
       try {
         Integer v = extractBody(response).jsonPath().get("code");
@@ -69,7 +68,6 @@ public final class ResponseHelper {
         // fallback ниже
       }
     }
-    // 2) Пытаемся распарсить всё тело через Jackson
     JsonNode root = readJsonNodeLenient(response);
     JsonNode node = safeGet(root, "code");
     if (node != null && node.isInt()) {
@@ -151,10 +149,6 @@ public final class ResponseHelper {
      ДОПОЛНИТЕЛЬНЫЕ УНИВЕРСАЛЬНЫЕ УТИЛИТЫ (НОВЫЕ)
      ========================================================= */
 
-  /**
-   * Универсальный геттер JSON-поля по простому имени (только верхний уровень).
-   * Возвращает Optional.empty(), если не JSON/поля нет/не получается распарсить.
-   */
   public static Optional<JsonNode> getJsonField(ValidatableResponse response, String fieldName) {
     try {
       if (StringUtils.isBlank(fieldName)) return Optional.empty();
@@ -166,9 +160,6 @@ public final class ResponseHelper {
     }
   }
 
-  /**
-   * Попытаться извлечь JSON-узел из HTML body: полезно, если сервер кладёт JSON-строку в HTML.
-   */
   public static Optional<JsonNode> tryExtractJsonFromHtmlBody(ValidatableResponse response) {
     String body = getBodyFromResponseBody(response);
     try {
@@ -177,10 +168,6 @@ public final class ResponseHelper {
       return Optional.empty();
     }
   }
-
-  /* =========================================================
-     ПРИВАТНЫЕ ПОМОЩНИКИ
-     ========================================================= */
 
   private static boolean isJson(ValidatableResponse response) {
     String ct = contentType(response);
@@ -202,15 +189,6 @@ public final class ResponseHelper {
     }
   }
 
-  /**
-   * "Ленивое" чтение JSON:
-   * <ol>
-   *   <li>Если Content-Type JSON — читаем весь body и парсим Jackson'ом</li>
-   *   <li>Если HTML — пробуем достать текст из &lt;body&gt; и парсим как JSON</li>
-   *   <li>Если XML — попробуем сконвертить xmlPath().get() в строку и распарсить, если там JSON (маловероятно)</li>
-   *   <li>Иначе — парсим целый body как JSON (если не получится — ошибка)</li>
-   * </ol>
-   */
   private static JsonNode readJsonNodeLenient(ValidatableResponse response) {
     String raw = extractBodyAsString(response);
     if (isJson(response)) {
@@ -218,10 +196,7 @@ public final class ResponseHelper {
     }
     if (isXml(response)) {
       try {
-        Object any = extractBody(response).xmlPath().get();
-        if (any instanceof String s && !isJson(s)) {
-          return readJson(s);
-        }
+        extractBody(response).xmlPath().get();
       } catch (XmlPathException ignore) {
       }
     }
