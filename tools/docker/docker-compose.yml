@@ -36,7 +36,7 @@ services:
     ports:
       - "2181:2181"
 
-  mock:
+  mock-server:
     image: mockserver/mockserver:5.15.0
     command: -logLevel DEBUG -serverPort 1080
     environment:
