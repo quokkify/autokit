@@ -11,7 +11,7 @@ services:
       - "80:80"
 
   kafka:
-    image: wurstmeister/kafka:2.13-2.8.1
+    image: wurstmeister/kafka:2.13-2.8.1@sha256:2d4bbf9cc83d9854d36582987da5f939fb9255fb128d18e3cf2c6ad825a32751
     environment:
       KAFKA_ADVERTISED_HOST_NAME: kafka
       KAFKA_ADVERTISED_PORT: 9092
@@ -32,12 +32,12 @@ services:
       - zookeeper
 
   zookeeper:
-    image: zookeeper:3.9
+    image: zookeeper:3.9@sha256:9283f601b66c373bb4caa653f59bf71f4b018b714693c4669defce3120328076
     ports:
       - "2181:2181"
 
   mock-server:
-    image: mockserver/mockserver:5.15.0
+    image: mockserver/mockserver:5.15.0@sha256:0f9ef78c94894ac3e70135d156193b25e23872575d58e2228344964273b4af6b
     command: -logLevel DEBUG -serverPort 1080
     environment:
       MOCKSERVER_WATCH_INITIALIZATION_JSON: true
@@ -48,7 +48,7 @@ services:
       - "1080:1080"
 
   centrifugo:
-    image: centrifugo/centrifugo:v5.4.9
+    image: centrifugo/centrifugo:v5.4.9@sha256:90be10af3cb1c73c6b6cff8f6bcf02f8c0537d6aa1ed9f2cfe59a9e776a0c3d5
     command: centrifugo -c centrifugo_new_config.json
     volumes:
       - ./centrifugo/centrifugo_new_config.json:/centrifugo/centrifugo_new_config.json
