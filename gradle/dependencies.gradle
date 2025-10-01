@@ -26,7 +26,7 @@ ext {
     opencsv = "5.10"
     commons_io = "2.19.0"
     jcabi_ssh = "1.9.0"
-    modelmapper = "3.2.2"
+    modelmapper = "3.2.5"
     aspectj = "1.9.24"
     reflections = "0.10.2"
     fasterxml_jackson = "2.18.3"
