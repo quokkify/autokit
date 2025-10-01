@@ -56,7 +56,6 @@ public class DatabaseSqlTest extends BaseDatabaseTest {
         .isEqualTo(Collections.singleton(expectedUser));
   }
 
-  @SuppressFBWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
   @TmsLink("SQL_DATABASE_ID_2")
   @Test(description = "Check update record in database")
   public void checkUpdate() {
