@@ -83,7 +83,7 @@ subprojects {
             api "org.testng:testng:${testng}"
             api "io.qameta.allure:allure-testng:${allure}"
             api "commons-io:commons-io:${commons_io}"
-            api "org.apache.commons:commons-lang3:3.14.0"
+            api "org.apache.commons:commons-lang3:3.19.0"
             api "org.apache.commons:commons-text:1.12.0"
         }
 
