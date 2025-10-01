@@ -24,7 +24,7 @@ ext {
     jira_rest_client_core = "6.0.2"
     fugue = "6.0.1"
     opencsv = "5.10"
-    commons_io = "2.19.0"
+    commons_io = "2.20.0"
     jcabi_ssh = "1.9.0"
     modelmapper = "3.2.2"
     aspectj = "1.9.24"
