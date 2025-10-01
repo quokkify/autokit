@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.automation.entity.DatabaseTestUser;
 import io.automation.entity.DatabaseTestUserIdentity;
 import io.automation.entity.QDatabaseTestUser;
@@ -56,7 +55,6 @@ public class DatabaseSqlTest extends BaseDatabaseTest {
         .isEqualTo(Collections.singleton(expectedUser));
   }
 
-  @SuppressFBWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
   @TmsLink("SQL_DATABASE_ID_2")
   @Test(description = "Check update record in database")
   public void checkUpdate() {
