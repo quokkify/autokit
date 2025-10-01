@@ -2,6 +2,7 @@ plugins {
     id 'checkstyle'
     id 'java-platform'
     id 'com.github.spotbugs' version '6.1.11'
+    id 'com.adarshr.test-logger' version '4.0.0'
 }
 
 allprojects {
