@@ -391,7 +391,7 @@ public class CommonRandomData {
    * @return the random Long
    */
   public static long randomLongWithDigits(int numberOfDigits) {
-    return FAKER.number().randomNumber(numberOfDigits, true);
+    return FAKER.number().randomNumber(numberOfDigits);
   }
 
   /**
@@ -550,11 +550,11 @@ public class CommonRandomData {
   }
 
   private static String password(boolean special) {
-    return FAKER.internet().password(8, 12, true, special);
+    return FAKER.credentials().password(8, 12, true, special);
   }
 
   /**
-   * Generates a random email address with a user name and a custom domain.
+   * Generates a random email address with a username and a custom domain.
    *
    * <pre>
    * email('gmail.com') = 58493107.Lucrecia@gmail.com
@@ -564,7 +564,7 @@ public class CommonRandomData {
    * @return a random email address with the specified domain
    */
   public static String email(String domain) {
-    return TEMPLATE_EMAIL.formatted(FAKER.number().randomNumber(8, false), FAKER.name().firstName(), domain);
+    return TEMPLATE_EMAIL.formatted(FAKER.number().randomNumber(8), FAKER.name().firstName(), domain);
   }
 
   /**
@@ -732,7 +732,7 @@ public class CommonRandomData {
    * @return a random username
    */
   public static String skype() {
-    return FAKER.name().username();
+    return FAKER.credentials().username();
   }
 
   /**
@@ -781,7 +781,7 @@ public class CommonRandomData {
    */
   public static String dateOfBirth(int minAge, int maxAge) {
     return LocalDateFormatter.format(
-        FAKER.date().birthdayLocalDate(minAge, maxAge),
+        FAKER.timeAndDate().birthday(minAge, maxAge),
         DateFormat.YYYY_MM_DD
     );
   }
