@@ -2,7 +2,7 @@ services:
   # general services
 
   nginx:
-    image: nginx:1.23.4
+    image: nginx:1.29.1@sha256:8adbdcb969e2676478ee2c7ad333956f0c8e0e4c5a7463f4611d7a2e7a7ff5dc
     volumes:
       - ./nginx/config/default.conf:/etc/nginx/conf.d/default.conf
       - ./nginx/config/download_map.conf:/etc/nginx/conf.d/download_map.conf
