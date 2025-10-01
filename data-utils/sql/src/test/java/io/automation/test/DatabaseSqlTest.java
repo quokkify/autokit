@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.automation.entity.DatabaseTestUser;
 import io.automation.entity.DatabaseTestUserIdentity;
 import io.automation.entity.QDatabaseTestUser;
