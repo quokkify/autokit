@@ -30,7 +30,7 @@ public final class XmlConverter {
       .addModule(new JavaTimeModule())
       .disable(ToXmlGenerator.Feature.WRITE_XML_DECLARATION)
       .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
-      .serializationInclusion(JsonInclude.Include.NON_NULL)
+      .defaultPropertyInclusion(JsonInclude.Value.construct(JsonInclude.Include.NON_NULL, JsonInclude.Include.ALWAYS))
       .build();
 
   private XmlConverter() {

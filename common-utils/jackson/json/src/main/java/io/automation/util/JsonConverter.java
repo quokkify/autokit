@@ -31,7 +31,7 @@ public final class JsonConverter {
   private static final ObjectMapper JSON_NON_NULL = JsonMapper.builder()
       .addModule(new JavaTimeModule())
       .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
-      .serializationInclusion(JsonInclude.Include.NON_NULL)
+      .defaultPropertyInclusion(JsonInclude.Value.construct(JsonInclude.Include.NON_NULL, JsonInclude.Include.ALWAYS))
       .build();
 
   private JsonConverter() {
