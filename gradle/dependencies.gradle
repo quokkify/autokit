@@ -7,7 +7,7 @@ ext {
     selenide = "7.9.2"
     selenium = "4.32.0"
     aeonbits = "1.0.12"
-    log4j = "2.24.3"
+    log4j = "2.25.2"
     slf4j = "2.0.17"
     allure = "2.29.1"
     httpcore5 = "5.3.6"
