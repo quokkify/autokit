@@ -32,7 +32,7 @@ services:
       - zookeeper
 
   zookeeper:
-    image: zookeeper:3.9@sha256:9283f601b66c373bb4caa653f59bf71f4b018b714693c4669defce3120328076
+    image: zookeeper:3.9@sha256:28dd24b6ab2a649146ec413bf64ac69af4677b743c4ed4e2c1a37addab768727
     ports:
       - "2181:2181"
 
