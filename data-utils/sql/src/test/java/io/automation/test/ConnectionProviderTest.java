@@ -38,7 +38,7 @@ public class ConnectionProviderTest extends BaseDatabaseTest {
   @TmsLink("SQL_DATABASE_CONNECTION_PROVIDER_ID_3")
   @Test(description = "Check connection via PersistenceItem")
   public void checkC3P0ProviderViaPersistenceItem() {
-    PersistenceItem persistenceItem = new PersistenceItem("test", getHsqlProperties());
+    PersistenceItem persistenceItem = new PersistenceItem("test", getH2Properties());
     TestLogAppender appender = withLogging(() -> DatabaseService.getInstance().createSqlQuery(persistenceItem));
     Assertions.assertThat(appender.getCombinedLog())
         .as("Combined log should contain both lines")

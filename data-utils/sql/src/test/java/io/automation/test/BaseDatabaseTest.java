@@ -34,7 +34,7 @@ abstract class BaseDatabaseTest {
 
       @Override
       public String getPersistencePropertyPath() {
-        return "hsql.properties";
+        return "h2.properties";
       }
     };
   }
@@ -61,10 +61,10 @@ abstract class BaseDatabaseTest {
     }
   }
 
-  protected static Map<String, Object> getHsqlProperties() {
+  protected static Map<String, Object> getH2Properties() {
     return Map.of(
-        AvailableSettings.JAKARTA_JDBC_DRIVER, "org.hsqldb.jdbc.JDBCDriver",
-        AvailableSettings.JAKARTA_JDBC_URL, "jdbc:hsqldb:mem:myDb",
+        AvailableSettings.JAKARTA_JDBC_DRIVER, "org.h2.Driver",
+        AvailableSettings.JAKARTA_JDBC_URL, "jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=PostgreSQL",
         AvailableSettings.JAKARTA_JDBC_USER, "sa",
         AvailableSettings.JAKARTA_JDBC_PASSWORD, "sa",
         AvailableSettings.ISOLATION, Connection.TRANSACTION_READ_COMMITTED,
