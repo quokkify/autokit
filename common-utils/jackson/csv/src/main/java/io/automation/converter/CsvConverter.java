@@ -52,7 +52,7 @@ public final class CsvConverter {
       .enable(CsvParser.Feature.TRIM_SPACES)
       .enable(CsvParser.Feature.IGNORE_TRAILING_UNMAPPABLE)
       .enable(CsvParser.Feature.WRAP_AS_ARRAY)
-      .serializationInclusion(JsonInclude.Include.NON_NULL)
+      .defaultPropertyInclusion(JsonInclude.Value.construct(JsonInclude.Include.NON_NULL, JsonInclude.Include.ALWAYS))
       .build();
 
   private CsvConverter() {
