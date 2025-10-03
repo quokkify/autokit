@@ -33,7 +33,7 @@ public class DatabaseSqlTest extends BaseDatabaseTest {
 
   @BeforeClass(alwaysRun = true)
   public void initResources() {
-    PersistenceItem persistenceItem = new PersistenceItem(this.getClass().getSimpleName(), getHsqlProperties());
+    PersistenceItem persistenceItem = new PersistenceItem(this.getClass().getSimpleName(), getH2Properties());
     SqlFactory query = DatabaseService.getInstance().createSqlQuery(persistenceItem);
     databaseSteps = new SqlDatabaseSteps(query);
     databaseSteps.save(Arrays.asList(expectedUser, updatedUser, deletedUser, expectedUserIdentity));

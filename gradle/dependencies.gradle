@@ -39,7 +39,6 @@ ext {
     jjschema = "1.16"
     report_portal_rest_assured = "5.3.4"
     report_portal_client_java = "5.2.15"
-    hsqldb = "2.7.4"
     hibernate = "7.1.2.Final"
     hibernate_type = "3.11.0"
     jakarta_persistence_api = "3.2.0"
@@ -49,7 +48,7 @@ ext {
     reportportal = "5.4.3"
     java_websocket = "1.6.0"
     kafka = "4.0.0"
-    hsqldb = "2.7.4"
+    h2 = "2.4.240"
     classgraph = "4.8.181"
 }
 

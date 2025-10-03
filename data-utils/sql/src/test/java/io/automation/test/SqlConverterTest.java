@@ -41,7 +41,7 @@ public class SqlConverterTest extends BaseDatabaseTest {
 
   @BeforeMethod(alwaysRun = true)
   public void initResources() {
-    PersistenceItem persistenceItem = new PersistenceItem(UUID.randomUUID().toString(), getHsqlProperties());
+    PersistenceItem persistenceItem = new PersistenceItem(UUID.randomUUID().toString(), getH2Properties());
     SqlFactory query = DatabaseService.getInstance().createSqlQuery(persistenceItem);
     databaseSteps = new SqlDatabaseSteps(query);
   }
