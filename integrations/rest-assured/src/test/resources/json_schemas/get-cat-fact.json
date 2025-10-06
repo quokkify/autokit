@@ -1,9 +1,6 @@
 {
   "type": "object",
-  "required": [
-    "fact",
-    "length"
-  ],
+  "required": ["fact", "length"],
   "additionalProperties": false,
   "minProperties": 2,
   "maxProperties": 2,
