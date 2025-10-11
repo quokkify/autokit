@@ -49,7 +49,7 @@ ext {
     java_websocket = "1.6.0"
     kafka = "4.0.0"
     h2 = "2.4.240"
-    classgraph = "4.8.181"
+    classgraph = "4.8.184"
 }
 
 subprojects {
