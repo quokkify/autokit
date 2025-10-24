@@ -1,4 +1,4 @@
-package io.automation.elements;
+package io.automation.elements.single;
 
 /**
  * Textarea UI element and methods of working with it.

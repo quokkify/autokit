@@ -1,4 +1,4 @@
-package io.automation.elements;
+package io.automation.elements.single;
 
 import com.codeborne.selenide.Condition;
 import io.automation.elements.base.Component;
