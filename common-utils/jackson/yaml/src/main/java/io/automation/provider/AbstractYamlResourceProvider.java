@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
-import io.automation.exception.ResourceException;
+import io.automation.ex.ResourceException;
 import io.automation.parser.YamlParser;
 
 /**

@@ -11,6 +11,10 @@ public interface ConstantFormat {
 
   String formatValue();
 
+  default String value() {
+    return lowerCase();
+  }
+
   /**
    * Converts a string where all words start with a capital letter separated by a space.
    *

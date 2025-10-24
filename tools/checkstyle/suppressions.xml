@@ -4,7 +4,7 @@
         "https://checkstyle.org/dtds/suppressions_1_2.dtd">
 
 <suppressions>
-    <suppress files=".*[\\/]generated[\\/].*Q.*\.java" checks=".*"/>
+    <suppress files="[/\\]generated[/\\]" checks=".*"/>
     <suppress checks="JavadocMethod" files=".*[/\\]testng[/\\].*.java"/>
     <suppress checks="JavadocMethod" files="src[/\\]test[/\\]java[/\\].*"/>
     <suppress checks="AvoidStarImport" files="src[/\\]test[/\\]java[/\\].*"/>

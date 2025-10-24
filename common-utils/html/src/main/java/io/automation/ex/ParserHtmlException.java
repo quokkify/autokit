@@ -1,4 +1,4 @@
-package io.automation.exception;
+package io.automation.ex;
 
 /**
  * Exception thrown when there is an error during HTML parsing.

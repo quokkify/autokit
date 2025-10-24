@@ -1,0 +1,18 @@
+description = "Wrapper around Selenide for user interface testing"
+
+ext {
+    artifactId = "selenide"
+}
+
+dependencies {
+    implementation project(":common-utils:config")
+    implementation project(":common-utils:core")
+    implementation project(":common-utils:html")
+    implementation project(":testng-extensions")
+
+    implementation "com.codeborne:selenide-proxy:${selenide}"
+    implementation "com.codeborne:selenide-grid:${selenide}"
+    testImplementation "io.qameta.allure:allure-testng:${allure}"
+
+    api "org.assertj:assertj-core"
+}
