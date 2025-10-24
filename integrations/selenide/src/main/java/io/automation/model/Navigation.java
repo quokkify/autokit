@@ -1,5 +1,6 @@
 package io.automation.model;
 
+import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.Objects;
 
@@ -7,6 +8,7 @@ import com.codeborne.selenide.BasicAuthCredentials;
 import com.codeborne.selenide.Selenide;
 import io.automation.annotation.PageUrl;
 import io.automation.impl.Page;
+import io.automation.util.UrlHelper;
 import io.qameta.allure.Allure;
 
 /**
@@ -46,7 +48,12 @@ public abstract class Navigation {
    * @return PageObject class
    */
   protected <T extends Page> T openPage(Class<T> pageClass, Map<String, Object> queryParams, Object... urlParams) {
-    String fullPageUrl = UrlUtils.addQueryParameters(getPageUrl(pageClass, urlParams), queryParams);
+    String fullPageUrl;
+    try {
+      fullPageUrl = UrlHelper.addQueryParameters(getPageUrl(pageClass, urlParams), queryParams);
+    } catch (URISyntaxException e) {
+      throw new RuntimeException(e);
+    }
     return openPage(fullPageUrl, pageClass);
   }
 
@@ -74,7 +81,12 @@ public abstract class Navigation {
    * @return PageObject class
    */
   protected <T extends Page> T openPage(Class<T> pageClass, Map<String, Object> queryParams) {
-    String fullPageUrl = UrlUtils.addQueryParameters(getPageUrl(pageClass), queryParams);
+    String fullPageUrl;
+    try {
+      fullPageUrl = UrlHelper.addQueryParameters(getPageUrl(pageClass), queryParams);
+    } catch (URISyntaxException e) {
+      throw new RuntimeException(e);
+    }
     return openPage(fullPageUrl, pageClass);
   }
 
@@ -86,18 +98,32 @@ public abstract class Navigation {
    */
   protected void openPage(String fullPageUrl) {
     if (Objects.nonNull(basicAuthCredentials)) {
-      Selenide.open(
-          UrlUtils.getPageUrlWithCredentials(fullPageUrl, basicAuthCredentials.login, basicAuthCredentials.password));
+      try {
+        Selenide.open(UrlHelper.getPageUrlWithCredentials(
+            fullPageUrl,
+            basicAuthCredentials.login,
+            basicAuthCredentials.password)
+        );
+      } catch (URISyntaxException e) {
+        throw new RuntimeException(e);
+      }
     } else {
       Selenide.open(fullPageUrl);
     }
   }
 
   private <T extends Page> T openPage(String fullPageUrl, Class<T> pageClass) {
-    String pageUrl = Objects.nonNull(basicAuthCredentials)
-        ? UrlUtils.getPageUrlWithCredentials(
-        fullPageUrl, basicAuthCredentials.login, basicAuthCredentials.password)
-        : fullPageUrl;
+    String pageUrl;
+    try {
+      pageUrl = Objects.nonNull(basicAuthCredentials)
+          ? UrlHelper.getPageUrlWithCredentials(
+          fullPageUrl,
+          basicAuthCredentials.login,
+          basicAuthCredentials.password)
+          : fullPageUrl;
+    } catch (URISyntaxException e) {
+      throw new RuntimeException(e);
+    }
     Allure.step("Open page by url: '%s'".formatted(pageUrl));
     return Selenide.open(pageUrl, pageClass);
   }

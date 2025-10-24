@@ -1,7 +1,7 @@
 package io.automation.elements.table.classic.base;
 
-import javax.annotation.Nonnull;
 import java.io.File;
+import javax.annotation.Nonnull;
 
 import com.codeborne.selenide.SelenideElement;
 import io.automation.elements.base.Component;
