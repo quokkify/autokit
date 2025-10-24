@@ -12,6 +12,11 @@ import org.openqa.selenium.By;
  */
 public class Input extends Component {
 
+  public Input pressEnter() {
+    getSelf().pressEnter();
+    return this;
+  }
+
   /**
    * Clear input value.
    *
