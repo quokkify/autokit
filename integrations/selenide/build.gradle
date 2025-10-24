@@ -9,6 +9,7 @@ dependencies {
     implementation project(":common-utils:core")
     implementation project(":common-utils:html")
     implementation project(":common-utils:http")
+    implementation project(":common-utils:awaitility")
     implementation project(":testng-extensions")
 
     implementation "com.codeborne:selenide-proxy:${selenide}"
