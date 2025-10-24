@@ -1,4 +1,4 @@
-package io.automation.pages.w3school;
+package io.automation.page.w3school;
 
 import java.util.Map;
 

@@ -1,4 +1,4 @@
-package io.automation.pages.google;
+package io.automation.page.google;
 
 import io.automation.annotation.PageUrl;
 import io.automation.elements.base.ComponentsCollection;

@@ -1,4 +1,4 @@
-package io.automation.pages.google;
+package io.automation.page.google;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Selenide;
