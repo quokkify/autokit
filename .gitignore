@@ -19,3 +19,7 @@ statics/bin
 # Local resources
 **/local_resources/
 *.env
+
+**/allure-results/
+**/generated/
+**/generated_tests/
