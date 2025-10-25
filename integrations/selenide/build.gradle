@@ -15,6 +15,7 @@ dependencies {
     implementation "com.codeborne:selenide-proxy:${selenide}"
     implementation "com.codeborne:selenide-grid:${selenide}"
     testImplementation "io.qameta.allure:allure-testng:${allure}"
+    testImplementation "io.rest-assured:rest-assured:${rest_assured}"
 
     api "org.assertj:assertj-core"
 }

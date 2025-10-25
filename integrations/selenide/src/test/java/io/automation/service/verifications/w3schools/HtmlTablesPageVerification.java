@@ -7,6 +7,7 @@ import io.automation.elements.table.model.RowData;
 import io.automation.model.Verification;
 import io.automation.page.w3school.HtmlTablesPage;
 import io.automation.service.steps.w3schools.HtmlTablesPageSteps;
+import io.automation.test.UiTableTest;
 import io.qameta.allure.Step;
 
 public class HtmlTablesPageVerification extends Verification<HtmlTablesPageSteps, HtmlTablesPage> {
@@ -27,8 +28,8 @@ public class HtmlTablesPageVerification extends Verification<HtmlTablesPageSteps
   public HtmlTablesPageVerification verifyTableRow(String company, UiTableTest.Firm firm) {
     page.getTableRowWithValueInColumn(company)
         .verifyRow(RowData.<HtmlTablesPage.Header>builder()
-            .add(CheckType.EQUALS, HtmlTablesPage.Header.CONTACT, firm.getContract())
-            .add(CheckType.CONTAINS, HtmlTablesPage.Header.COUNTRY, firm.getCountry())
+            .add(CheckType.EQUALS, HtmlTablesPage.Header.CONTACT, firm.contract())
+            .add(CheckType.CONTAINS, HtmlTablesPage.Header.COUNTRY, firm.country())
             .build());
     return this;
   }
@@ -37,7 +38,7 @@ public class HtmlTablesPageVerification extends Verification<HtmlTablesPageSteps
   public HtmlTablesPageVerification verifyTableRow(Map<HtmlTablesPage.Header, String> actualRowValues,
                                                    UiTableTest.Firm firm) {
     page.getTableRowWithValuesInColumns(actualRowValues)
-        .verifyCell(HtmlTablesPage.Header.CONTACT, firm.getContract());
+        .verifyCell(HtmlTablesPage.Header.CONTACT, firm.contract());
     return this;
   }
 }

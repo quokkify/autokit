@@ -12,7 +12,7 @@ public abstract class Component implements Container {
   @Self
   private SelenideElement self;
 
-  protected SelenideElement getSelf() {
+  public SelenideElement getSelf() {
     return self;
   }
 
