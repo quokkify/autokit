@@ -13,7 +13,7 @@ ext {
     httpcore5 = "5.3.6"
     restAssured = "5.5.1"
     awaitility = "4.3.0"
-    spotbugs_annotations = "4.9.7"
+    spotbugs_annotations = "4.9.8"
     bouncy_castle = "1.82"
     snakeyaml = "2.2"
     gson = "2.13.0"
