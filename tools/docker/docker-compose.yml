@@ -2,7 +2,7 @@ services:
   # general services
 
   nginx:
-    image: nginx:1.29.2@sha256:3b7732505933ca591ce4a6d860cb713ad96a3176b82f7979a8dfa9973486a0d6
+    image: nginx:1.29.4@sha256:fb01117203ff38c2f9af91db1a7409459182a37c87cced5cb442d1d8fcc66d19
     volumes:
       - ./nginx/config/default.conf:/etc/nginx/conf.d/default.conf
       - ./nginx/config/download_map.conf:/etc/nginx/conf.d/download_map.conf
@@ -32,7 +32,7 @@ services:
       - zookeeper
 
   zookeeper:
-    image: zookeeper:3.9@sha256:28dd24b6ab2a649146ec413bf64ac69af4677b743c4ed4e2c1a37addab768727
+    image: zookeeper:3.9@sha256:b87f5ea0cdc73d71c74875277ca2e862f7abb3c0bfa365bd818db71eef870917
     ports:
       - "2181:2181"
 
@@ -48,7 +48,7 @@ services:
       - "1080:1080"
 
   centrifugo:
-    image: centrifugo/centrifugo:v5.4.9@sha256:90be10af3cb1c73c6b6cff8f6bcf02f8c0537d6aa1ed9f2cfe59a9e776a0c3d5
+    image: centrifugo/centrifugo:v6.5.2@sha256:055d950b56b85d0ab9dc402cb461bf481360e6b4967e32e2e840268047852fb3
     command: centrifugo -c centrifugo_new_config.json
     volumes:
       - ./centrifugo/centrifugo_new_config.json:/centrifugo/centrifugo_new_config.json
@@ -62,7 +62,7 @@ services:
         hard: 65535
 
   mongodb:
-    image: mongo:5.0.31@sha256:54bcd8da3ea5eec561b68c605046c55c6b304387dc4c2bf5b3a5f5064fbb7495
+    image: mongo:8.2.2@sha256:bf5995bcccb65725aa81fd92e68449323c94b96bf1c1fa9f7acbc2a8ad518114
     restart: always
     ports:
       - "27017:27017"
