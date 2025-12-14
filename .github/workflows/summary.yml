@@ -4,6 +4,10 @@ on:
     workflows: ["Run tests"]
     types: [completed]
   workflow_dispatch:
+    inputs:
+      run_id:
+        description: "Run ID of 'Run tests' workflow"
+        required: true
 
 permissions:
   actions: read
@@ -18,7 +22,7 @@ jobs:
         uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          run-id: ${{ github.event.workflow_run.id }}
+          run-id: ${{ github.event.workflow_run.id || inputs.run_id }}
           path: artifacts
 
       - name: 🧩 Merge JUnit XML (junitparser)
