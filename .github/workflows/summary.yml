@@ -23,7 +23,6 @@ jobs:
       - name: 🔬Report summary
         uses: dorny/test-reporter@fe45e9537387dac839af0d33ba56eed8e24189e8 # v2
         with:
-          name: "🔬Test report: $1 $2"
-          artifact: /test-report-([^-]+)-(.*)/
+          name: "🔬Combined test report"
           path: "**/build/test-results/**/TEST-*.xml"
           reporter: java-junit
