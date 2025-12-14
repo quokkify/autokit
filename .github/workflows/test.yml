@@ -6,7 +6,7 @@ on:
     branches: [main]
 
 jobs:
-  run-module-checks:
+  run-tests-on-linux:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
