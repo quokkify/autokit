@@ -48,7 +48,7 @@ services:
       - "1080:1080"
 
   centrifugo:
-    image: centrifugo/centrifugo:v6.5.1@sha256:53b5852f805ea4eec0e57c65c9e745de420b1a91cf46dd8f9f3fa3a7530f94cc
+    image: centrifugo/centrifugo:v6.5.2@sha256:055d950b56b85d0ab9dc402cb461bf481360e6b4967e32e2e840268047852fb3
     command: centrifugo -c centrifugo_new_config.json
     volumes:
       - ./centrifugo/centrifugo_new_config.json:/centrifugo/centrifugo_new_config.json
