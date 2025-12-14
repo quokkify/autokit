@@ -6,48 +6,101 @@ on:
     branches: [main]
 
 jobs:
-  run-tests-on-linux:
+  run-module-checks:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
+      max-parallel: 4
       matrix:
-        gradle-task: ["check"]
+        include:
+          - module: ":testng-extensions"
+            needs_app: false
+          - module: ":integrations:rest-assured"
+            needs_app: true
+          # ===== DATA UTILS
+          - module: ":data-utils:sql"
+            needs_app: false
+          # ===== COMMON UTILS
+          - module: ":common-utils:core"
+            needs_app: false
+          - module: ":common-utils:jackson:parent"
+            needs_app: false
+          - module: ":common-utils:jackson:csv"
+            needs_app: false
+          - module: ":common-utils:jackson:xml"
+            needs_app: false
+          - module: ":common-utils:jackson:json"
+            needs_app: false
+          - module: ":common-utils:jackson:yaml"
+            needs_app: false
+          - module: ":common-utils:introspection"
+            needs_app: false
+          - module: ":common-utils:awaitility"
+            needs_app: false
+          - module: ":common-utils:file"
+            needs_app: false
+          - module: ":common-utils:html"
+            needs_app: false
+          - module: ":common-utils:http"
+            needs_app: false
+          - module: ":common-utils:jwt"
+            needs_app: false
+          - module: ":common-utils:config"
+            needs_app: false
+          - module: ":common-utils:signature"
+            needs_app: false
+          - module: ":common-utils:console"
+            needs_app: false
+
     steps:
       - name: 🔨Checkout
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
+
       - name: 🔨Set up JDK
         uses: actions/setup-java@f2beeb24e141e01a676f977032f5a29d81c9e27e # v5
         with:
           distribution: "temurin"
           cache: "gradle"
           java-version: "25"
+
       - name: 🔨Build with Gradle
         uses: gradle/actions/setup-gradle@4d9f0ba0025fe599b4ebab900eb7f3a1d93ef4c2 # v5
+
       - name: 🟢Start Application
+        if: ${{ matrix.needs_app }}
         run: |
           ./tools/scripts/mock/run_mock_server.sh
           ./tools/scripts/mock/upload_expectations.sh
         shell: bash
-      - name: 🚀Run the unit tests
-        run: ./gradlew ${{ matrix.gradle-task }} --no-parallel --no-daemon --console=plain
+
+      - name: 🚀Run checks for module
+        run: ./gradlew ${{ matrix.module }}:check --no-daemon --console=plain --stacktrace
+        shell: bash
+
       - name: 🐳 Collecting logs from all docker containers
+        if: ${{ matrix.needs_app }}
         uses: jwalton/gh-docker-logs@2741064ab9d7af54b0b1ffb6076cf64c16f0220e # v2
         with:
           dest: logs
+
       - name: 🛑Stop Application
+        if: ${{ matrix.needs_app }}
         run: ./tools/scripts/dev/stop_app.sh
         shell: bash
+
       - name: 📦 Packing docker compose logs as artifact
+        if: ${{ matrix.needs_app }}
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
-          name: docker-logs
+          name: docker-logs-${{ matrix.module }}
           retention-days: 3
           path: logs
+
       - name: 📦Packing test results as artifact
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         if: always()
         with:
-          name: test-report-linux-${{ matrix.gradle-task }}
+          name: test-report-linux-${{ matrix.module }}
           retention-days: 3
           path: |
             **/build/reports
