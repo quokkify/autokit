@@ -1,8 +1,8 @@
 name: "Test Report"
 on:
   workflow_run:
-    workflows: [ "Run tests" ]
-    types: [ completed ]
+    workflows: ["Run tests"]
+    types: [completed]
 
 permissions:
   actions: read
