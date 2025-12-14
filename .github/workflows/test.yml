@@ -24,13 +24,11 @@ jobs:
             slug: "integrations-rest-assured"
             needs_app: true
 
-          # ===== DATA UTILS
           - name: "data-utils • sql"
             module: ":data-utils:sql"
             slug: "data-utils-sql"
             needs_app: false
 
-          # ===== COMMON UTILS
           - name: "common-utils • core"
             module: ":common-utils:core"
             slug: "common-utils-core"

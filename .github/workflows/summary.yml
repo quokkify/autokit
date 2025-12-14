@@ -1,9 +1,8 @@
 name: "Test Report"
 on:
   workflow_run:
-    workflows: ["Run tests"]
-    types:
-      - completed
+    workflows: [ "Run tests" ]
+    types: [ completed ]
 
 permissions:
   actions: read
@@ -12,17 +11,23 @@ permissions:
 jobs:
   report:
     runs-on: ubuntu-latest
+
     steps:
-      - name: 🔨Checkout
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
-      - name: 📦Download artifacts
+      - name: 📦 Download artifacts
         uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           run-id: ${{ github.event.workflow_run.id }}
-      - name: 🔬Report summary
+          path: artifacts
+
+      - name: 🧩 Merge JUnit XML (junitparser)
+        shell: bash
+        run: |
+          ./tools/scripts/ci/merge_junit_reports.sh artifacts artifacts/_combined/combined-junit.xml
+
+      - name: 🔬 Combined test report
         uses: dorny/test-reporter@fe45e9537387dac839af0d33ba56eed8e24189e8 # v2
         with:
-          name: "🔬Combined test report"
-          path: "**/build/test-results/**/TEST-*.xml"
+          name: "🔬 Combined test report"
+          path: "artifacts/_combined/combined-junit.xml"
           reporter: java-junit
