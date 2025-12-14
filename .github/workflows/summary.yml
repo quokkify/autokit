@@ -3,6 +3,7 @@ on:
   workflow_run:
     workflows: ["Run tests"]
     types: [completed]
+  workflow_dispatch:
 
 permissions:
   actions: read
