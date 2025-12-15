@@ -120,7 +120,7 @@ jobs:
 
       - name: 🟢 Start Infra
         if: ${{ matrix.profile != 'none' }}
-        run: ./tools/scripts/infra/start_app.sh "${{ matrix.infra_profile }}"
+        run: ./tools/scripts/infra/run_app.sh "${{ matrix.infra_profile }}"
         shell: bash
 
       - name: 🚀 Run tests
