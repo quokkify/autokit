@@ -6952,7 +6952,7 @@
             <a
               id="error-information-button"
               class="hidden"
-              onclick="toggleErrorInformationPopup();"
+              onclick="toggleErrorInformationPopup()"
               jstcache="0"
             ></a>
           </h1>
@@ -7015,7 +7015,7 @@
                     <a
                       class="link-button"
                       jscontent="closeDescriptionPopup"
-                      onclick="toggleErrorInformationPopup();"
+                      onclick="toggleErrorInformationPopup()"
                       jstcache="20"
                       >null</a
                     >
@@ -7124,7 +7124,7 @@
           <button
             id="reload-button"
             class="blue-button text-button"
-            onclick="reloadButtonClick(this.url);"
+            onclick="reloadButtonClick(this.url)"
             jsselect="reloadButton"
             jsvalues=".url:reloadUrl"
             jscontent="msg"
@@ -7146,7 +7146,10 @@
         <button
           id="details-button"
           class="secondary-button text-button small-link"
-          onclick="detailsButtonClick(); toggleHelpBox()"
+          onclick="
+            detailsButtonClick();
+            toggleHelpBox();
+          "
           jscontent="details"
           jsdisplay="(suggestionsDetails &amp;&amp; suggestionsDetails.length &gt; 0) || diagnose"
           jsvalues=".detailsText:details; .hideDetailsText:hideDetails;"

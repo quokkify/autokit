@@ -916,7 +916,10 @@
         <button
           id="runbtn"
           class="w3-button w3-bar-item w3-hover-white w3-hover-text-green"
-          onclick="submitTryit(1);uic_r_p();"
+          onclick="
+            submitTryit(1);
+            uic_r_p();
+          "
         >
           Run &#10095;
         </button>
@@ -976,7 +979,10 @@
             class="w3-bar-item w3-button"
             href="javascript:void(0);"
             title="Change Orientaton"
-            onclick="openMenu();restack(currentStack)"
+            onclick="
+              openMenu();
+              restack(currentStack);
+            "
             ><i
               class="fa fa-rotate"
               style="font-size: 26px; margin-left: -4px; margin-right: 8px"
@@ -990,7 +996,10 @@
             class="w3-bar-item w3-button"
             href="javascript:void(0);"
             title="Save"
-            onclick="openMenu();spaceIt.showDialog()"
+            onclick="
+              openMenu();
+              spaceIt.showDialog();
+            "
             ><i
               class="fa fa-save"
               style="font-size: 26px; margin-right: 10px"
@@ -1004,7 +1013,10 @@
             class="w3-bar-item w3-button"
             href="javascript:void(0);"
             title="Change Theme"
-            onclick="openMenu();retheme()"
+            onclick="
+              openMenu();
+              retheme();
+            "
             ><i
               class="fa fa-adjust"
               style="font-size: 26px; margin-right: 8px"
@@ -1020,7 +1032,7 @@
               style="display: inline; padding: 0"
               href="https://www.w3schools.com/about/about_privacy.asp"
               target="_blank"
-              onclick="openMenu();"
+              onclick="openMenu()"
               class="w3-hover-none ws-hover-text-green"
               >Privacy policy</a
             >
@@ -1029,7 +1041,7 @@
               style="display: inline; padding: 0"
               href="https://www.w3schools.com/about/about_copyright.asp"
               target="_blank"
-              onclick="openMenu();"
+              onclick="openMenu()"
               class="w3-hover-none ws-hover-text-green"
               >Copyright 1999-2023</a
             >
