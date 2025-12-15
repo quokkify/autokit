@@ -16,9 +16,7 @@ public class UiTableTest extends BaseTest {
     w3SchoolsNavigationSteps.openHtmlTablePage()
         .acceptTerms()
         .verify()
-        .verifyTableRow(firm.company(), Map.of(
-            HtmlTablesPage.Header.CONTACT, firm.country,
-            HtmlTablesPage.Header.COUNTRY, firm.country));
+        .verifyTableRow(firm.company(), firm);
   }
 
   @TmsLink("UI_ID_3")
@@ -48,6 +46,6 @@ public class UiTableTest extends BaseTest {
             firm);
   }
 
-  public record Firm(String company, String contract, String country) {
+  public record Firm(String company, String contact, String country) {
   }
 }

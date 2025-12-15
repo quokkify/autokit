@@ -17,18 +17,10 @@ public class HtmlTablesPageVerification extends Verification<HtmlTablesPageSteps
   }
 
   @Step("Verify table row")
-  @Deprecated(since = "0.4.31")
-  public HtmlTablesPageVerification verifyTableRow(String company,
-                                                   Map<HtmlTablesPage.Header, String> expectedRowValues) {
-    page.getTableRowWithValueInColumn(company).verifyRow(expectedRowValues);
-    return this;
-  }
-
-  @Step("Verify table row")
   public HtmlTablesPageVerification verifyTableRow(String company, UiTableTest.Firm firm) {
     page.getTableRowWithValueInColumn(company)
         .verifyRow(RowData.<HtmlTablesPage.Header>builder()
-            .add(CheckType.EQUALS, HtmlTablesPage.Header.CONTACT, firm.contract())
+            .add(CheckType.EQUALS, HtmlTablesPage.Header.CONTACT, firm.contact())
             .add(CheckType.CONTAINS, HtmlTablesPage.Header.COUNTRY, firm.country())
             .build());
     return this;
@@ -38,7 +30,7 @@ public class HtmlTablesPageVerification extends Verification<HtmlTablesPageSteps
   public HtmlTablesPageVerification verifyTableRow(Map<HtmlTablesPage.Header, String> actualRowValues,
                                                    UiTableTest.Firm firm) {
     page.getTableRowWithValuesInColumns(actualRowValues)
-        .verifyCell(HtmlTablesPage.Header.CONTACT, firm.contract());
+        .verifyCell(HtmlTablesPage.Header.CONTACT, firm.contact());
     return this;
   }
 }
