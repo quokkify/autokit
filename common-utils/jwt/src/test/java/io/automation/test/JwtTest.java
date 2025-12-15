@@ -1,4 +1,4 @@
-package io.automation.tests;
+package io.automation.test;
 
 import java.util.Locale;
 
