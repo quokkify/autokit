@@ -170,7 +170,7 @@ tasks.register('extractBcd') {
             }
         }
 
-        println "✅ Unpdacked to: ${extractedDir.get().asFile.absolutePath}"
+        println "✅ Unpacked to: ${extractedDir.get().asFile.absolutePath}"
     }
 }
 
