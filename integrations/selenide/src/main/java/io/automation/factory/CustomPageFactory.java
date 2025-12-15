@@ -45,12 +45,11 @@ public class CustomPageFactory<T extends Component> extends SelenidePageFactory 
    * @return UI elements list as {@link ComponentsCollection}&lt;{@link T}&gt;
    */
   @SuppressWarnings("unchecked")
-  private ComponentsCollection<T> init(WebElementSource searchContext,
+  private ComponentsCollection<T> init(@Nullable WebElementSource searchContext,
                                        Field field,
                                        By selector,
                                        Type[] genericTypes) {
     Class<T> listType = (Class<T>) getListGenericType(field, genericTypes);
-    Objects.requireNonNull(searchContext, "searchContext must not be null for ComponentsCollection initialization");
     var elementDecorateProperties = new ElementDecorateProperties<>(searchContext, listType, selector, genericTypes);
     return new ComponentsCollection<>(this, elementDecorateProperties);
   }
