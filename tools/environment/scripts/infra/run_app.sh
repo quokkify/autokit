@@ -46,8 +46,8 @@ for profile in "${TOKENS[@]}"; do
   case "$profile" in
     mock)
       info "[infra] mock hook: upload expectations"
-      ./tools/scripts/mock/run_mock_server.sh
-      ./tools/scripts/mock/upload_expectations.sh
+      ./tools/environment/scripts/mock/run_mock_server.sh
+      ./tools/environment/scripts/mock/upload_expectations.sh
       ;;
     *)
       : # no-op
