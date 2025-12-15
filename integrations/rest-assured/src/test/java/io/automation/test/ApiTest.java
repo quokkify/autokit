@@ -1,4 +1,4 @@
-package io.automation.tests;
+package io.automation.test;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
