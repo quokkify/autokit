@@ -2,7 +2,7 @@
 
 echo "🚀 Starting MockServer container..."
 docker compose \
-  -f tools/docker/docker-compose.yml \
+  -f tools/environment/docker/docker-compose.yml \
    up -d --quiet-pull mock-server
 
 sleep=2

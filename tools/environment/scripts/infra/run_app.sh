@@ -38,7 +38,7 @@ done
 
 echo "[infra] docker compose up: ${PROFILES_ARGS[*]}"
 docker compose \
-  -f tools/docker/docker-compose.yml \
+  -f tools/environment/docker/docker-compose.yml \
   "${PROFILES_ARGS[@]}" up -d
 
 for profile in "${TOKENS[@]}"; do
