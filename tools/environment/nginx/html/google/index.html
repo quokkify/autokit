@@ -58,6 +58,7 @@
           for (
             var b = null;
             a && (!a.getAttribute || !(b = a.getAttribute("leid")));
+
           )
             a = a.parentNode;
           return b;
@@ -267,8 +268,8 @@
             (this.j = this.C
               ? !0
               : this.i || this.l
-                ? !1
-                : !this.g.src || this.g.complete) || B(this);
+              ? !1
+              : !this.g.src || this.g.complete) || B(this);
             !google.c.wpr && google.c.wh > 1 && C(this);
           },
           B = function (a) {
@@ -290,8 +291,7 @@
           },
           C = function (a, b) {
             if (b || a.B === void 0)
-              ((a.B = google.cv(a.g)),
-                a.g.setAttribute("data-atf", String(a.B)));
+              (a.B = google.cv(a.g)), a.g.setAttribute("data-atf", String(a.B));
             return a.B;
           },
           ia = function (a, b) {
@@ -347,6 +347,7 @@
               c !== d &&
               c.tagName !== "G-SCROLLING-CAROUSEL" &&
               (!ea || !c.hasAttribute("data-sn-container"));
+
             )
               c = c.parentElement;
             d = c;
@@ -356,12 +357,12 @@
             (c.style.display === "none"
               ? (a = !0)
               : document.defaultView && document.defaultView.getComputedStyle
-                ? ((a = document.defaultView.getComputedStyle(c)),
-                  (a =
-                    !!a &&
-                    (a.visibility === "hidden" ||
-                      (a.height === "0px" && a.width === "0px"))))
-                : (a = !1));
+              ? ((a = document.defaultView.getComputedStyle(c)),
+                (a =
+                  !!a &&
+                  (a.visibility === "hidden" ||
+                    (a.height === "0px" && a.width === "0px"))))
+              : (a = !1));
           if (a) b = 0;
           else if (c.getBoundingClientRect) {
             b: {
@@ -511,8 +512,8 @@
           return (a = window.performance) == null
             ? void 0
             : (b = a.getEntriesByType) == null
-              ? void 0
-              : b.call(a, "navigation")[0];
+            ? void 0
+            : b.call(a, "navigation")[0];
         }
         function R() {
           var a;
@@ -523,8 +524,8 @@
           return (a = window.performance) == null
             ? void 0
             : (b = a.navigation) == null
-              ? void 0
-              : b.type;
+            ? void 0
+            : b.type;
         }
         var ka = window.location;
         function T(a) {
@@ -605,7 +606,7 @@
               google.kEI +
               "&rt=";
             g = "";
-            for (f in c) ((a += "" + g + f + "." + c[f]), (g = ","));
+            for (f in c) (a += "" + g + f + "." + c[f]), (g = ",");
             for (var q in b) a += "&" + q + "=" + b[q];
             var f = "";
             n._cshid && (f += "&cshid=" + n._cshid);
@@ -680,7 +681,7 @@
             V(
               function (f) {
                 if (!(C(f) & 1)) return !1;
-                if (f.j) return (++g, !f.C);
+                if (f.j) return ++g, !f.C;
                 C(f) & 4 && (f.F ? (q = !0) : (m = !0));
                 f.i && ++l;
                 ++h;
@@ -790,7 +791,7 @@
       }).call(this);
       (function () {
         function b() {
-          for (var a = google.drc.shift(); a; ) (a(), (a = google.drc.shift()));
+          for (var a = google.drc.shift(); a; ) a(), (a = google.drc.shift());
         }
         google.drc = [
           function () {
@@ -876,7 +877,7 @@
           b && (u = a && a.message);
           d === void 0 && (d = {});
           d.cad = "ple_" + google.ple + ".aple_" + google.aple;
-          if (google.dl) return (google.dl(a, e, d, !0), null);
+          if (google.dl) return google.dl(a, e, d, !0), null;
           b = d;
           if (x < 0) {
             window.console && console.error(a, b);
@@ -912,8 +913,7 @@
                 "&cad=" + b(f ? f.substring(0, 300) : "No script found."))));
           google.ple && google.ple === 1 && (e = 2);
           c += "&jsel=" + e;
-          for (var v in d)
-            ((c += "&"), (c += b(v)), (c += "="), (c += b(d[v])));
+          for (var v in d) (c += "&"), (c += b(v)), (c += "="), (c += b(d[v]));
           c = c + "&emsg=" + b(a.name + ": " + a.message);
           c = c + "&jsst=" + b(a.stack || "N/A");
           c.length >= 12288 && (c = c.substring(0, 12288));
@@ -981,14 +981,14 @@
             return a === 0
               ? "ri=1"
               : a === 1
-                ? c
-                  ? "ri=24"
-                  : "ri=27"
-                : a === 2
-                  ? c
-                    ? "ri=25"
-                    : "ri=26"
-                  : "";
+              ? c
+                ? "ri=24"
+                : "ri=27"
+              : a === 2
+              ? c
+                ? "ri=25"
+                : "ri=26"
+              : "";
           }
           function k(a, c) {
             return c ? "&" + a + "=" + encodeURIComponent(c) : "";
@@ -1150,8 +1150,8 @@
                       : q(b, 0)
                     : c)
                 : (b = p(b, 1))
-                  ? (v(b.j, !0), (b = b.l))
-                  : (b = c));
+                ? (v(b.j, !0), (b = b.l))
+                : (b = c));
             b && b !== a.href && ((c = b), r.test(c) && (a.href = c));
           };
           function v(a, c) {
@@ -1172,10 +1172,10 @@
             return b === c
               ? a
               : b !== void 0
-                ? a.replace(/([?&])nis=[^&]*/, function (d, f) {
-                    return f + "nis=" + c;
-                  })
-                : g(a, "nis=" + c);
+              ? a.replace(/([?&])nis=[^&]*/, function (d, f) {
+                  return f + "nis=" + c;
+                })
+              : g(a, "nis=" + c);
           }
           function w() {
             var a;
@@ -1186,7 +1186,7 @@
           }
           var y = new t();
           google.ausb = function (a) {
-            if (!a) return (google.ml(Error("a"), !1), !0);
+            if (!a) return google.ml(Error("a"), !1), !0;
             if (a.hasAttribute("data-impdclcc"))
               try {
                 var c =
@@ -1194,12 +1194,12 @@
                   a.hasAttribute("attributiondestination")
                     ? "2"
                     : a.hasAttribute("attributionsrc")
-                      ? w()
-                        ? "6"
-                        : "5"
-                      : w()
-                        ? "7"
-                        : "8";
+                    ? w()
+                      ? "6"
+                      : "5"
+                    : w()
+                    ? "7"
+                    : "8";
                 var b = x(a.href, c);
                 r.test(b) && (a.href = b);
               } catch (d) {}
@@ -1378,8 +1378,8 @@
               await (a == null
                 ? void 0
                 : (c = a.viewTransition) == null
-                  ? void 0
-                  : c.finished);
+                ? void 0
+                : c.finished);
             } finally {
               y();
             }
@@ -1476,9 +1476,9 @@
               e = q(e.height);
               d.currentTime = 0;
             } else
-              ((g = new DOMMatrix(b[1].transform)),
+              (g = new DOMMatrix(b[1].transform)),
                 (h = q(b[1].width)),
-                (e = q(b[1].height)));
+                (e = q(b[1].height));
             var k = new DOMMatrix(b[0].transform),
               p = q(b[0].height);
             h = q(b[0].width) / h;
@@ -3252,10 +3252,9 @@
         font-display: optional;
         src: url(//fonts.gstatic.com/s/googlesans/v29/4UaGrENHsxJlGDuGo1OIlL3Owp5eKQtG.woff2)
           format("woff2");
-        unicode-range:
-          U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
-          U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
-          U+2212, U+2215, U+FEFF, U+FFFD;
+        unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
+          U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122,
+          U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
       }
     </style>
     <script nonce="ReRoo3qP5IXcb49tGjQAiw">
@@ -8465,10 +8464,10 @@ test</textarea
                                   g.matches && irrp
                                     ? f(12, 0)
                                     : k.matches
-                                      ? f(8, 5)
-                                      : l.matches
-                                        ? f(10, 5)
-                                        : f(12, 7);
+                                    ? f(8, 5)
+                                    : l.matches
+                                    ? f(10, 5)
+                                    : f(12, 7);
                                 };
                               g.addEventListener("change", m);
                               k.addEventListener("change", m);
@@ -15480,11 +15479,11 @@ test</textarea
                 e.hasAttribute("data-lzy_") &&
                 Number(e.getAttribute("data-atf")) & 1)
             )
-              ((d = e.getAttribute("jscontroller")),
+              (d = e.getAttribute("jscontroller")),
                 (d = !(
                   (d === "UBXHI" || d === "R3fhkb" || d === "TSZEqd") &&
                   e.hasAttribute("data-src")
-                )));
+                ));
             if (d) return !0;
           }
           return !1;
@@ -17829,11 +17828,11 @@ test</textarea
               );
             }
             if (a)
-              ((a.innerHTML = f),
+              (a.innerHTML = f),
                 c && c(),
                 deia &&
                   ((google.delt = google.delt || {}),
-                  (google.delt[a.id] = Date.now())));
+                  (google.delt[a.id] = Date.now()));
             else if (!(google.ia && google.ia.rids && google.ia.rids.has(b))) {
               var e = {
                 id: b,
@@ -17897,6 +17896,7 @@ test</textarea
                   e = 0,
                   b;
                 (b = d[e++]);
+
               ) {
                 var a = b.getAttribute("href");
                 a.match(/[\?|&](ei|ved)=/) &&
@@ -17908,8 +17908,8 @@ test</textarea
               }
               d = document.querySelectorAll("[ping]");
               for (e = 0; (b = d[e++]); )
-                ((a = b.getAttribute("ping")),
-                  a.indexOf("cshid=") === -1 && b.setAttribute("ping", a + c));
+                (a = b.getAttribute("ping")),
+                  a.indexOf("cshid=") === -1 && b.setAttribute("ping", a + c);
             }
             window._cshid && google.dclc(f);
           }).call(this);
@@ -18017,8 +18017,8 @@ test</textarea
                       a !== void 0 && (b.href = a));
                   }
               } else
-                (window.sessionStorage.removeItem("aim-trsm-q"),
-                  window.sessionStorage.removeItem("aim-trsm-mstk"));
+                window.sessionStorage.removeItem("aim-trsm-q"),
+                  window.sessionStorage.removeItem("aim-trsm-mstk");
             }
             window.addEventListener("pageshow", function (b) {
               b.persisted && p();

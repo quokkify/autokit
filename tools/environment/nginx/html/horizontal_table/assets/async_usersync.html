@@ -4617,8 +4617,8 @@
           this.typeConfig.type == "COLLECTABLE"
             ? Runner.altCommonImageSprite
             : this.altGameModeActive
-              ? Runner.altGameImageSprite
-              : Runner.imageSprite;
+            ? Runner.altGameImageSprite
+            : Runner.imageSprite;
 
         // For animated obstacles.
         this.currentFrame = 0;
@@ -4995,9 +4995,9 @@
 
           // Update Trex config
           Trex.config.GRAVITY = spriteDefinition.GRAVITY || Trex.config.GRAVITY;
-          ((Trex.config.HEIGHT = spriteDefinition.RUNNING_1.h),
+          (Trex.config.HEIGHT = spriteDefinition.RUNNING_1.h),
             (Trex.config.INITIAL_JUMP_VELOCITY =
-              spriteDefinition.INITIAL_JUMP_VELOCITY));
+              spriteDefinition.INITIAL_JUMP_VELOCITY);
           Trex.config.MAX_JUMP_HEIGHT = spriteDefinition.MAX_JUMP_HEIGHT;
           Trex.config.MIN_JUMP_HEIGHT = spriteDefinition.MIN_JUMP_HEIGHT;
           Trex.config.WIDTH = spriteDefinition.RUNNING_1.w;
@@ -7424,10 +7424,10 @@
             null != d && K.push(e + "=" + d);
           }
           if (0 == K.length)
-            return (a.setAttribute("jstcache", "0"), (a.__jstcache = H[0]));
+            return a.setAttribute("jstcache", "0"), (a.__jstcache = H[0]);
           var g = K.join("&");
           if ((b = I[g]))
-            return (a.setAttribute("jstcache", b), (a.__jstcache = H[b]));
+            return a.setAttribute("jstcache", b), (a.__jstcache = H[b]);
           var h = {};
           b = 0;
           for (c = N.length; b < c; ++b) {
@@ -7555,7 +7555,7 @@
             if ((c = c.jscontent)) {
               if (((c = "" + y(a, c, b)), b.innerHTML != c)) {
                 for (; b.firstChild; )
-                  ((e = b.firstChild), e.parentNode.removeChild(e));
+                  (e = b.firstChild), e.parentNode.removeChild(e);
                 b.appendChild(this.m.createTextNode(c));
               }
             } else {
@@ -7618,7 +7618,7 @@
           c.c = [];
           e();
           for (var h, f, k; d.length; )
-            ((h = d[d.length - 1]),
+            (h = d[d.length - 1]),
               (e = g[g.length - 1]),
               e >= h.length
                 ? ((e = c), (f = d.pop()), (f.length = 0), e.c.push(f), g.pop())
@@ -7626,7 +7626,7 @@
                   (k = h[e++]),
                   (h = h[e++]),
                   (g[g.length - 1] = e),
-                  f.call(c, k, h)));
+                  f.call(c, k, h));
         };
       })();
     </script>
