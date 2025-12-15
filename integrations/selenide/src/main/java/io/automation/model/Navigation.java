@@ -40,7 +40,7 @@ public abstract class Navigation {
   /**
    * Open page with url query parameters and formatted dynamic parts.
    *
-   * <p>PageUrl: 'https://example.com/id/%s' -> 'https://example.comx/id/555?id=555'<p/>.
+   * PageUrl: 'https://example.com/id/%s' -> 'https://example.comx/id/555?id=555'.
    *
    * @param pageClass   PageObject class
    * @param queryParams url query parameters
@@ -60,7 +60,7 @@ public abstract class Navigation {
   /**
    * Open page with formatted url dynamic parts.
    *
-   * <p>PageUrl: 'https://example.com/id/%s' -> 'https://example.comx/id/555'<p/>.
+   * PageUrl: 'https://example.com/id/%s' -> 'https://example.comx/id/555'.
    *
    * @param pageClass PageObject class
    * @param urlParams dynamic url parameters
@@ -74,7 +74,7 @@ public abstract class Navigation {
   /**
    * Open page with url query parameters.
    *
-   * <p>PageUrl: 'https://example.com' -> 'https://example.com?id=555'<p/>.
+   * PageUrl: 'https://example.com' -> 'https://example.com?id=555'.
    *
    * @param pageClass   PageObject class
    * @param queryParams url query parameters
@@ -94,7 +94,6 @@ public abstract class Navigation {
    * Open page using full page url.
    *
    * @param fullPageUrl full page url as {@link String}
-   * @return page class
    */
   protected void openPage(String fullPageUrl) {
     if (Objects.nonNull(basicAuthCredentials)) {

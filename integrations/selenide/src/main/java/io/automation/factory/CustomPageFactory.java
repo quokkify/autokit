@@ -45,7 +45,7 @@ public class CustomPageFactory<T extends Component> extends SelenidePageFactory 
    * @return UI elements list as {@link ComponentsCollection}&lt;{@link T}&gt;
    */
   @SuppressWarnings("unchecked")
-  private ComponentsCollection<T> init(@Nullable WebElementSource searchContext,
+  private ComponentsCollection<T> init(WebElementSource searchContext,
                                        Field field,
                                        By selector,
                                        Type[] genericTypes) {

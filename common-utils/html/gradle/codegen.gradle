@@ -124,9 +124,6 @@ tasks.register('resolveBcd') {
     }
 }
 
-/* =========================
-   2) downloadBcd
-   ========================= */
 tasks.register('downloadBcd') {
     group = 'codegen'
     description = 'Скачивает tarball @mdn/browser-compat-data'
@@ -146,9 +143,6 @@ tasks.register('downloadBcd') {
     }
 }
 
-/* =========================
-   3) extractBcd — распаковка
-   ========================= */
 tasks.register('extractBcd') {
     group = 'codegen'
     description = 'Скачивает и распаковывает исходники MDN Browser Compat Data (GitHub main.zip)'
