@@ -22,7 +22,7 @@ public class BaseTest {
   @BeforeSuite(alwaysRun = true)
   protected void beforeSuite() {
     Browser.setDefaultConfigurations();
-    com.codeborne.selenide.Configuration.headless = false;
+    com.codeborne.selenide.Configuration.headless = true;
     if (Objects.nonNull(BROWSER_CONFIGURATION.remoteUrl())) {
       Browser.setRemoteDefaultConfiguration();
     }
