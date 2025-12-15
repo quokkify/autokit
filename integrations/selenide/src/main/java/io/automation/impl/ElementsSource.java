@@ -1,8 +1,8 @@
 package io.automation.impl;
 
+import java.util.List;
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
-import java.util.List;
 
 import io.automation.elements.base.Component;
 

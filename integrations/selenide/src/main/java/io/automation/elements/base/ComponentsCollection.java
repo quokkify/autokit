@@ -18,12 +18,12 @@ import com.codeborne.selenide.impl.SelenidePageFactory;
 import com.codeborne.selenide.impl.WebElementSource;
 import io.automation.constant.PollingInterval;
 import io.automation.constant.StringConstant;
-import io.automation.impl.CollectionSource;
-import io.automation.impl.DefaultCollectionSource;
-import io.automation.impl.FilteredElementsSource;
 import io.automation.ex.ElementNotFoundAssertionError;
 import io.automation.factory.ElementDecorateProperties;
+import io.automation.impl.CollectionSource;
+import io.automation.impl.DefaultCollectionSource;
 import io.automation.impl.ElementsSource;
+import io.automation.impl.FilteredElementsSource;
 import io.automation.util.Waiter;
 import org.openqa.selenium.WebElement;
 
@@ -313,7 +313,7 @@ public class ComponentsCollection<T extends Component> extends AbstractList<T> {
     private final Integer elementIndex;
     private final T element;
 
-    public IteratedElement(Integer elementIndex, T element) {
+    IteratedElement(Integer elementIndex, T element) {
       this.elementIndex = elementIndex;
       this.element = element;
     }

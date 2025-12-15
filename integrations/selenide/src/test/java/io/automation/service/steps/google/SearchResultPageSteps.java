@@ -8,7 +8,6 @@ import io.qameta.allure.Step;
 public class SearchResultPageSteps
     extends PageSteps<SearchResultPageSteps, SearchResultPageVerification, SearchResultPage> {
 
-
   public SearchResultPageSteps(SearchResultPage page) {
     super.verification = new SearchResultPageVerification(this, page);
     super.page = page;

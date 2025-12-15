@@ -1,6 +1,5 @@
 package io.automation.test;
 
-
 import io.automation.page.w3school.HtmlHorizontalTablePage;
 import io.qameta.allure.TmsLink;
 import org.testng.annotations.Test;

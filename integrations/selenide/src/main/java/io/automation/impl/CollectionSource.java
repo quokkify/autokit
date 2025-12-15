@@ -1,9 +1,9 @@
 package io.automation.impl;
 
+import java.util.Objects;
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Objects;
 
 import com.codeborne.selenide.Driver;
 import com.codeborne.selenide.impl.ElementDescriber;

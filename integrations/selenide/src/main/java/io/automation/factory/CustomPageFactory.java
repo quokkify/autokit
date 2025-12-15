@@ -1,11 +1,11 @@
 package io.automation.factory;
 
-import javax.annotation.CheckReturnValue;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.Objects;
+import javax.annotation.CheckReturnValue;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.codeborne.selenide.Driver;
 import com.codeborne.selenide.impl.SelenidePageFactory;
