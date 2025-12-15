@@ -2,7 +2,6 @@ package io.automation.factory;
 
 import java.lang.reflect.Type;
 import java.util.Arrays;
-import java.util.Objects;
 
 import com.codeborne.selenide.impl.WebElementSource;
 import io.automation.elements.base.Component;
