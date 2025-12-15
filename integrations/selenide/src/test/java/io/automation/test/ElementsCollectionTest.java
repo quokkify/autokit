@@ -8,8 +8,8 @@ public class ElementsCollectionTest extends BaseTest {
   @TmsLink("UI_ID_6")
   @Test(description = "Verify 'CustomElementsCollection'")
   public void testVerifyCustomElementsCollection() {
-    String searchLinkText = "QUOKKIFY git";
-    String searchResultLinkUrl = "https://github.com/ylazakovich/quokkify";
+    String searchLinkText = "Speed Test";
+    String searchResultLinkUrl = "https://www.speedtest.pl/";
 
     googleNavigationSteps.openSearchResultPage()
         .clickOnSearchResultLink(searchLinkText)
