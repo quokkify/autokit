@@ -17,92 +17,92 @@ jobs:
           - name: "testng-extensions"
             module: ":testng-extensions"
             slug: "testng-extensions"
-            needs_app: false
+            profile: "none"
 
           - name: "integrations • rest-assured"
             module: ":integrations:rest-assured"
             slug: "integrations-rest-assured"
-            needs_app: true
+            profile: "mock"
 
           - name: "data-utils • sql"
             module: ":data-utils:sql"
             slug: "data-utils-sql"
-            needs_app: false
+            profile: "none"
 
           - name: "common-utils • core"
             module: ":common-utils:core"
             slug: "common-utils-core"
-            needs_app: false
+            profile: "none"
 
           - name: "common-utils • jackson • parent"
             module: ":common-utils:jackson:parent"
             slug: "common-utils-jackson-parent"
-            needs_app: false
+            profile: "none"
 
           - name: "common-utils • jackson • csv"
             module: ":common-utils:jackson:csv"
             slug: "common-utils-jackson-csv"
-            needs_app: false
+            profile: "none"
 
           - name: "common-utils • jackson • xml"
             module: ":common-utils:jackson:xml"
             slug: "common-utils-jackson-xml"
-            needs_app: false
+            profile: "none"
 
           - name: "common-utils • jackson • json"
             module: ":common-utils:jackson:json"
             slug: "common-utils-jackson-json"
-            needs_app: false
+            profile: "none"
 
           - name: "common-utils • jackson • yaml"
             module: ":common-utils:jackson:yaml"
             slug: "common-utils-jackson-yaml"
-            needs_app: false
+            profile: "none"
 
           - name: "common-utils • introspection"
             module: ":common-utils:introspection"
             slug: "common-utils-introspection"
-            needs_app: false
+            profile: "none"
 
           - name: "common-utils • awaitility"
             module: ":common-utils:awaitility"
             slug: "common-utils-awaitility"
-            needs_app: false
+            profile: "none"
 
           - name: "common-utils • file"
             module: ":common-utils:file"
             slug: "common-utils-file"
-            needs_app: false
+            profile: "none"
 
           - name: "common-utils • html"
             module: ":common-utils:html"
             slug: "common-utils-html"
-            needs_app: false
+            profile: "none"
 
           - name: "common-utils • http"
             module: ":common-utils:http"
             slug: "common-utils-http"
-            needs_app: false
+            profile: "none"
 
           - name: "common-utils • jwt"
             module: ":common-utils:jwt"
             slug: "common-utils-jwt"
-            needs_app: false
+            profile: "none"
 
           - name: "common-utils • config"
             module: ":common-utils:config"
             slug: "common-utils-config"
-            needs_app: false
+            profile: "none"
 
           - name: "common-utils • signature"
             module: ":common-utils:signature"
             slug: "common-utils-signature"
-            needs_app: false
+            profile: "none"
 
           - name: "common-utils • console"
             module: ":common-utils:console"
             slug: "common-utils-console"
-            needs_app: false
+            profile: "none"
 
     steps:
       - name: 🔨Checkout
@@ -118,30 +118,28 @@ jobs:
       - name: 🔨Build with Gradle
         uses: gradle/actions/setup-gradle@4d9f0ba0025fe599b4ebab900eb7f3a1d93ef4c2 # v5
 
-      - name: 🟢Start Application
-        if: ${{ matrix.needs_app }}
-        run: |
-          ./tools/scripts/mock/run_mock_server.sh
-          ./tools/scripts/mock/upload_expectations.sh
+      - name: 🟢 Start Infra
+        if: ${{ matrix.profile != 'none' }}
+        run: ./tools/scripts/infra/start_infra.sh "${{ matrix.infra_profile }}"
         shell: bash
 
-      - name: 🚀Run checks for module
+      - name: 🚀 Run tests
         run: ./gradlew ${{ matrix.module }}:check --no-daemon --console=plain --stacktrace
         shell: bash
 
       - name: 🐳 Collecting logs from all docker containers
-        if: ${{ matrix.needs_app }}
+        if: ${{ matrix.needs_app && always() }}
         uses: jwalton/gh-docker-logs@2741064ab9d7af54b0b1ffb6076cf64c16f0220e # v2
         with:
           dest: logs
 
       - name: 🛑Stop Application
-        if: ${{ matrix.needs_app }}
+        if: ${{ matrix.needs_app && always() }}
         run: ./tools/scripts/dev/stop_app.sh
         shell: bash
 
       - name: 📦 Packing docker compose logs as artifact
-        if: ${{ matrix.needs_app }}
+        if: ${{ matrix.needs_app && always() }}
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
           name: docker-logs-${{ matrix.slug }}
