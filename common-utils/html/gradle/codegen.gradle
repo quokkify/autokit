@@ -83,7 +83,7 @@ ext.writeConstClass = { File file, String pkg, String className, Map<String, Str
 
 tasks.register('resolveBcd') {
     group = 'codegen'
-    description = 'Определяет URL tarball для @mdn/browser-compat-data (latest)'
+    description = 'Apply URL tarball for @mdn/browser-compat-data (latest)'
 
     outputs.file(metaFile)
 
@@ -95,25 +95,24 @@ tasks.register('resolveBcd') {
         try {
             metaJson = new URL(npmMetaUrl as String).text
         } catch (Exception e) {
-            throw new GradleException("Не удалось получить npm-метаданные ${npmMetaUrl}", e)
+            throw new GradleException("Not received npm meta data ${npmMetaUrl}", e)
         }
 
         def meta = new JsonSlurper().parseText(metaJson)
         if (!(meta instanceof Map)) {
-            throw new GradleException("Ожидался объект метаданных npm, получено: ${meta?.getClass()?.name}")
+            throw new GradleException("Expected meta of npm, but actual: ${meta?.getClass()?.name}")
         }
 
-        // ВАЖНО: ключ с дефисом читаем через скобки (без meta?.['..'])
         def distTags = (meta as Map).containsKey('dist-tags') ? (meta as Map)['dist-tags'] : null
         def latest = (distTags instanceof Map && (distTags as Map).containsKey('latest')) ? (distTags as Map)['latest'] as String : ''
-        if (!latest) throw new GradleException("Не найден dist-tags.latest в метаданных npm")
+        if (!latest) throw new GradleException("Not found dist-tags.latest in npm")
 
         def versions = (meta as Map).containsKey('versions') ? (meta as Map)['versions'] : null
         def latestObj = (versions instanceof Map) ? (versions as Map)[latest] : null
         def dist = (latestObj instanceof Map) ? (latestObj as Map)['dist'] : null
         def tarUrl = (dist instanceof Map) ? (dist as Map)['tarball'] as String : null
 
-        if (!tarUrl) throw new GradleException("Не найден dist.tarball для версии ${latest}")
+        if (!tarUrl) throw new GradleException("Not found dist.tarball for version ${latest}")
 
         def out = metaFile.get().asFile
         out.parentFile.mkdirs()
@@ -126,7 +125,7 @@ tasks.register('resolveBcd') {
 
 tasks.register('downloadBcd') {
     group = 'codegen'
-    description = 'Скачивает tarball @mdn/browser-compat-data'
+    description = 'Download tarball @mdn/browser-compat-data'
     dependsOn tasks.named('resolveBcd')
 
     inputs.file(metaFile)
@@ -139,13 +138,13 @@ tasks.register('downloadBcd') {
         new URL(url).withInputStream { is ->
             outFile.withOutputStream { os -> os << is }
         }
-        println "Скачан: ${outFile.absolutePath}"
+        println "Downloaded: ${outFile.absolutePath}"
     }
 }
 
 tasks.register('extractBcd') {
     group = 'codegen'
-    description = 'Скачивает и распаковывает исходники MDN Browser Compat Data (GitHub main.zip)'
+    description = 'Download and unpack MDN Browser Compat Data (GitHub main.zip)'
     outputs.dir(extractedDir)
     outputs.upToDateWhen { false }
 
@@ -154,32 +153,30 @@ tasks.register('extractBcd') {
         def zipFile = layout.buildDirectory.file('bcd/bcd.zip').get().asFile
         zipFile.parentFile.mkdirs()
 
-        println "⬇️ Скачиваю ${zipUrl} ..."
+        println "⬇️ Downloading ${zipUrl} ..."
         new URL(zipUrl).withInputStream { i -> zipFile.withOutputStream { it << i } }
-        println "✅ Скачано: ${zipFile.length()} байт"
+        println "✅ Downloaded: ${zipFile.length()} bytes"
 
-        println "📦 Распаковываю только /html/** ..."
+        println "📦 Unpacking /html/** ..."
         copy {
             from zipTree(zipFile)
             into extractedDir.get().asFile
             include '**/html/**'
             includeEmptyDirs = false
             eachFile { f ->
-                // убираем префикс 'browser-compat-data-main/'
                 if (f.path.startsWith('browser-compat-data-main/')) {
                     f.path = f.path.substring('browser-compat-data-main/'.length())
                 }
             }
         }
 
-        println "✅ Распаковано в: ${extractedDir.get().asFile.absolutePath}"
+        println "✅ Unpdacked to: ${extractedDir.get().asFile.absolutePath}"
     }
 }
 
-// Fixed process task: stable sorting, correct per-element attribute discovery (top-level + nested 'attributes'), robust skips.
 tasks.register('process') {
     group = 'codegen'
-    description = 'Генерирует HtmlTag/HtmlAttribute/HtmlClassName из build/bcd/extracted/html (правильный обход html/global_attributes и html/elements/<tag>.json)'
+    description = 'Generate HtmlTag/HtmlAttribute/HtmlClassName from build/bcd/extracted/html'
     dependsOn tasks.named('extractBcd')
 
     // вход — именно каталог html
@@ -190,14 +187,14 @@ tasks.register('process') {
     doLast {
         File htmlBase = new File(extractedDir.get().asFile, 'html')
         if (!htmlBase.exists()) {
-            throw new GradleException("Не найден каталог: ${htmlBase.absolutePath}. Убедись, что extractBcd распаковал в bcd/extracted/html.")
+            throw new GradleException("Not found catalog: ${htmlBase.absolutePath}. Task 'extractBcd' should make unpacking in bcd/extracted/html.")
         }
 
         File elDir = new File(htmlBase, 'elements')
-        if (!elDir.exists()) throw new GradleException("Не найден каталог элементов: ${elDir.absolutePath}")
+        if (!elDir.exists()) throw new GradleException("Not found catalog with elements: ${elDir.absolutePath}")
 
         File gFile = new File(htmlBase, 'global_attributes.json')
-        if (!gFile.exists()) throw new GradleException("Не найден файл глобальных атрибутов: ${gFile.absolutePath}")
+        if (!gFile.exists()) throw new GradleException("Not found file with global attributes: ${gFile.absolutePath}")
 
         File pkgDir = new File(generatedSrcDir.get().asFile, targetPackage.replace('.', '/'))
         pkgDir.mkdirs()
@@ -223,7 +220,6 @@ tasks.register('process') {
  */''')
 
         /* =============== ATTRIBUTES =============== */
-        // служебные ключи, которые не являются атрибутами
         Set<String> hardSkip = [
                 '__compat', 'examples', 'obsolete', 'deprecated',
                 'attributes', 'children', 'content', 'permitted_content', 'permittedDescendants',
@@ -236,19 +232,17 @@ tasks.register('process') {
         def putAttr = { String key ->
             String constName = toConstName(key)
             String value = toAttrValue(key)
-            if (!attrConsts.containsValue(value)) { // де-дуп по финальному строковому значению
+            if (!attrConsts.containsValue(value)) {
                 attrConsts[constName] = value
             }
         }
 
-        // ---- 1) Глобальные атрибуты: html -> global_attributes (Map атрибутов)
         def gRoot = new groovy.json.JsonSlurper().parse(gFile)
         Map globals = (gRoot instanceof Map) ? (((gRoot['html'] ?: [:])['global_attributes'] ?: [:]) as Map) : [:]
         globals.keySet().toList().sort().each { k ->
             if (!hardSkip.contains(k as String)) putAttr(k as String)
         }
 
-        // ---- 2) Атрибуты элементов: html -> elements -> <tag>
         elDir.listFiles({ File dir, String name -> name.toLowerCase(Locale.ROOT).endsWith('.json') } as FilenameFilter)
                 .each { f ->
                     def root = new groovy.json.JsonSlurper().parse(f)
@@ -261,13 +255,11 @@ tasks.register('process') {
                     String tagKey = f.name.replaceAll(/\.json$/, '')
                     Map elObj = elements[tagKey] instanceof Map ? (elements[tagKey] as Map) : null
                     if (!(elObj instanceof Map)) {
-                        // fallback: если имя файла и ключ не совпали (редко)
                         def firstEntry = elements.entrySet().iterator().hasNext() ? elements.entrySet().iterator().next() : null
                         elObj = (firstEntry?.value instanceof Map) ? (firstEntry.value as Map) : null
                     }
                     if (!(elObj instanceof Map)) return
 
-                    // 2a) верхнеуровневые фичи тега, у которых есть __compat — это атрибуты
                     elObj.each { k, v ->
                         if (k in hardSkip) return
                         if (v instanceof Map && (v as Map).containsKey('__compat')) {
@@ -275,7 +267,6 @@ tasks.register('process') {
                         }
                     }
 
-                    // 2b) вложенный узел "attributes": те же правила
                     Map nestedAttrs = elObj['attributes'] instanceof Map ? (elObj['attributes'] as Map) : null
                     if (nestedAttrs != null) {
                         nestedAttrs.each { k, v ->
@@ -286,11 +277,8 @@ tasks.register('process') {
                     }
                 }
 
-        // удобные дубли
         attrConsts['CLASS'] = 'class'
         attrConsts['CLASS_NAME'] = 'class'
-
-        // стабильная сортировка по строковому значению
         attrConsts = attrConsts.entrySet().toList()
                 .sort { a, b -> a.value <=> b.value }
                 .collectEntries { [(it.key): it.value] }
@@ -328,9 +316,9 @@ tasks.register('process') {
  * String values are kebab-case.
  */''')
 
-        println "Сгенерировано: ${new File(pkgDir, 'HtmlTag.java')}"
-        println "Сгенерировано: ${new File(pkgDir, 'HtmlAttribute.java')}"
-        println "Сгенерировано: ${new File(pkgDir, 'HtmlCustomAttribute.java')}"
+        println "Generated: ${new File(pkgDir, 'HtmlTag.java')}"
+        println "Generated: ${new File(pkgDir, 'HtmlAttribute.java')}"
+        println "Generated: ${new File(pkgDir, 'HtmlCustomAttribute.java')}"
     }
 }
 
