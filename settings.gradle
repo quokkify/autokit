@@ -9,6 +9,7 @@ include(":testng-extensions")            // Extensions for TestNG (used as testI
 // INTEGRATIONS WITH EXTERNAL LIBRARIES / SERVICES
 // ============================================================================
 include(":integrations:rest-assured")    // Wrapper around Rest Assured for HTTP testing
+include(":integrations:selenide")        // Wrapper around Selenide for user interface testing
 
 // ============================================================================
 // DATA ACCESS MODULES (SQL / NoSQL)

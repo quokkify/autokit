@@ -14,21 +14,38 @@ jobs:
       max-parallel: 4
       matrix:
         include:
+          # =========================
+          # TestNG extensions
+          # =========================
           - name: "testng-extensions"
             module: ":testng-extensions"
             slug: "testng-extensions"
             profile: "none"
 
+          # =========================
+          # Integrations
+          # =========================
           - name: "integrations • rest-assured"
             module: ":integrations:rest-assured"
             slug: "integrations-rest-assured"
             profile: "mock"
 
+          - name: "integrations • selenide"
+            module: ":integrations:selenide"
+            slug: "integrations-selenide"
+            profile: "web"
+
+          # =========================
+          # Data utils
+          # =========================
           - name: "data-utils • sql"
             module: ":data-utils:sql"
             slug: "data-utils-sql"
             profile: "none"
 
+          # =========================
+          # Common utils
+          # =========================
           - name: "common-utils • core"
             module: ":common-utils:core"
             slug: "common-utils-core"
@@ -120,7 +137,7 @@ jobs:
 
       - name: 🟢 Start Infra
         if: ${{ matrix.profile != 'none' }}
-        run: ./tools/scripts/infra/run_app.sh "${{ matrix.profile }}"
+        run: ./tools/environment/scripts/infra/run_app.sh "${{ matrix.profile }}"
         shell: bash
 
       - name: 🚀 Run tests
@@ -128,18 +145,18 @@ jobs:
         shell: bash
 
       - name: 🐳 Collecting logs from all docker containers
-        if: ${{ matrix.needs_app && always() }}
+        if: ${{ matrix.profile != 'none' && always() }}
         uses: jwalton/gh-docker-logs@2741064ab9d7af54b0b1ffb6076cf64c16f0220e # v2
         with:
           dest: logs
 
-      - name: 🛑Stop Application
-        if: ${{ matrix.needs_app && always() }}
-        run: ./tools/scripts/dev/stop_app.sh
+      - name: 🛑 Stop Infra
+        if: ${{ matrix.profile != 'none' && always() }}
+        run: ./tools/environment/scripts/infra/stop_app.sh
         shell: bash
 
       - name: 📦 Packing docker compose logs as artifact
-        if: ${{ matrix.needs_app && always() }}
+        if: ${{ matrix.profile != 'none' && always() }}
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
           name: docker-logs-${{ matrix.slug }}
