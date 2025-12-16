@@ -179,7 +179,6 @@ tasks.register('process') {
     description = 'Generate HtmlTag/HtmlAttribute/HtmlClassName from build/bcd/extracted/html'
     dependsOn tasks.named('extractBcd')
 
-    // вход — именно каталог html
     inputs.dir(layout.buildDirectory.dir('bcd/extracted/html'))
     if (classnamesTxt.exists()) inputs.file(classnamesTxt)
     outputs.dir(generatedSrcDir)
