@@ -13,8 +13,8 @@ import org.testng.annotations.BeforeSuite;
 
 public class BaseTest {
 
-  private static final Configuration APP_CONFIG = ConfigRegistry.get(Configuration.class);
-  private static final BrowserConfiguration BROWSER_CONFIGURATION = ConfigRegistry.get(BrowserConfiguration.class);
+  protected static final Configuration APP_CONFIG = ConfigRegistry.get(Configuration.class);
+  protected static final BrowserConfiguration BROWSER_CONFIGURATION = ConfigRegistry.get(BrowserConfiguration.class);
 
   protected GoogleNavigationSteps googleNavigationSteps = new GoogleNavigationSteps(APP_CONFIG.baseUrl());
   protected W3SchoolsNavigationSteps w3SchoolsNavigationSteps = new W3SchoolsNavigationSteps(APP_CONFIG.baseUrl());
@@ -22,7 +22,7 @@ public class BaseTest {
   @BeforeSuite(alwaysRun = true)
   protected void beforeSuite() {
     Browser.setDefaultConfigurations();
-    com.codeborne.selenide.Configuration.headless = true;
+    com.codeborne.selenide.Configuration.headless = false;
     if (Objects.nonNull(BROWSER_CONFIGURATION.remoteUrl())) {
       Browser.setRemoteDefaultConfiguration();
     }

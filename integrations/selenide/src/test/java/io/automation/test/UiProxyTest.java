@@ -2,6 +2,7 @@ package io.automation.test;
 
 import com.codeborne.selenide.Configuration;
 import de.sstoehr.harreader.model.Har;
+import io.automation.config.ConfigRegistry;
 import io.automation.parser.HarParser;
 import io.qameta.allure.TmsLink;
 import org.apache.http.HttpStatus;

@@ -9,11 +9,12 @@ public class ElementsCollectionTest extends BaseTest {
   @Test(description = "Verify 'CustomElementsCollection'")
   public void testVerifyCustomElementsCollection() {
     String searchLinkText = "Speed Test";
-    String searchResultLinkUrl = "https://www.speedtest.pl/";
+    String searchResultRelativePath = "/external/speedtest/";
+    String expectedUrl = APP_CONFIG.baseUrl() + searchResultRelativePath;
 
     googleNavigationSteps.openSearchResultPage()
         .clickOnSearchResultLink(searchLinkText)
         .verify()
-        .verifyOpenedPageUrl(searchResultLinkUrl);
+        .verifyOpenedPageUrl(expectedUrl);
   }
 }
