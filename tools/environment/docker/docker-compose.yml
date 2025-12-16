@@ -1,0 +1,71 @@
+services:
+  nginx:
+    profiles: [web]
+    image: nginx:1.29.4@sha256:fb01117203ff38c2f9af91db1a7409459182a37c87cced5cb442d1d8fcc66d19
+    volumes:
+      - ../nginx/conf.d:/etc/nginx/conf.d:ro
+      - ../nginx/html:/usr/share/nginx/html:ro
+    ports:
+      - "80:80"
+
+  kafka:
+    profiles: [messaging]
+    image: wurstmeister/kafka:2.13-2.8.1@sha256:2d4bbf9cc83d9854d36582987da5f939fb9255fb128d18e3cf2c6ad825a32751
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: kafka
+      KAFKA_ADVERTISED_PORT: 9092
+      KAFKA_PORT: 9092
+      KAFKA_BROKER_ID: 1
+      KAFKA_LISTENERS: EXTERNAL_SAME_HOST://:29092,INTERNAL://:9092
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:9092,EXTERNAL_SAME_HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL_SAME_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LOG4J_ROOT_LOGLEVEL: WARN
+      KAFKA_CREATE_TOPICS: >
+        messages:1:1
+    ports:
+      - "29092:29092"
+      - "9092:9092"
+    depends_on:
+      - zookeeper
+
+  zookeeper:
+    profiles: [messaging]
+    image: zookeeper:3.9@sha256:b87f5ea0cdc73d71c74875277ca2e862f7abb3c0bfa365bd818db71eef870917
+    ports:
+      - "2181:2181"
+
+  mock-server:
+    profiles: [mock]
+    image: mockserver/mockserver:5.15.0@sha256:0f9ef78c94894ac3e70135d156193b25e23872575d58e2228344964273b4af6b
+    command: -logLevel DEBUG -serverPort 1080
+    environment:
+      MOCKSERVER_WATCH_INITIALIZATION_JSON: true
+      MOCKSERVER_INITIALIZATION_JSON_PATH: /config/expectation.json
+    volumes:
+      - ./mock/expectation.json:/config/expectation.json
+    ports:
+      - "1080:1080"
+
+  centrifugo:
+    profiles: [realtime]
+    image: centrifugo/centrifugo:v6.5.2@sha256:055d950b56b85d0ab9dc402cb461bf481360e6b4967e32e2e840268047852fb3
+    command: centrifugo -c centrifugo_new_config.json
+    volumes:
+      - ./centrifugo/centrifugo_new_config.json:/centrifugo/centrifugo_new_config.json
+    ports:
+      - "8005:8000"
+    environment:
+      CENTRIFUGO_PORT: 8000
+    ulimits:
+      nofile:
+        soft: 65535
+        hard: 65535
+
+  mongodb:
+    profiles: [storage]
+    image: mongo:8.2.2@sha256:bf5995bcccb65725aa81fd92e68449323c94b96bf1c1fa9f7acbc2a8ad518114
+    restart: always
+    ports:
+      - "27017:27017"
