@@ -29,15 +29,18 @@ public class UiProxyTest extends BaseTest {
   @TmsLink("UI_PROXY_ID_1")
   @Test(description = "Verify proxy 'Har' recording")
   public void testProxyHar() {
-    String searchLinkText = "GitHub";
-    String requestUrl = "https://github.githubassets.com/favicons/favicon-dark.svg";
+    String searchLinkText = "Speed Test";
+    String requestRelativePath = "/external/speedtest/assets/speedtestpl-logo.webp";
+    String requestUrl = APP_CONFIG.baseUrl() + requestRelativePath;
 
     Har har = googleNavigationSteps.openSearchResultPage()
         .startProxyHarRecording()
         .clickOnSearchResultLink(searchLinkText)
         .stopProxyHarRecording();
+
     Assertions.assertThat(HarParser.getLastHarEntryResponseStatusCode(har, requestUrl))
         .as("Response status code is incorrect")
         .isEqualTo(HttpStatus.SC_OK);
   }
 }
+
