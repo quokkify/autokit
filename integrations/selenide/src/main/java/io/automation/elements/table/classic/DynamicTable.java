@@ -4,6 +4,7 @@ import java.util.function.Function;
 
 import com.codeborne.selenide.Condition;
 import io.automation.elements.table.classic.base.BaseClassicTable;
+import io.automation.html.model.HtmlTag;
 import io.automation.model.ConstantFormat;
 import org.openqa.selenium.By;
 
@@ -21,9 +22,9 @@ public class DynamicTable<T extends Enum<T> & ConstantFormat> extends BaseClassi
   @Override
   protected Function<T, Integer> fetchColumnIndex() {
     return column -> getSelf().shouldBe(Condition.visible)
-        .findAll(By.xpath(".//thead//th"))
+        .findAll(By.xpath(".//%s//%s".formatted(HtmlTag.THEAD, HtmlTag.TH)))
         .findBy(Condition.text(column.capitalize()))
-        .findAll(By.xpath("./preceding-sibling::th"))
+        .findAll(By.xpath("./preceding-sibling::%s".formatted(HtmlTag.TH)))
         .size();
   }
 }
