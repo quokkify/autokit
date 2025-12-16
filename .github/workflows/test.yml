@@ -150,9 +150,9 @@ jobs:
         with:
           dest: logs
 
-      - name: 🛑Stop Application
+      - name: 🛑 Stop Infra
         if: ${{ matrix.profile != 'none' && always() }}
-        run: ./tools/environment/scripts/stop_app.sh
+        run: ./tools/environment/scripts/infra/stop_app.sh
         shell: bash
 
       - name: 📦 Packing docker compose logs as artifact
