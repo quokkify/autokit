@@ -12,6 +12,10 @@ public interface TestNGExtension extends Config, Reloadable, Mutable {
   @DefaultValue("2")
   Integer retryCount();
 
+  @Key("TEST_THREAD_COUNT")
+  @DefaultValue("5")
+  Integer testThreadCount();
+
   @Key("TEST_GROUP")
   String testGroup();
 

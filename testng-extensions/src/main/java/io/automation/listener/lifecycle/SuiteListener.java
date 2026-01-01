@@ -195,10 +195,7 @@ public class SuiteListener implements IAlterSuiteListener {
    * @return test thread count as {@link Integer}
    */
   private Integer getTestThreadCount() {
-    String testThreadCount = System.getenv("TEST_THREAD_COUNT");
-    return StringUtils.isNotBlank(testThreadCount)
-        ? Integer.valueOf(Integer.parseInt(testThreadCount))
-        : XmlSuite.DEFAULT_THREAD_COUNT;
+    return CONFIG.testThreadCount();
   }
 
   /**
