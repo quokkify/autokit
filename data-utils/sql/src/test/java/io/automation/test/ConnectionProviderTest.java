@@ -2,6 +2,7 @@ package io.automation.test;
 
 import java.util.List;
 
+import io.automation.annotation.SingleThread;
 import io.automation.persistence.PersistenceItem;
 import io.automation.provider.PersistenceItemProvider;
 import io.automation.service.DatabaseService;
@@ -18,6 +19,7 @@ public class ConnectionProviderTest extends BaseDatabaseTest {
 
   @TmsLink("SQL_DATABASE_CONNECTION_PROVIDER_ID_1")
   @Test(description = "Check connection via Xml")
+  @SingleThread
   public void checkC3P0ProviderViaXml() {
     TestLogAppender appender = withLogging(() -> DatabaseService.getInstance().createSqlQuery("hsql"));
     Assertions.assertThat(appender.getCombinedLog())
@@ -27,6 +29,7 @@ public class ConnectionProviderTest extends BaseDatabaseTest {
 
   @TmsLink("SQL_DATABASE_CONNECTION_PROVIDER_ID_2")
   @Test(description = "Check connection via Provider")
+  @SingleThread
   public void checkC3P0ProviderViaPersistenceProvider() {
     PersistenceItem persistenceItem = PersistenceItemProvider.getPersistenceItem(getStage());
     TestLogAppender appender = withLogging(() -> DatabaseService.getInstance().createSqlQuery(persistenceItem));
@@ -37,6 +40,7 @@ public class ConnectionProviderTest extends BaseDatabaseTest {
 
   @TmsLink("SQL_DATABASE_CONNECTION_PROVIDER_ID_3")
   @Test(description = "Check connection via PersistenceItem")
+  @SingleThread
   public void checkC3P0ProviderViaPersistenceItem() {
     PersistenceItem persistenceItem = new PersistenceItem("test", getH2Properties());
     TestLogAppender appender = withLogging(() -> DatabaseService.getInstance().createSqlQuery(persistenceItem));
