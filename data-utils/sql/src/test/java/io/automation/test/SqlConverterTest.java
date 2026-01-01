@@ -3,6 +3,7 @@ package io.automation.test;
 import java.util.List;
 import java.util.UUID;
 
+import io.automation.annotation.SingleThread;
 import io.automation.converter.SqlConverter;
 import io.automation.entity.DatabaseTestUser;
 import io.automation.entity.QDatabaseTestUser;
@@ -53,6 +54,7 @@ public class SqlConverterTest extends BaseDatabaseTest {
 
   @TmsLink("SQL_CONVERTER_ID_1")
   @Test(description = "Check sql converting when 'fetchFirst'")
+  @SingleThread
   public void checkConvertingWhenFetchFirst() {
     int questions = 3;
     TestLogAppender appender = withLogging(() -> databaseSteps
@@ -73,6 +75,7 @@ public class SqlConverterTest extends BaseDatabaseTest {
 
   @TmsLink("SQL_CONVERTER_ID_2")
   @Test(description = "Check sql converting when 'fetch'")
+  @SingleThread
   public void checkConvertingWhenFetch() {
     int questions = 2;
     TestLogAppender appender = withLogging(() -> databaseSteps
@@ -93,6 +96,7 @@ public class SqlConverterTest extends BaseDatabaseTest {
 
   @TmsLink("SQL_CONVERTER_ID_3")
   @Test(description = "Check sql converting when 'fetchOne'")
+  @SingleThread
   public void checkConvertingWhenFetchOne() {
     int questions = 2;
     TestLogAppender appender = withLogging(() -> databaseSteps
@@ -113,6 +117,7 @@ public class SqlConverterTest extends BaseDatabaseTest {
 
   @TmsLink("SQL_CONVERTER_ID_4")
   @Test(description = "Escaping: single quote in string parameter should be doubled in Executable SQL")
+  @SingleThread
   public void checkEscapingSingleQuote() {
     DatabaseTestUser testEntity = new DatabaseTestUser("O'Hara", "D'Angelo");
     TestLogAppender appender = withLogging(() -> databaseSteps
@@ -135,6 +140,7 @@ public class SqlConverterTest extends BaseDatabaseTest {
 
   @TmsLink("SQL_CONVERTER_ID_5")
   @Test(description = "Limit/Offset: placeholders should be replaced with numeric values in Executable SQL")
+  @SingleThread
   public void checkLimitAndOffsetReplacement() {
     DatabaseTestUser testEntity = new DatabaseTestUser(name, lastName);
     TestLogAppender appender = withLogging(() -> databaseSteps
@@ -156,6 +162,7 @@ public class SqlConverterTest extends BaseDatabaseTest {
 
   @TmsLink("SQL_CONVERTER_ID_6")
   @Test(description = "IN: simple string collection should expand into ('a','b','c')")
+  @SingleThread
   public void checkInWithStringCollection() {
     var names = List.of("Alice", "Bob", "Charlie");
     TestLogAppender appender = withLogging(() -> databaseSteps
@@ -175,6 +182,7 @@ public class SqlConverterTest extends BaseDatabaseTest {
 
   @TmsLink("SQL_CONVERTER_ID_7")
   @Test(description = "IN: string items with single quotes must be escaped (O'Hara -> O''Hara)")
+  @SingleThread
   public void checkInWithEscapingInCollection() {
     var tricky = List.of("O'Hara", "D'Angelo");
     TestLogAppender appender = withLogging(() -> databaseSteps
@@ -193,6 +201,7 @@ public class SqlConverterTest extends BaseDatabaseTest {
 
   @TmsLink("SQL_CONVERTER_ID_8")
   @Test(description = "IN: numeric collection should render without quotes")
+  @SingleThread
   public void checkInWithNumericCollection() {
     var ids = List.of(1L, 2L, 3L);
     TestLogAppender appender = withLogging(() -> databaseSteps

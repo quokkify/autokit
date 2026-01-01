@@ -10,6 +10,8 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import io.automation.annotation.SingleThread;
+import io.automation.config.ConfigRegistry;
+import io.automation.config.TestNGExtension;
 import org.apache.commons.lang3.StringUtils;
 import org.testng.IAlterSuiteListener;
 import org.testng.annotations.Test;
@@ -30,6 +32,7 @@ import org.testng.xml.XmlTest;
 public class SuiteListener implements IAlterSuiteListener {
 
   private static final int SINGLE_THREAD_COUNT = 1;
+  private static final TestNGExtension CONFIG = ConfigRegistry.get(TestNGExtension.class);
 
   @Override
   public void alter(List<XmlSuite> suites) {
@@ -182,10 +185,7 @@ public class SuiteListener implements IAlterSuiteListener {
    * @return suite name as {@link String}
    */
   private String getSuiteName() {
-    String suiteName = System.getenv("SUITE_NAME");
-    return StringUtils.isNotBlank(suiteName)
-        ? suiteName
-        : "Default suite";
+    return CONFIG.suiteName();
   }
 
   /**
@@ -195,10 +195,7 @@ public class SuiteListener implements IAlterSuiteListener {
    * @return test thread count as {@link Integer}
    */
   private Integer getTestThreadCount() {
-    String testThreadCount = System.getenv("TEST_THREAD_COUNT");
-    return StringUtils.isNotBlank(testThreadCount)
-        ? Integer.valueOf(Integer.parseInt(testThreadCount))
-        : XmlSuite.DEFAULT_THREAD_COUNT;
+    return CONFIG.testThreadCount();
   }
 
   /**
