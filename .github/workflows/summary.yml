@@ -23,6 +23,7 @@ jobs:
         id: select
         uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
         with:
+          github-token: ${{ secrets.RUNNER_DISCOVERY_TOKEN || github.token }}
           script: |
             const labels = ['self-hosted', 'linux', 'compose', 'internal'];
             const trusted = new Set(['OWNER', 'MEMBER', 'COLLABORATOR']);
