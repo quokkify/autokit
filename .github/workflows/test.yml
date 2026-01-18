@@ -25,7 +25,7 @@ jobs:
         with:
           github-token: ${{ secrets.RUNNER_DISCOVERY_TOKEN || github.token }}
           script: |
-            const labels = ['self-hosted', 'linux', 'compose', 'internal'];
+            const labels = ['self-hosted', 'compose', 'internal'];
             const trusted = new Set(['OWNER', 'MEMBER', 'COLLABORATOR']);
             const eventName = context.eventName;
             let allowSelfHosted = false;
@@ -53,7 +53,9 @@ jobs:
                 repo: context.repo.repo,
               });
               const hasLabels = (runner) =>
-                labels.every((label) => runner.labels.some((item) => item.name === label));
+                labels.every((label) =>
+                  runner.labels.some((item) => item.name.toLowerCase() === label)
+                );
               const online = data.runners.find(
                 (runner) => runner.status === 'online' && hasLabels(runner)
               );
