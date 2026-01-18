@@ -1,5 +1,9 @@
 package io.automation.test;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.NoSuchElementException;
+
 import com.codeborne.selenide.Configuration;
 import de.sstoehr.harreader.model.Har;
 import io.automation.parser.HarParser;
@@ -9,10 +13,6 @@ import org.assertj.core.api.Assertions;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.NoSuchElementException;
 
 /**
  * NOTE: Other tests could be affected by the test. Should be executed in single thread

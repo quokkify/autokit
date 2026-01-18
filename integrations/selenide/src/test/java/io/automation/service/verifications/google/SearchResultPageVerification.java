@@ -1,5 +1,8 @@
 package io.automation.service.verifications.google;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import io.automation.model.Verification;
 import io.automation.page.google.SearchResultPage;
 import io.automation.service.Browser;
@@ -7,9 +10,6 @@ import io.automation.service.steps.google.SearchResultPageSteps;
 import io.automation.util.Waiter;
 import io.qameta.allure.Step;
 import org.assertj.core.api.Assertions;
-
-import java.net.URI;
-import java.net.URISyntaxException;
 
 public class SearchResultPageVerification extends Verification<SearchResultPageSteps, SearchResultPage> {
 
