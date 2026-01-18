@@ -29,7 +29,7 @@ jobs:
           ./tools/scripts/ci/merge_junit_reports.sh artifacts artifacts/_combined/combined-junit.xml
 
       - name: 🔬Combined test report
-        uses: dorny/test-reporter@fe45e9537387dac839af0d33ba56eed8e24189e8 # v2
+        uses: dorny/test-reporter@b082adf0eced0765477756c2a610396589b8c637 # v2
         with:
           name: "🔬Combined test report"
           path: "artifacts/_combined/combined-junit.xml"
