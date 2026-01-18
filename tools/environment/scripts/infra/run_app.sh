@@ -37,8 +37,13 @@ for profile in "${TOKENS[@]}"; do
 done
 
 echo "[infra] docker compose up: ${PROFILES_ARGS[*]}"
+COMPOSE_FILES=(-f tools/environment/docker/docker-compose.yml)
+if [[ "${CI:-}" == "true" ]]; then
+  COMPOSE_FILES+=(-f tools/environment/docker/docker-compose.ci.yml)
+fi
+
 docker compose \
-  -f tools/environment/docker/docker-compose.yml \
+  "${COMPOSE_FILES[@]}" \
   "${PROFILES_ARGS[@]}" up -d
 
 for profile in "${TOKENS[@]}"; do

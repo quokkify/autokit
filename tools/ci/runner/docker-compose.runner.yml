@@ -1,0 +1,28 @@
+services:
+  dind:
+    image: docker:27-dind
+    privileged: true
+    environment:
+      DOCKER_TLS_CERTDIR: ""
+    command:
+      - --host=tcp://0.0.0.0:2375
+      - --host=unix:///var/run/docker.sock
+    volumes:
+      - dind-data:/var/lib/docker
+
+  runner:
+    image: myoung34/github-runner:2.321.0
+    depends_on:
+      - dind
+    environment:
+      REPO_URL: ${REPO_URL}
+      RUNNER_TOKEN: ${RUNNER_TOKEN}
+      RUNNER_NAME: ${RUNNER_NAME}
+      RUNNER_LABELS: self-hosted,linux,compose,internal
+      RUNNER_EPHEMERAL: "true"
+      DISABLE_AUTO_UPDATE: "true"
+      DOCKER_HOST: tcp://dind:2375
+      DOCKER_TLS_CERTDIR: ""
+
+volumes:
+  dind-data:
