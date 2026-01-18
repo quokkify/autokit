@@ -7,6 +7,7 @@ import io.automation.service.steps.google.SearchResultPageSteps;
 import io.automation.util.Waiter;
 import io.qameta.allure.Step;
 import org.assertj.core.api.Assertions;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 

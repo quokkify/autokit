@@ -9,6 +9,7 @@ import org.assertj.core.api.Assertions;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.NoSuchElementException;
