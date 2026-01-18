@@ -34,9 +34,11 @@ jobs:
               allowSelfHosted = true;
             } else if (eventName === 'pull_request') {
               const pr = context.payload.pull_request;
-              const isFork = Boolean(pr?.head?.repo?.fork);
+              const sameRepo = pr?.head?.repo?.full_name && pr?.base?.repo?.full_name
+                ? pr.head.repo.full_name === pr.base.repo.full_name
+                : false;
               const association = pr?.author_association || 'NONE';
-              allowSelfHosted = !isFork && trusted.has(association);
+              allowSelfHosted = sameRepo && trusted.has(association);
             }
 
             if (!allowSelfHosted) {

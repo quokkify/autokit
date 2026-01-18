@@ -36,10 +36,11 @@ jobs:
               if (runEvent === 'push') {
                 allowSelfHosted = true;
               } else if (runEvent === 'pull_request') {
-                const pr = run.pull_requests?.[0];
-                const isFork = Boolean(pr?.head?.repo?.fork);
+                const headRepo = run.head_repository?.full_name;
+                const baseRepo = run.repository?.full_name;
+                const sameRepo = headRepo && baseRepo ? headRepo === baseRepo : false;
                 const association = run.actor?.association || 'NONE';
-                allowSelfHosted = !isFork && trusted.has(association);
+                allowSelfHosted = sameRepo && trusted.has(association);
               }
             }
 
