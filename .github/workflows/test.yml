@@ -98,7 +98,8 @@ jobs:
             module: ":integrations:selenide"
             slug: "integrations-selenide"
             profile: "web"
-            base_url: "http://127.0.0.1:8080"
+            base_url_hosted: "http://127.0.0.1:8080"
+            base_url_self_hosted: "http://dind:8080"
 
           # =========================
           # Data utils
@@ -206,8 +207,13 @@ jobs:
         shell: bash
 
       - name: Set BASE_URL for selenide
-        if: ${{ matrix.base_url }}
-        run: echo "BASE_URL=${{ matrix.base_url }}" >> "$GITHUB_ENV"
+        if: ${{ matrix.base_url_hosted }}
+        run: |
+          if [[ "${{ needs.detect-runner.outputs.is_self_hosted }}" == "true" ]]; then
+            echo "BASE_URL=${{ matrix.base_url_self_hosted }}" >> "$GITHUB_ENV"
+          else
+            echo "BASE_URL=${{ matrix.base_url_hosted }}" >> "$GITHUB_ENV"
+          fi
         shell: bash
 
       - name: 🚀 Run tests

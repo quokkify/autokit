@@ -15,4 +15,3 @@ services:
 
 networks:
   default:
-    internal: true
