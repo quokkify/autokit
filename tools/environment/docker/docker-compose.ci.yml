@@ -1,0 +1,17 @@
+services:
+  nginx:
+    ports:
+      - "127.0.0.1:8080:80"
+  kafka:
+    ports: []
+  zookeeper:
+    ports: []
+  mock-server:
+    ports: []
+  centrifugo:
+    ports: []
+  mongodb:
+    ports: []
+
+networks:
+  default:
