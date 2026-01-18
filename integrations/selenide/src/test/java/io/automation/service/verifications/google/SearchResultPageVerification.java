@@ -7,6 +7,8 @@ import io.automation.service.steps.google.SearchResultPageSteps;
 import io.automation.util.Waiter;
 import io.qameta.allure.Step;
 import org.assertj.core.api.Assertions;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 public class SearchResultPageVerification extends Verification<SearchResultPageSteps, SearchResultPage> {
 
@@ -23,7 +25,33 @@ public class SearchResultPageVerification extends Verification<SearchResultPageS
 
   @Step("Verify opened page url")
   public SearchResultPageVerification verifyOpenedPageUrl(String expectedUrl) {
-    Assertions.assertThat(Browser.getUrl()).as("Page url is incorrect").startsWith(expectedUrl);
+    String actualUrl = Browser.getUrl();
+    if (!actualUrl.startsWith(expectedUrl)) {
+      String normalizedActual = dropPort(actualUrl);
+      String normalizedExpected = dropPort(expectedUrl);
+      Assertions.assertThat(normalizedActual).as("Page url is incorrect").startsWith(normalizedExpected);
+      return this;
+    }
+    Assertions.assertThat(actualUrl).as("Page url is incorrect").startsWith(expectedUrl);
     return this;
+  }
+
+  private static String dropPort(String url) {
+    try {
+      URI uri = new URI(url);
+      if (uri.getPort() == -1) {
+        return url;
+      }
+      return new URI(
+          uri.getScheme(),
+          uri.getUserInfo(),
+          uri.getHost(),
+          -1,
+          uri.getPath(),
+          uri.getQuery(),
+          uri.getFragment()).toString();
+    } catch (URISyntaxException e) {
+      return url;
+    }
   }
 }
