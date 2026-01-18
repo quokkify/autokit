@@ -1633,8 +1633,8 @@ th, td {
         var ifrw = ifr.contentWindow
           ? ifr.contentWindow
           : ifr.contentDocument.document
-          ? ifr.contentDocument.document
-          : ifr.contentDocument;
+            ? ifr.contentDocument.document
+            : ifr.contentDocument;
         ifrw.document.open();
         ifrw.document.write(text);
         ifrw.document.close();

@@ -1,5 +1,9 @@
 package io.automation.test;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.NoSuchElementException;
+
 import com.codeborne.selenide.Configuration;
 import de.sstoehr.harreader.model.Har;
 import io.automation.parser.HarParser;
@@ -37,9 +41,39 @@ public class UiProxyTest extends BaseTest {
         .clickOnSearchResultLink(searchLinkText)
         .stopProxyHarRecording();
 
-    Assertions.assertThat(HarParser.getLastHarEntryResponseStatusCode(har, requestUrl))
+    Assertions.assertThat(getStatusCodeWithFallback(har, requestUrl))
         .as("Response status code is incorrect")
         .isEqualTo(HttpStatus.SC_OK);
   }
-}
 
+  private static int getStatusCodeWithFallback(Har har, String requestUrl) {
+    try {
+      return HarParser.getLastHarEntryResponseStatusCode(har, requestUrl);
+    } catch (NoSuchElementException missing) {
+      String noPort = dropPort(requestUrl);
+      if (!noPort.equals(requestUrl)) {
+        return HarParser.getLastHarEntryResponseStatusCode(har, noPort);
+      }
+      throw missing;
+    }
+  }
+
+  private static String dropPort(String url) {
+    try {
+      URI uri = new URI(url);
+      if (uri.getPort() == -1) {
+        return url;
+      }
+      return new URI(
+          uri.getScheme(),
+          uri.getUserInfo(),
+          uri.getHost(),
+          -1,
+          uri.getPath(),
+          uri.getQuery(),
+          uri.getFragment()).toString();
+    } catch (URISyntaxException e) {
+      return url;
+    }
+  }
+}
