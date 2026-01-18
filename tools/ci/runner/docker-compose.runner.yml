@@ -18,7 +18,7 @@ services:
       REPO_URL: ${REPO_URL}
       RUNNER_TOKEN: ${RUNNER_TOKEN}
       RUNNER_NAME: ${RUNNER_NAME}
-      RUNNER_LABELS: self-hosted,linux,compose,internal
+      LABELS: ${RUNNER_LABELS}
       RUNNER_EPHEMERAL: "true"
       DISABLE_AUTO_UPDATE: "true"
       DOCKER_HOST: tcp://dind:2375
