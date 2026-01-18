@@ -1,6 +1,6 @@
 services:
   dind:
-    image: docker:27-dind
+    image: docker:29.1-dind
     privileged: true
     environment:
       DOCKER_TLS_CERTDIR: ""

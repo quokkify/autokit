@@ -98,6 +98,7 @@ jobs:
             module: ":integrations:selenide"
             slug: "integrations-selenide"
             profile: "web"
+            base_url: "http://127.0.0.1:8080"
 
           # =========================
           # Data utils
@@ -202,6 +203,11 @@ jobs:
       - name: 🟢 Start Infra
         if: ${{ matrix.profile != 'none' }}
         run: ./tools/environment/scripts/infra/run_app.sh "${{ matrix.profile }}"
+        shell: bash
+
+      - name: Set BASE_URL for selenide
+        if: ${{ matrix.base_url }}
+        run: echo "BASE_URL=${{ matrix.base_url }}" >> "$GITHUB_ENV"
         shell: bash
 
       - name: 🚀 Run tests
