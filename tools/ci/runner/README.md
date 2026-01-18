@@ -21,5 +21,6 @@ This runner uses Docker-in-Docker to avoid exposing the host Docker socket.
 ```
 
 Notes:
+
 - Runner labels: `self-hosted, linux, compose, internal`
 - Runner is ephemeral: it unregisters after each job run.

@@ -25,6 +25,25 @@ jobs:
         with:
           script: |
             const labels = ['self-hosted', 'linux', 'compose', 'internal'];
+            const trusted = new Set(['OWNER', 'MEMBER', 'COLLABORATOR']);
+            const eventName = context.eventName;
+            let allowSelfHosted = false;
+
+            if (eventName === 'push') {
+              allowSelfHosted = true;
+            } else if (eventName === 'pull_request') {
+              const pr = context.payload.pull_request;
+              const isFork = Boolean(pr?.head?.repo?.fork);
+              const association = pr?.author_association || 'NONE';
+              allowSelfHosted = !isFork && trusted.has(association);
+            }
+
+            if (!allowSelfHosted) {
+              core.setOutput('runs_on', JSON.stringify(['ubuntu-latest']));
+              core.setOutput('is_self_hosted', 'false');
+              return;
+            }
+
             try {
               const { data } = await github.rest.actions.listSelfHostedRunnersForRepo({
                 owner: context.repo.owner,
@@ -49,8 +68,6 @@ jobs:
     needs: detect-runner
     runs-on: ${{ fromJson(needs.detect-runner.outputs.runs_on) }}
     if: ${{ github.event_name != 'pull_request_target' }}
-    environment:
-      name: ${{ github.event_name == 'pull_request' && 'ci-approval' || 'ci' }}
     permissions:
       contents: read
     env:
