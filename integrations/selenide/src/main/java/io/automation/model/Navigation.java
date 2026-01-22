@@ -100,8 +100,8 @@ public abstract class Navigation {
       try {
         Selenide.open(UrlHelper.getPageUrlWithCredentials(
             fullPageUrl,
-            basicAuthCredentials.login,
-            basicAuthCredentials.password)
+            basicAuthCredentials.login(),
+            basicAuthCredentials.password())
         );
       } catch (URISyntaxException e) {
         throw new RuntimeException(e);
@@ -117,8 +117,8 @@ public abstract class Navigation {
       pageUrl = Objects.nonNull(basicAuthCredentials)
           ? UrlHelper.getPageUrlWithCredentials(
           fullPageUrl,
-          basicAuthCredentials.login,
-          basicAuthCredentials.password)
+          basicAuthCredentials.login(),
+          basicAuthCredentials.password())
           : fullPageUrl;
     } catch (URISyntaxException e) {
       throw new RuntimeException(e);
