@@ -1,6 +1,6 @@
 ext {
     aeonbits = "1.0.12"
-    assertj = "3.27.6"
+    assertj = "3.27.7"
     hamcrest = "3.0"
     testng = "7.12.0"
     faker = "2.5.3"
