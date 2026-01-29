@@ -32,7 +32,7 @@ services:
 
   zookeeper:
     profiles: [messaging]
-    image: zookeeper:3.9@sha256:b87f5ea0cdc73d71c74875277ca2e862f7abb3c0bfa365bd818db71eef870917
+    image: zookeeper:3.9@sha256:98be0d025355dd2f1659af615def34f04eabb233c80f4a9a1cc5ab121831c413
     ports:
       - "2181:2181"
 
