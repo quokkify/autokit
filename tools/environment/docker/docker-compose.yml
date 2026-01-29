@@ -1,7 +1,7 @@
 services:
   nginx:
     profiles: [web]
-    image: nginx:1.29.4@sha256:fb01117203ff38c2f9af91db1a7409459182a37c87cced5cb442d1d8fcc66d19
+    image: nginx:1.29.4@sha256:c881927c4077710ac4b1da63b83aa163937fb47457950c267d92f7e4dedf4aec
     volumes:
       - ../nginx/conf.d:/etc/nginx/conf.d:ro
       - ../nginx/html:/usr/share/nginx/html:ro
