@@ -10,6 +10,8 @@ include(":testng-extensions")            // Extensions for TestNG (used as testI
 // ============================================================================
 include(":integrations:rest-assured")    // Wrapper around Rest Assured for HTTP testing
 include(":integrations:selenide")        // Wrapper around Selenide for user interface testing
+include(":integrations:testrail:core")   // TestRail core integration
+include(":integrations:testrail:testng") // TestRail TestNG integration
 
 // ============================================================================
 // DATA ACCESS MODULES (SQL / NoSQL)

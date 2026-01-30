@@ -1,0 +1,12 @@
+description = "TestRail TestNG integration"
+
+ext {
+    artifactId = "testrail-testng"
+}
+
+dependencies {
+    implementation project(":integrations:testrail:core")
+    implementation project(":testng-extensions")
+
+    implementation "io.qameta.allure:allure-testng:${allure}"
+}
