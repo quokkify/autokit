@@ -106,9 +106,14 @@ jobs:
             base_url_hosted: "http://127.0.0.1:8080"
             base_url_self_hosted: "http://dind:8080"
 
-          - name: "integrations • testrail"
-            module: ":integrations:testrail"
-            slug: "integrations-testrail"
+          - name: "integrations • testrail • core"
+            module: ":integrations:testrail:core"
+            slug: "integrations-testrail-core"
+            profile: "none"
+
+          - name: "integrations • testrail • testng"
+            module: ":integrations:testrail:testng"
+            slug: "integrations-testrail-testng"
             profile: "none"
 
           # =========================
