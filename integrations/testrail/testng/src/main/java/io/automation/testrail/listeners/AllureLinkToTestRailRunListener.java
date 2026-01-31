@@ -43,7 +43,7 @@ public class AllureLinkToTestRailRunListener implements ITestListener {
   @Override
   public void onTestStart(ITestResult testResult) {
     updateTestCaseTmsLinks(testResult);
-    if (IS_TESTRAIL_ENABLED || NumberUtils.isCreatable(CONFIG.testRailId())) {
+    if (IS_TESTRAIL_ENABLED && NumberUtils.isCreatable(CONFIG.testRailId())) {
       String testId = String.valueOf(getTestData(testResult).getId());
       Link link = ResultsUtils.createTmsLink(testId);
       Allure.link("T%s".formatted(testId), link.getUrl().replace("cases", "tests"));
