@@ -53,7 +53,8 @@ public class AllureBugTrackerListener implements IInvokedMethodListener, ISuiteL
       TmsLink testCaseIdAnnotation = TestUtils.getTestAnnotation(method.getTestMethod(), TmsLink.class);
       if (Objects.nonNull(testCaseIdAnnotation) && Objects.nonNull(testCaseIdAnnotation.value())) {
         disabledTestCases.entrySet().stream()
-            .filter(map -> map.getValue().stream().anyMatch(caseId -> caseId.contains(testCaseIdAnnotation.value())))
+            .filter(map -> map.getValue().stream()
+                .anyMatch(caseId -> caseId != null && caseId.trim().equals(testCaseIdAnnotation.value())))
             .map(Map.Entry::getKey)
             .toList()
             .forEach(ticketId -> {
