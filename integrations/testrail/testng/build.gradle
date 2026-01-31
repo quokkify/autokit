@@ -6,7 +6,6 @@ ext {
 
 dependencies {
     implementation project(":integrations:testrail:testrail-core")
-    implementation project(":integrations:jira:jira-core")
     implementation project(":common-utils:core")
     implementation project(":common-utils:config")
     implementation project(":testng-extensions")

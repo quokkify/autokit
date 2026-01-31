@@ -4,19 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.ServiceLoader;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import io.automation.config.ConfigRegistry;
 import io.automation.constant.StringConstant;
-import io.automation.jira.configs.JiraConfiguration;
-import io.automation.jira.services.JiraService;
 import io.automation.testrail.configs.TestRailConfiguration;
+import io.automation.testrail.tickets.TicketSource;
 import io.automation.testrail.utils.TestRailHelper;
 import io.automation.testrail.utils.TestRailTestFilterRules;
 import io.automation.util.TestUtils;
 
-import com.atlassian.jira.rest.client.api.domain.Issue;
 import io.qameta.allure.TmsLink;
 import org.apache.commons.lang3.StringUtils;
 import org.testng.ISuite;
@@ -30,7 +30,6 @@ import org.testng.ITestNGMethod;
 public class AddDisabledTestsToTestRailListener implements ISuiteListener {
 
   private static final TestRailConfiguration CONFIG = ConfigRegistry.get(TestRailConfiguration.class);
-  private static final JiraConfiguration JIRA_CONFIG = ConfigRegistry.get(JiraConfiguration.class);
   private static final boolean IS_TESTRAIL_ENABLED =
       !CONFIG.isTestrailDisabled() && StringUtils.isNotEmpty(CONFIG.testRailId());
 
@@ -38,7 +37,7 @@ public class AddDisabledTestsToTestRailListener implements ISuiteListener {
   public void onFinish(ISuite suite) {
     if (!IS_TESTRAIL_ENABLED) return;
     setDisabledTestsAsFailedToTestRail(new ArrayList<>(suite.getExcludedMethods()));
-    addJiraBugsToTestRail(new ArrayList<>(suite.getAllMethods()));
+    addTicketBugsToTestRail(new ArrayList<>(suite.getAllMethods()));
     if (CONFIG.closeTestRun()) {
       TestRailHelper.closeActualTestRuns();
     }
@@ -64,21 +63,22 @@ public class AddDisabledTestsToTestRailListener implements ISuiteListener {
         });
   }
 
-  private void addJiraBugsToTestRail(List<ITestNGMethod> allTests) {
-    if (!isJiraEnabled()) {
+  private void addTicketBugsToTestRail(List<ITestNGMethod> allTests) {
+    List<TicketSource> sources = loadTicketSources();
+    if (sources.isEmpty()) {
       return;
     }
-    JiraService jiraService = new JiraService(JIRA_CONFIG.jiraUrl(), JIRA_CONFIG.jiraToken());
-    List<Issue> ticketsWithBug = jiraService.getIssues(JIRA_CONFIG.jiraBugQuery());
-    Map<String, List<String>> testCasesWithBugs =
-        jiraService.getTestCasesWithBugs(ticketsWithBug, JIRA_CONFIG.jiraBugMarker());
+    Map<String, String> commentsByTestCase = buildCommentsByTestCase(sources);
+    if (commentsByTestCase.isEmpty()) {
+      return;
+    }
     allTests.stream()
         .filter(test -> Objects.nonNull(TestUtils.getTestAnnotation(test, TmsLink.class)))
-        .filter(test -> hasBugs(testCasesWithBugs, getTestCaseId(test)))
+        .filter(test -> commentsByTestCase.containsKey(getTestCaseId(test)))
         .forEach(test -> {
           String testCaseId = getTestCaseId(test);
-          List<String> jiraBugs = testCasesWithBugs.get(testCaseId);
-          AtomicReference<String> commentMessage = new AtomicReference<>(buildBugComment(testCaseId, jiraBugs));
+          AtomicReference<String> commentMessage =
+              new AtomicReference<>(commentsByTestCase.get(testCaseId));
           if (TestRailTestFilterRules.needRunTest(testCaseId)) {
             TestRailHelper.addTestResultForDisabledTest(
                 testCaseId,
@@ -88,34 +88,35 @@ public class AddDisabledTestsToTestRailListener implements ISuiteListener {
         });
   }
 
-  private static boolean hasBugs(Map<String, List<String>> testCasesWithBugs, String testCaseId) {
-    List<String> jiraBugs = testCasesWithBugs.get(testCaseId);
-    return jiraBugs != null && !jiraBugs.isEmpty();
-  }
-
   private static String getTestCaseId(ITestNGMethod test) {
     return TestUtils.getTestAnnotation(test, TmsLink.class).value();
   }
 
-  private static String buildBugComment(String testCaseId, List<String> jiraBugs) {
-    String jiraBugsString = jiraBugs.stream()
-        .map(AddDisabledTestsToTestRailListener::buildJiraLink)
-        .collect(Collectors.joining(StringConstant.COMMA_SPACE));
-    return "TC-%s is disabled via **Jira Issue(s):** %s".formatted(testCaseId, jiraBugsString);
+  private static List<TicketSource> loadTicketSources() {
+    return StreamSupport.stream(ServiceLoader.load(TicketSource.class).spliterator(), false)
+        .filter(TicketSource::isEnabled)
+        .toList();
   }
 
-  private static String buildJiraLink(String issueId) {
-    return "[%2$s](%1$s%2$s)".formatted(jiraIssueUrl(), issueId);
-  }
+  private static Map<String, String> buildCommentsByTestCase(List<TicketSource> sources) {
+    Map<String, List<String>> segmentsByTestCase = new java.util.HashMap<>();
+    sources.forEach(source ->
+        source.getTestCasesWithBugs().forEach((testCaseId, tickets) -> {
+          if (tickets == null || tickets.isEmpty()) {
+            return;
+          }
+          String ticketsString = tickets.stream()
+              .map(source::buildTicketLink)
+              .collect(Collectors.joining(StringConstant.COMMA_SPACE));
+          String segment = "**%s:** %s".formatted(source.label(), ticketsString);
+          segmentsByTestCase.computeIfAbsent(testCaseId, key -> new ArrayList<>()).add(segment);
+        }));
 
-  private static String jiraIssueUrl() {
-    return StringUtils.appendIfMissing(JIRA_CONFIG.jiraUrl(), "/") + "browse/";
-  }
-
-  private static boolean isJiraEnabled() {
-    return StringUtils.isNotBlank(JIRA_CONFIG.jiraUrl())
-        && StringUtils.isNotBlank(JIRA_CONFIG.jiraToken())
-        && StringUtils.isNotBlank(JIRA_CONFIG.jiraBugQuery())
-        && StringUtils.isNotBlank(JIRA_CONFIG.jiraBugMarker());
+    return segmentsByTestCase.entrySet().stream()
+        .collect(Collectors.toMap(
+            Map.Entry::getKey,
+            entry -> "TC-%s is disabled via %s".formatted(
+                entry.getKey(),
+                String.join(StringConstant.SEMICOLON_SPACE, entry.getValue()))));
   }
 }

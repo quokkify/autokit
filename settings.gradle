@@ -13,6 +13,8 @@ include(":integrations:selenide")        // Wrapper around Selenide for user int
 include(":integrations:jira:jira-core")  // Jira core integration
 project(":integrations:jira:jira-core").projectDir = file("integrations/jira/core")
 include(":integrations:jira:testng")     // Jira TestNG integration
+include(":integrations:jira:testrail")   // Jira TestRail TicketSource integration
+project(":integrations:jira:testrail").projectDir = file("integrations/jira/testrail")
 include(":integrations:testrail:testrail-core")   // TestRail core integration
 project(":integrations:testrail:testrail-core").projectDir = file("integrations/testrail/core")
 include(":integrations:testrail:testng") // TestRail TestNG integration
