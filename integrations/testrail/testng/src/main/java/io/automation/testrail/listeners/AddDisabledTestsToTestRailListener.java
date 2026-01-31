@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 import io.automation.config.ConfigRegistry;
 import io.automation.constant.StringConstant;
-import io.automation.jira.configs.JiraConfig;
+import io.automation.jira.configs.JiraConfiguration;
 import io.automation.jira.services.JiraService;
 import io.automation.testrail.configs.TestRailConfiguration;
 import io.automation.testrail.utils.TestRailHelper;
@@ -30,9 +30,9 @@ import org.testng.ITestNGMethod;
 public class AddDisabledTestsToTestRailListener implements ISuiteListener {
 
   private static final TestRailConfiguration CONFIG = ConfigRegistry.get(TestRailConfiguration.class);
+  private static final JiraConfiguration JIRA_CONFIG = ConfigRegistry.get(JiraConfiguration.class);
   private static final boolean IS_TESTRAIL_ENABLED =
       !CONFIG.isTestrailDisabled() && StringUtils.isNotEmpty(CONFIG.testRailId());
-  private static final boolean IS_JIRA_ENABLED = JiraConfig.isEnabled();
 
   @Override
   public void onFinish(ISuite suite) {
@@ -65,13 +65,13 @@ public class AddDisabledTestsToTestRailListener implements ISuiteListener {
   }
 
   private void addJiraBugsToTestRail(List<ITestNGMethod> allTests) {
-    if (!IS_JIRA_ENABLED) {
+    if (!isJiraEnabled()) {
       return;
     }
-    JiraService jiraService = new JiraService(JiraConfig.jiraUrl(), JiraConfig.jiraToken());
-    List<Issue> ticketsWithBug = jiraService.getIssues(JiraConfig.jiraBugQuery());
+    JiraService jiraService = new JiraService(JIRA_CONFIG.jiraUrl(), JIRA_CONFIG.jiraToken());
+    List<Issue> ticketsWithBug = jiraService.getIssues(JIRA_CONFIG.jiraBugQuery());
     Map<String, List<String>> testCasesWithBugs =
-        jiraService.getTestCasesWithBugs(ticketsWithBug, JiraConfig.jiraBugMarker());
+        jiraService.getTestCasesWithBugs(ticketsWithBug, JIRA_CONFIG.jiraBugMarker());
     allTests.stream()
         .filter(test -> Objects.nonNull(TestUtils.getTestAnnotation(test, TmsLink.class)))
         .filter(test -> hasBugs(testCasesWithBugs, getTestCaseId(test)))
@@ -105,6 +105,17 @@ public class AddDisabledTestsToTestRailListener implements ISuiteListener {
   }
 
   private static String buildJiraLink(String issueId) {
-    return "[%2$s](%1$s%2$s)".formatted(JiraConfig.jiraIssueUrl(), issueId);
+    return "[%2$s](%1$s%2$s)".formatted(jiraIssueUrl(), issueId);
+  }
+
+  private static String jiraIssueUrl() {
+    return StringUtils.appendIfMissing(JIRA_CONFIG.jiraUrl(), "/") + "browse/";
+  }
+
+  private static boolean isJiraEnabled() {
+    return StringUtils.isNotBlank(JIRA_CONFIG.jiraUrl())
+        && StringUtils.isNotBlank(JIRA_CONFIG.jiraToken())
+        && StringUtils.isNotBlank(JIRA_CONFIG.jiraBugQuery())
+        && StringUtils.isNotBlank(JIRA_CONFIG.jiraBugMarker());
   }
 }
