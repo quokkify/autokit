@@ -83,7 +83,7 @@ public final class HttpCoreClient {
 
     String combinedPath = combinePaths(settings.basePath(), path);
     URI base = settings.baseUri();
-    URI resolved = combinedPath.isEmpty() ? base : base.resolve(combinedPath);
+    URI resolved = combinedPath.isEmpty() ? base : normalizeBaseForResolve(base).resolve(combinedPath);
     return buildUriWithQuery(resolved, queryParams);
   }
 
@@ -126,5 +126,17 @@ public final class HttpCoreClient {
       trimmed = trimmed.substring(0, trimmed.length() - 1);
     }
     return trimmed;
+  }
+
+  private URI normalizeBaseForResolve(URI base) {
+    String path = base.getPath();
+    if (path != null && !path.isEmpty() && !path.endsWith("/")) {
+      try {
+        return new URI(base.getScheme(), base.getAuthority(), path + "/", base.getQuery(), base.getFragment());
+      } catch (URISyntaxException e) {
+        throw new RuntimeException("Failed to normalize base URI: " + base, e);
+      }
+    }
+    return base;
   }
 }
