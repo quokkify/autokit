@@ -43,6 +43,7 @@ ext {
     jakarta_persistence_api = "3.2.0"
     querydsl = "5.1.0"
     jedis = "5.2.0"
+    redisson = "3.52.0"
     morphia = "2.2.9"
     reportportal = "5.4.3"
     java_websocket = "1.6.0"

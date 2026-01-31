@@ -124,6 +124,11 @@ jobs:
             slug: "data-utils-sql"
             profile: "none"
 
+          - name: "data-utils • nosql • redis"
+            module: ":data-utils:nosql:redis"
+            slug: "data-utils-nosql-redis"
+            profile: "redis"
+
           # =========================
           # Common utils
           # =========================

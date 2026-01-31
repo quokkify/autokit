@@ -69,3 +69,9 @@ services:
     restart: always
     ports:
       - "27017:27017"
+
+  redis:
+    profiles: [redis]
+    image: redis:7.4.1
+    ports:
+      - "6379:6379"

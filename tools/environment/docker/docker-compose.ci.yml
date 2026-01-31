@@ -12,6 +12,8 @@ services:
     ports: []
   mongodb:
     ports: []
+  redis:
+    ports: []
 
 networks:
   default:

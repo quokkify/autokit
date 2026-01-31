@@ -54,6 +54,20 @@ for profile in "${TOKENS[@]}"; do
       ./tools/environment/scripts/mock/run_mock_server.sh
       ./tools/environment/scripts/mock/upload_expectations.sh
       ;;
+    redis)
+      info "[infra] redis hook: waiting for PING"
+      ready="false"
+      for _ in {1..30}; do
+        if docker compose "${COMPOSE_FILES[@]}" exec -T redis redis-cli ping >/dev/null 2>&1; then
+          ready="true"
+          break
+        fi
+        sleep 1
+      done
+      if [[ "$ready" != "true" ]]; then
+        warning "[infra] redis hook: PING not ready after timeout"
+      fi
+      ;;
     *)
       : # no-op
       ;;
