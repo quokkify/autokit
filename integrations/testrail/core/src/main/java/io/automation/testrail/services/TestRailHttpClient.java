@@ -36,11 +36,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class TestRailApiService {
+public class TestRailHttpClient implements TestRailClient {
 
   private static final TestRailConfiguration CONFIG = ConfigRegistry.get(TestRailConfiguration.class);
 
-  private static final Logger LOG = LogManager.getLogger(TestRailApiService.class);
+  private static final Logger LOG = LogManager.getLogger(TestRailHttpClient.class);
   private static final String BASE_PATH = "index.php";
   private static final String SUITE_ID_PARAM = "suite_id";
   private static final String EMAIL_PARAM = "email";
@@ -66,7 +66,7 @@ public class TestRailApiService {
 
   private final HttpCoreClient client;
 
-  public TestRailApiService() {
+  public TestRailHttpClient() {
     this.client = HttpClientFactory.builder()
         .baseUri(CONFIG.baseUrl())
         .basicAuth(CONFIG.user(), CONFIG.password())

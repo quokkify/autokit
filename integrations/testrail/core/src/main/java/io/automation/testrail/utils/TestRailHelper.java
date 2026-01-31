@@ -19,7 +19,8 @@ import io.automation.testrail.models.TestPlan;
 import io.automation.testrail.models.TestRun;
 import io.automation.testrail.models.TestRunFromSuite;
 import io.automation.testrail.models.TestSuite;
-import io.automation.testrail.services.TestRailApiService;
+import io.automation.testrail.services.TestRailClient;
+import io.automation.testrail.services.TestRailHttpClient;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -33,7 +34,7 @@ public final class TestRailHelper {
 
   private static final Logger LOG = LogManager.getLogger(TestRailHelper.class);
   private static final TestRailConfiguration CONFIG = ConfigRegistry.get(TestRailConfiguration.class);
-  private static final TestRailApiService TEST_RAIL_API_SERVICE = new TestRailApiService();
+  private static final TestRailClient TEST_RAIL_CLIENT = new TestRailHttpClient();
   private static final Integer TAG_FIELD_CONFIG_INDEX = 0;
   private static final String TAGS_SYSTEM_NAME = "custom_tags";
   private static final Integer AUTOMATION_TYPE_FIELD_CONFIG_INDEX = 0;
@@ -50,7 +51,7 @@ public final class TestRailHelper {
                 .anyMatch(testCase -> testCase.getCaseId().toString().equals(testCaseId)))
         .forEach(testRun -> {
           LOG.debug("Add result for passed test '{}', in run '{}'", testCaseId, testRun.getKey());
-          TEST_RAIL_API_SERVICE.addPassedTestResult(testRun.getKey(), testCaseId);
+          TEST_RAIL_CLIENT.addPassedTestResult(testRun.getKey(), testCaseId);
         });
   }
 
@@ -61,7 +62,7 @@ public final class TestRailHelper {
                 .anyMatch(testCase -> testCase.getCaseId().toString().equals(testCaseId)))
         .forEach(testRun -> {
           LOG.info("Add result for failed test '{}', in run '{}'", testCaseId, testRun.getKey());
-          TEST_RAIL_API_SERVICE.addFailedTestResult(testRun.getKey(), testCaseId, errorMessage);
+          TEST_RAIL_CLIENT.addFailedTestResult(testRun.getKey(), testCaseId, errorMessage);
         });
   }
 
@@ -72,7 +73,7 @@ public final class TestRailHelper {
                 .anyMatch(testCase -> testCase.getCaseId().toString().equals(testCaseId)))
         .forEach(testRun -> {
           LOG.info("Add result for skipped test '{}', in run '{}'", testCaseId, testRun.getKey());
-          TEST_RAIL_API_SERVICE.addSkippedTestResult(testRun.getKey(), testCaseId, errorMessage);
+          TEST_RAIL_CLIENT.addSkippedTestResult(testRun.getKey(), testCaseId, errorMessage);
         });
   }
 
@@ -82,7 +83,7 @@ public final class TestRailHelper {
             .anyMatch(testCase -> testCase.getCaseId().equals(Integer.parseInt(testCaseId))))
         .forEach(testRun -> {
           LOG.info("Add result for disabled test '{}', in run '{}'", testCaseId, testRun.getKey());
-          TEST_RAIL_API_SERVICE.addFailedTestResult(testRun.getKey(), testCaseId, assignedUserId, commentMessage);
+          TEST_RAIL_CLIENT.addFailedTestResult(testRun.getKey(), testCaseId, assignedUserId, commentMessage);
         });
   }
 
@@ -103,12 +104,12 @@ public final class TestRailHelper {
                 .anyMatch(testCase -> testCase.getCaseId().toString().equals(testCaseId)))
         .forEach(testRun -> {
           LOG.info("Add retest result for test '{}', in run '{}'", testCaseId, testRun.getKey());
-          TEST_RAIL_API_SERVICE.addRetestTestResult(testRun.getKey(), testCaseId, commentMessage);
+          TEST_RAIL_CLIENT.addRetestTestResult(testRun.getKey(), testCaseId, commentMessage);
         });
   }
 
   public static List<TestData> getTests(int testRunId) {
-    return TEST_RAIL_API_SERVICE.getTestsAsModel(testRunId);
+    return TEST_RAIL_CLIENT.getTestsAsModel(testRunId);
   }
 
   public static TestData getActualTest(int testRunId, int testCaseId) {
@@ -132,10 +133,10 @@ public final class TestRailHelper {
   }
 
   public static Map<Integer, String> getBreadCrumbs() {
-    Map<Integer, String> suiteIds = TEST_RAIL_API_SERVICE.getAllSuitesAsModel().stream()
+    Map<Integer, String> suiteIds = TEST_RAIL_CLIENT.getAllSuitesAsModel().stream()
         .collect(Collectors.toMap(TestSuite::getId, TestSuite::getName));
     return suiteIds.entrySet().stream().parallel().map(entry -> {
-      List<Section> sections = TEST_RAIL_API_SERVICE.getSectionsAsModel(CONFIG.projectId(), entry.getKey());
+      List<Section> sections = TEST_RAIL_CLIENT.getSectionsAsModel(CONFIG.projectId(), entry.getKey());
       return sections.stream().parallel()
               .collect(Collectors.toMap(
                   Section::getId,
@@ -150,7 +151,7 @@ public final class TestRailHelper {
   }
 
   public static TestRun createTestRunFromSuite(TestRunFromSuite testRunFromSuite) {
-    return TEST_RAIL_API_SERVICE.createRunFromSuite(testRunFromSuite);
+    return TEST_RAIL_CLIENT.createRunFromSuite(testRunFromSuite);
   }
 
   public static void closeActualTestRuns() {
@@ -163,35 +164,35 @@ public final class TestRailHelper {
 
   public static TestRun closeTestRun(int testRunId) {
     LOG.info("Close test run {}", testRunId);
-    return TEST_RAIL_API_SERVICE.closeTestRun(testRunId);
+    return TEST_RAIL_CLIENT.closeTestRun(testRunId);
   }
 
   public static boolean deleteTestRun(int testRunId) {
-    return TEST_RAIL_API_SERVICE.deleteTestRun(testRunId).statusCode() == 200;
+    return TEST_RAIL_CLIENT.deleteTestRun(testRunId).statusCode() == 200;
   }
 
   public static TestSuite getTestSuite(int suiteId) {
-    return TEST_RAIL_API_SERVICE.getTestSuiteAsModel(suiteId);
+    return TEST_RAIL_CLIENT.getTestSuiteAsModel(suiteId);
   }
 
   public static TestPlan getTestPlan(int planId) {
-    return TEST_RAIL_API_SERVICE.getTestPlanAsModel(planId);
+    return TEST_RAIL_CLIENT.getTestPlanAsModel(planId);
   }
 
   public static boolean isExistTestSuite(int suiteId) {
-    return TEST_RAIL_API_SERVICE.getTestSuite(suiteId).statusCode() == 200;
+    return TEST_RAIL_CLIENT.getTestSuite(suiteId).statusCode() == 200;
   }
 
   public static boolean isExistTestPlan(int planId) {
-    return TEST_RAIL_API_SERVICE.getTestPlan(planId).statusCode() == 200;
+    return TEST_RAIL_CLIENT.getTestPlan(planId).statusCode() == 200;
   }
 
   public static boolean isExistTestRun(int runId) {
-    return TEST_RAIL_API_SERVICE.getTestRun(runId).statusCode() == 200;
+    return TEST_RAIL_CLIENT.getTestRun(runId).statusCode() == 200;
   }
 
   public static Integer getUserId() {
-    return TEST_RAIL_API_SERVICE.getUserId(CONFIG.user());
+    return TEST_RAIL_CLIENT.getUserId(CONFIG.user());
   }
 
   /**
@@ -200,14 +201,14 @@ public final class TestRailHelper {
    * @return test run
    */
   public static TestRun getTestRun(Integer testRunId) {
-    return TEST_RAIL_API_SERVICE.getTestRuns().stream()
+    return TEST_RAIL_CLIENT.getTestRuns().stream()
         .filter(testRun -> testRun.getId().equals(testRunId))
         .findFirst()
         .orElse(null);
   }
 
   public static TestCase getTestCase(int testCaseId) {
-    return TEST_RAIL_API_SERVICE.getCaseAsModel(testCaseId);
+    return TEST_RAIL_CLIENT.getCaseAsModel(testCaseId);
   }
 
   public static List<CustomTag> getAvailableCustomTags() {
@@ -247,7 +248,7 @@ public final class TestRailHelper {
   }
 
   private static CaseFields getCustomCaseFieldBySystemName(String customCaseField) {
-    return TEST_RAIL_API_SERVICE.getCaseFields().stream()
+    return TEST_RAIL_CLIENT.getCaseFields().stream()
         .filter(caseFields -> caseFields.getSystemName().equals(customCaseField))
         .findFirst()
         .orElseThrow(() -> new RuntimeException("Custom field '%s' not found".formatted(customCaseField)));
