@@ -10,6 +10,9 @@ include(":testng-extensions")            // Extensions for TestNG (used as testI
 // ============================================================================
 include(":integrations:rest-assured")    // Wrapper around Rest Assured for HTTP testing
 include(":integrations:selenide")        // Wrapper around Selenide for user interface testing
+include(":integrations:jira:jira-core")  // Jira core integration
+project(":integrations:jira:jira-core").projectDir = file("integrations/jira/core")
+include(":integrations:jira:testng")     // Jira TestNG integration
 include(":integrations:testrail:testrail-core")   // TestRail core integration
 project(":integrations:testrail:testrail-core").projectDir = file("integrations/testrail/core")
 include(":integrations:testrail:testng") // TestRail TestNG integration

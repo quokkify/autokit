@@ -1,16 +1,14 @@
-description = "TestRail TestNG integration"
+description = "Jira TestNG integration"
 
 ext {
-    artifactId = "testrail-testng"
+    artifactId = "jira-testng"
 }
 
 dependencies {
-    implementation project(":integrations:testrail:testrail-core")
     implementation project(":integrations:jira:jira-core")
     implementation project(":common-utils:core")
-    implementation project(":common-utils:config")
     implementation project(":testng-extensions")
-    api "org.apache.commons:commons-lang3"
 
     implementation "io.qameta.allure:allure-testng:${allure}"
+    api "org.apache.commons:commons-lang3"
 }
