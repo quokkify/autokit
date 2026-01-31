@@ -36,8 +36,9 @@ public class AddDisabledTestsToTestRailListener implements ISuiteListener {
   @Override
   public void onFinish(ISuite suite) {
     if (!IS_TESTRAIL_ENABLED) return;
-    setDisabledTestsAsFailedToTestRail(new ArrayList<>(suite.getExcludedMethods()));
-    addTicketBugsToTestRail(new ArrayList<>(suite.getAllMethods()));
+    List<ITestNGMethod> excludedMethods = new ArrayList<>(suite.getExcludedMethods());
+    setDisabledTestsAsFailedToTestRail(excludedMethods);
+    addTicketBugsToTestRail(excludedMethods);
     if (CONFIG.closeTestRun()) {
       TestRailHelper.closeActualTestRuns();
     }
@@ -63,7 +64,7 @@ public class AddDisabledTestsToTestRailListener implements ISuiteListener {
         });
   }
 
-  private void addTicketBugsToTestRail(List<ITestNGMethod> allTests) {
+  private void addTicketBugsToTestRail(List<ITestNGMethod> excludedTests) {
     List<TicketSource> sources = loadTicketSources();
     if (sources.isEmpty()) {
       return;
@@ -72,7 +73,7 @@ public class AddDisabledTestsToTestRailListener implements ISuiteListener {
     if (commentsByTestCase.isEmpty()) {
       return;
     }
-    allTests.stream()
+    excludedTests.stream()
         .filter(test -> Objects.nonNull(TestUtils.getTestAnnotation(test, TmsLink.class)))
         .filter(test -> commentsByTestCase.containsKey(getTestCaseId(test)))
         .forEach(test -> {
