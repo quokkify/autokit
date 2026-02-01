@@ -106,7 +106,7 @@ for profile in "${TOKENS[@]}"; do
         port="27017"
       fi
       host="localhost"
-      if [[ "${CI:-}" == "true" ]]; then
+      if [[ "${CI:-}" == "true" && "${EXECUTION_MODE:-}" == "DIND" ]]; then
         host="dind"
       fi
       echo "MONGODB_URL=mongodb://${host}:${port}" > tools/environment/.mongo.env
