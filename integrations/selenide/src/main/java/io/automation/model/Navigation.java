@@ -10,15 +10,11 @@ import io.automation.annotation.PageUrl;
 import io.automation.impl.Page;
 import io.automation.util.UrlHelper;
 import io.qameta.allure.Allure;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Navigation class for opening pages according to PageObject class.
  */
 public abstract class Navigation {
-
-  private static final Logger LOG = LoggerFactory.getLogger(Navigation.class);
 
   private final String baseUrl;
   private BasicAuthCredentials basicAuthCredentials;
@@ -128,7 +124,6 @@ public abstract class Navigation {
       throw new RuntimeException(e);
     }
     Allure.step("Open page by url: '%s'".formatted(pageUrl));
-    LOG.debug("Open page URL={}", pageUrl);
     return Selenide.open(pageUrl, pageClass);
   }
 
