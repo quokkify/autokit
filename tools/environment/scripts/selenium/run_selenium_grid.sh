@@ -10,13 +10,17 @@ echo "[selenium-grid] starting selenium hub + node"
 docker compose "${COMPOSE_FILES[@]}" up -d selenium-hub selenium-node-docker
 
 get_hub_url() {
+  local host="localhost"
+  if [[ "${CI:-}" == "true" ]]; then
+    host="dind"
+  fi
   local port_line
   port_line=$(docker compose "${COMPOSE_FILES[@]}" port selenium-hub 4444 | head -n1 || true)
   if [[ -n "$port_line" ]]; then
     local port="${port_line##*:}"
-    echo "http://localhost:${port}/wd/hub"
+    echo "http://${host}:${port}/wd/hub"
   else
-    echo "http://localhost:4444/wd/hub"
+    echo "http://${host}:4444/wd/hub"
   fi
 }
 
