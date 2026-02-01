@@ -78,14 +78,16 @@ for profile in "${TOKENS[@]}"; do
         COMPOSE_FILES+=(-f tools/environment/docker/docker-compose.local.yml)
       fi
       port_line=$(docker compose "${COMPOSE_FILES[@]}" port nginx 80 | head -n1 || true)
-      if [[ -n "$port_line" ]]; then
-        port="${port_line##*:}"
-      else
-        port="80"
-      fi
-      host="localhost"
       if [[ "${CI:-}" == "true" ]]; then
-        host="host.docker.internal"
+        host="nginx"
+        port="80"
+      else
+        host="localhost"
+        if [[ -n "$port_line" ]]; then
+          port="${port_line##*:}"
+        else
+          port="80"
+        fi
       fi
       echo "NGINX_BASE_URL=http://${host}:${port}" > tools/environment/.nginx.env
       ;;
