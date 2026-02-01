@@ -214,7 +214,15 @@ jobs:
       - name: 🔨Checkout
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
 
-      - name: 🔨Set up JDK
+      - name: 🔨Set up JDK (self-hosted, no cache)
+        if: ${{ needs.detect-runner.outputs.is_self_hosted == 'true' }}
+        uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5
+        with:
+          distribution: "temurin"
+          java-version: "21"
+
+      - name: 🔨Set up JDK (github-hosted, cache gradle)
+        if: ${{ needs.detect-runner.outputs.is_self_hosted != 'true' }}
         uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5
         with:
           distribution: "temurin"
