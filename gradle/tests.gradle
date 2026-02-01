@@ -15,6 +15,7 @@ subprojects {
             events "passed", "skipped", "failed"
             showExceptions = true
             exceptionFormat = 'full'
+            showStandardStreams = true
         }
     }
 }
