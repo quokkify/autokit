@@ -91,7 +91,11 @@ while [ $SECONDS -lt $end_time ]; do
     echo "[selenium-grid] ready"
     break
   else
-    echo "[selenium-grid] not ready yet, ${time_left}s left"
+    if [[ -n "$response" ]]; then
+      echo "[selenium-grid] not ready yet, ${time_left}s left, status=$(echo "$response" | tr -d '\n' | cut -c1-200)"
+    else
+      echo "[selenium-grid] not ready yet, ${time_left}s left, status=empty"
+    fi
     sleep "$wait_interval_in_seconds"
     time_left=$((time_left - wait_interval_in_seconds))
   fi
@@ -99,6 +103,7 @@ done
 
 if [ $SECONDS -ge $end_time ]; then
   echo "[selenium-grid] timeout after ${max_wait_time_in_seconds}s"
+  docker compose "${COMPOSE_FILES[@]}" logs --tail=200 selenium-hub selenium-node-docker || true
   exit 1
 fi
 
