@@ -54,6 +54,10 @@ for profile in "${TOKENS[@]}"; do
       ./tools/environment/scripts/mock/run_mock_server.sh
       ./tools/environment/scripts/mock/upload_expectations.sh
       ;;
+    web)
+      info "[infra] web hook: start selenium grid"
+      ./tools/environment/scripts/selenium/run_selenium_grid.sh
+      ;;
     *)
       : # no-op
       ;;

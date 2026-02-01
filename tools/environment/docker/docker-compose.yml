@@ -8,6 +8,28 @@ services:
     ports:
       - "80:80"
 
+  selenium-hub:
+    profiles: [web]
+    image: selenium/hub:4.27.0
+    environment:
+      SE_SUB_PATH: /wd/hub
+    ports:
+      - "4444:4444"
+
+  selenium-node-docker:
+    profiles: [web]
+    image: selenium/node-docker:4.27.0
+    depends_on:
+      - selenium-hub
+    volumes:
+      - ../selenium-grid/assets:/opt/selenium/assets
+      - ../selenium-grid/config.toml:/opt/selenium/docker.toml:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      SE_EVENT_BUS_HOST: selenium-hub
+      SE_NODE_DOCKER_CONFIG_FILENAME: docker.toml
+      SE_OPTS: --enable-managed-downloads true --enable-cdp false
+
   kafka:
     profiles: [messaging]
     image: wurstmeister/kafka:2.13-2.8.1@sha256:2d4bbf9cc83d9854d36582987da5f939fb9255fb128d18e3cf2c6ad825a32751

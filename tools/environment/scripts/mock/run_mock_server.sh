@@ -17,8 +17,13 @@ status=0
 
 while true; do
   if [[ "${CI:-}" == "true" ]]; then
-    status=$(docker compose "${COMPOSE_FILES[@]}" exec -T mock-server \
-      curl -o /dev/null -s -w "%{http_code}" http://localhost:1080/mockserver/dashboard)
+    container_id="$(docker compose "${COMPOSE_FILES[@]}" ps -q mock-server | head -n1 || true)"
+    if [[ -n "$container_id" ]]; then
+      status=$(docker run --rm --network "container:${container_id}" curlimages/curl:8.5.0 \
+        -o /dev/null -s -w "%{http_code}" http://localhost:1080/mockserver/dashboard || true)
+    else
+      status=000
+    fi
   else
     status=$(curl -o /dev/null -s -w "%{http_code}" http://localhost:1080/mockserver/dashboard)
   fi

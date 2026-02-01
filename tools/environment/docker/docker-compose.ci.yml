@@ -8,6 +8,9 @@ services:
     ports: []
   mock-server:
     ports: []
+  selenium-hub:
+    ports:
+      - "0:4444"
   centrifugo:
     ports: []
   mongodb:

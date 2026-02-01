@@ -266,16 +266,6 @@ jobs:
         run: ./tools/environment/scripts/infra/run_app.sh "${{ matrix.profile }}"
         shell: bash
 
-      - name: Set BASE_URL for selenide
-        if: ${{ matrix.base_url_hosted }}
-        run: |
-          if [[ "${{ needs.detect-runner.outputs.is_self_hosted }}" == "true" ]]; then
-            echo "BASE_URL=${{ matrix.base_url_self_hosted }}" >> "$GITHUB_ENV"
-          else
-            echo "BASE_URL=${{ matrix.base_url_hosted }}" >> "$GITHUB_ENV"
-          fi
-        shell: bash
-
       - name: 🚀 Run tests
         run: |
           EXTRA_ARGS=()
@@ -292,6 +282,12 @@ jobs:
             else
               export BASE_URL="${{ matrix.base_url_hosted }}"
             fi
+          fi
+
+          if [[ -f tools/environment/.selenium-grid.env ]]; then
+            set -a
+            source tools/environment/.selenium-grid.env
+            set +a
           fi
 
           ./gradlew ${{ matrix.module }}:check --no-daemon --console=plain --stacktrace "${EXTRA_ARGS[@]}"
