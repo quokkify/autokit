@@ -1,9 +1,14 @@
 #!/bin/bash
 
 echo "🚀 Starting MockServer container..."
+COMPOSE_FILES=(-f tools/environment/docker/docker-compose.yml)
+if [[ "${CI:-}" == "true" ]]; then
+  COMPOSE_FILES+=(-f tools/environment/docker/docker-compose.ci.yml)
+fi
+
 docker compose \
-  -f tools/environment/docker/docker-compose.yml \
-   up -d --quiet-pull mock-server
+  "${COMPOSE_FILES[@]}" \
+  up -d --quiet-pull mock-server
 
 sleep=2
 max_count=30
@@ -11,7 +16,12 @@ count=0
 status=0
 
 while true; do
-  status=$(curl -o /dev/null -s -w "%{http_code}" http://localhost:1080/mockserver/dashboard)
+  if [[ "${CI:-}" == "true" ]]; then
+    status=$(docker compose "${COMPOSE_FILES[@]}" exec -T mock-server \
+      curl -o /dev/null -s -w "%{http_code}" http://localhost:1080/mockserver/dashboard)
+  else
+    status=$(curl -o /dev/null -s -w "%{http_code}" http://localhost:1080/mockserver/dashboard)
+  fi
 
   if [[ "$status" -eq 200 ]]; then
     echo "✅ MockServer container started successfully"
