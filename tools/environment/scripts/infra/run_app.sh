@@ -70,7 +70,7 @@ for profile in "${TOKENS[@]}"; do
       fi
       host="localhost"
       if [[ "${CI:-}" == "true" ]]; then
-        host="dind"
+        host="host.docker.internal"
       fi
       echo "NGINX_BASE_URL=http://${host}:${port}" > tools/environment/.nginx.env
       ;;
