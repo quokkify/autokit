@@ -2,11 +2,48 @@ services:
   nginx:
     profiles: [web]
     image: nginx:1.29.4@sha256:c881927c4077710ac4b1da63b83aa163937fb47457950c267d92f7e4dedf4aec
-    volumes:
-      - ../nginx/conf.d:/etc/nginx/conf.d:ro
-      - ../nginx/html:/usr/share/nginx/html:ro
     ports:
       - "80:80"
+
+  selenium-hub:
+    profiles: [web]
+    image: selenium/hub:4.40.0-20260120
+    environment:
+      SE_SUB_PATH: /wd/hub
+    ports:
+      - "4442:4442"
+      - "4443:4443"
+      - "4444:4444"
+
+  selenium-node-docker:
+    profiles: [web]
+    image: selenium/node-docker:4.40.0-20260120
+    depends_on:
+      - selenium-hub
+      - docker-socket-proxy
+    volumes:
+      - ${SELENIUM_GRID_MOUNT:-../selenium-grid}:/opt/selenium/config.d:ro
+      - ../selenium-grid/assets:/opt/selenium/assets
+    environment:
+      SE_EVENT_BUS_HOST: selenium-hub
+      SE_EVENT_BUS_PUBLISH_PORT: "4442"
+      SE_EVENT_BUS_SUBSCRIBE_PORT: "4443"
+      SE_NODE_DOCKER_CONFIG_FILENAME: config.d/config.toml
+      SE_OPTS: --enable-managed-downloads true --enable-cdp false
+
+  docker-socket-proxy:
+    profiles: [web]
+    image: tecnativa/docker-socket-proxy:0.1.1
+    environment:
+      CONTAINERS: 1
+      IMAGES: 1
+      INFO: 1
+      NETWORKS: 1
+      VOLUMES: 1
+      POST: 1
+      DELETE: 1
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
 
   kafka:
     profiles: [messaging]

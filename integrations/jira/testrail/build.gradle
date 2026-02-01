@@ -1,0 +1,14 @@
+description = "Jira TestRail TicketSource integration"
+
+ext {
+    artifactId = "jira-testrail"
+}
+
+dependencies {
+    implementation project(":integrations:jira:jira-core")
+    implementation project(":integrations:testrail:testng")
+    implementation project(":common-utils:core")
+    implementation project(":common-utils:config")
+
+    api "org.apache.commons:commons-lang3"
+}

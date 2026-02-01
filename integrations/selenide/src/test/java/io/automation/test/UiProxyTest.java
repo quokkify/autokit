@@ -6,10 +6,13 @@ import java.util.NoSuchElementException;
 
 import com.codeborne.selenide.Configuration;
 import de.sstoehr.harreader.model.Har;
+import io.automation.config.ConfigRegistry;
+import io.automation.config.TestNGExtension;
 import io.automation.parser.HarParser;
 import io.qameta.allure.TmsLink;
 import org.apache.http.HttpStatus;
 import org.assertj.core.api.Assertions;
+import org.testng.SkipException;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -18,9 +21,13 @@ import org.testng.annotations.Test;
  * NOTE: Other tests could be affected by the test. Should be executed in single thread
  */
 public class UiProxyTest extends BaseTest {
+  private static final TestNGExtension TESTNG_CONFIG = ConfigRegistry.get(TestNGExtension.class);
 
   @BeforeClass
   public void enableProxy() {
+    if (TESTNG_CONFIG.mode() == TestNGExtension.ExecutionMode.DIND) {
+      throw new SkipException("Proxy test is skipped for DIND runs");
+    }
     Configuration.proxyEnabled = true;
   }
 
