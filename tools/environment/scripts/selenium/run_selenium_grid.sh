@@ -110,7 +110,11 @@ echo "BROWSER_REMOTE_URL=${REMOTE_HUB_URL}" > tools/environment/.selenium-grid.e
 if [[ "${CI:-}" == "true" ]]; then
   node_container="$(docker compose "${COMPOSE_FILES[@]}" ps -q selenium-node-docker | head -n1 || true)"
   if [[ -n "$node_container" ]]; then
-    nginx_port_line="$(docker compose "${COMPOSE_FILES[@]}" port nginx 80 | head -n1 || true)"
+    nginx_port_line="$(docker compose "${COMPOSE_FILES[@]}" port nginx 80/tcp 2>/dev/null | head -n1 || true)"
+    if [[ -z "$nginx_port_line" ]]; then
+      nginx_port_line="$(docker compose "${COMPOSE_FILES[@]}" port nginx 80 2>/dev/null | head -n1 || true)"
+    fi
+    echo "[selenium-grid] nginx port line: ${nginx_port_line:-<empty>}"
     if [[ -n "$nginx_port_line" ]]; then
       nginx_port="${nginx_port_line##*:}"
     else
