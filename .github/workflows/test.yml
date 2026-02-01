@@ -238,7 +238,6 @@ jobs:
 
       - name: 🚀 Run tests
         run: |
-          EXTRA_ARGS=()
           if [[ -f tools/environment/.selenium-grid.env ]]; then
             set -a
             source tools/environment/.selenium-grid.env
@@ -268,7 +267,7 @@ jobs:
             fi
           fi
 
-          ./gradlew ${{ matrix.module }}:check --no-daemon --console=plain --stacktrace "${EXTRA_ARGS[@]}"
+          ./gradlew ${{ matrix.module }}:check --no-daemon --console=plain --stacktrace
         shell: bash
 
       - name: 🛑 Stop Infra
