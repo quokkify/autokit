@@ -253,6 +253,11 @@ jobs:
             source tools/environment/.selenium-grid.env
             set +a
           fi
+          if [[ -f tools/environment/.mock-server.env ]]; then
+            set -a
+            source tools/environment/.mock-server.env
+            set +a
+          fi
 
           ./gradlew ${{ matrix.module }}:check --no-daemon --console=plain --stacktrace "${EXTRA_ARGS[@]}"
         shell: bash

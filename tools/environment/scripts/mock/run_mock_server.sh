@@ -42,3 +42,21 @@ while true; do
     exit 1
   fi
 done
+
+get_mockserver_base_url() {
+  local host="localhost"
+  if [[ "${CI:-}" == "true" ]]; then
+    host="dind"
+  fi
+  local port_line
+  port_line=$(docker compose "${COMPOSE_FILES[@]}" port mock-server 1080 | head -n1 || true)
+  if [[ -n "$port_line" ]]; then
+    local port="${port_line##*:}"
+    echo "http://${host}:${port}"
+  else
+    echo "http://${host}:1080"
+  fi
+}
+
+MOCKSERVER_BASE_URL="$(get_mockserver_base_url)"
+echo "BASE_API_URL=${MOCKSERVER_BASE_URL}" > tools/environment/.mock-server.env

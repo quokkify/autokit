@@ -7,7 +7,8 @@ services:
   zookeeper:
     ports: []
   mock-server:
-    ports: []
+    ports:
+      - "0:1080"
   selenium-hub:
     ports:
       - "0:4444"
