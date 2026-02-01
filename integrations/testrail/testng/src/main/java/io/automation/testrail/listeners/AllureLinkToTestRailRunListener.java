@@ -7,7 +7,6 @@ import io.automation.testrail.configs.TestRailConfiguration;
 import io.automation.testrail.models.TestData;
 import io.automation.testrail.utils.TestRailHelper;
 import io.automation.util.TestUtils;
-
 import io.qameta.allure.Allure;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.model.Link;

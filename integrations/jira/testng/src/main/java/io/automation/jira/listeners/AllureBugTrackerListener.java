@@ -5,13 +5,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import com.atlassian.jira.rest.client.api.domain.Issue;
 import io.automation.config.ConfigRegistry;
 import io.automation.constant.BugExecutionScope;
 import io.automation.jira.configs.JiraConfiguration;
 import io.automation.jira.services.JiraService;
 import io.automation.util.TestUtils;
-
-import com.atlassian.jira.rest.client.api.domain.Issue;
 import io.qameta.allure.Allure;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.model.Link;

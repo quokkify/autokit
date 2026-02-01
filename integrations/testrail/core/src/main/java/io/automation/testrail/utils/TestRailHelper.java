@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import io.automation.constant.StringConstant;
 import io.automation.config.ConfigRegistry;
+import io.automation.constant.StringConstant;
 import io.automation.testrail.configs.TestRailConfiguration;
 import io.automation.testrail.models.CaseFields;
 import io.automation.testrail.models.CustomAutomationType;
@@ -21,7 +21,6 @@ import io.automation.testrail.models.TestRunFromSuite;
 import io.automation.testrail.models.TestSuite;
 import io.automation.testrail.services.TestRailClient;
 import io.automation.testrail.services.TestRailHttpClient;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

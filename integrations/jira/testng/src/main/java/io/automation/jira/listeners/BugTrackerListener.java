@@ -7,14 +7,13 @@ import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import com.atlassian.jira.rest.client.api.domain.Issue;
 import io.automation.config.ConfigRegistry;
 import io.automation.constant.BugExecutionScope;
 import io.automation.constant.StringConstant;
 import io.automation.jira.configs.JiraConfiguration;
 import io.automation.jira.services.JiraService;
 import io.automation.util.TestUtils;
-
-import com.atlassian.jira.rest.client.api.domain.Issue;
 import io.qameta.allure.TmsLink;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;

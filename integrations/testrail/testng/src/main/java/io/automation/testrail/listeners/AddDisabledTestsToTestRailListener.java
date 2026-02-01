@@ -16,7 +16,6 @@ import io.automation.testrail.tickets.TicketSource;
 import io.automation.testrail.utils.TestRailHelper;
 import io.automation.testrail.utils.TestRailTestFilterRules;
 import io.automation.util.TestUtils;
-
 import io.qameta.allure.TmsLink;
 import org.apache.commons.lang3.StringUtils;
 import org.testng.ISuite;
