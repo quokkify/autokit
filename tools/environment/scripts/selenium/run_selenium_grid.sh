@@ -115,6 +115,17 @@ if [[ "${CI:-}" == "true" ]]; then
       nginx_port_line="$(docker compose "${COMPOSE_FILES[@]}" port nginx 80 2>/dev/null | head -n1 || true)"
     fi
     echo "[selenium-grid] nginx port line: ${nginx_port_line:-<empty>}"
+    nginx_container="$(docker compose "${COMPOSE_FILES[@]}" ps -q nginx | head -n1 || true)"
+    if [[ -n "$nginx_container" ]]; then
+      echo "[selenium-grid] waiting for nginx to respond..."
+      for i in $(seq 1 30); do
+        if docker run --rm --network "container:${nginx_container}" curlimages/curl:8.5.0 -sSf http://localhost/table/ >/dev/null 2>&1; then
+          echo "[selenium-grid] nginx is ready"
+          break
+        fi
+        sleep 1
+      done
+    fi
     if [[ -n "$nginx_port_line" ]]; then
       nginx_port="${nginx_port_line##*:}"
     else
