@@ -47,7 +47,7 @@ done
 
 get_mockserver_base_url() {
   local host="localhost"
-  if [[ "${CI:-}" == "true" ]]; then
+  if [[ "${CI:-}" == "true" && "${EXECUTION_MODE:-}" == "DIND" ]]; then
     host="dind"
   fi
   local port_line
