@@ -26,8 +26,8 @@ public class UiProxyTest extends BaseTest {
 
   @BeforeClass
   public void enableProxy() {
-    if (TESTNG_CONFIG.mode() == TestNGExtension.ExecutionMode.DIND) {
-      throw new SkipException("Proxy test is skipped for DIND runs");
+    if (TESTNG_CONFIG.mode() != TestNGExtension.ExecutionMode.LOCAL) {
+      throw new SkipException("Proxy test is skipped for non-local runs");
     }
     Configuration.proxyEnabled = true;
   }
