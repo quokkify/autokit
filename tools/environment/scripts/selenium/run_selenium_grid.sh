@@ -21,15 +21,28 @@ if [[ ! -f "$CONFIG_PATH" ]]; then
   exit 1
 fi
 
+project_name="${COMPOSE_PROJECT_NAME:-docker}"
+selenium_network="${project_name}_default"
+
+render_config() {
+  local src="$1"
+  local dst="$2"
+  sed -e "s/__NETWORK__/${selenium_network}/g" "$src" > "$dst"
+}
+
 if [[ "${CI:-}" == "true" ]]; then
   SELENIUM_GRID_MOUNT="selenium-grid-config"
   echo "[selenium-grid] preparing volume ${SELENIUM_GRID_MOUNT}"
   docker volume create "${SELENIUM_GRID_MOUNT}" >/dev/null
-  cat "$CONFIG_PATH" | docker run --rm -i -v "${SELENIUM_GRID_MOUNT}":/opt/selenium/config.d busybox \
+  tmp_config="$(mktemp)"
+  render_config "$CONFIG_PATH" "$tmp_config"
+  cat "$tmp_config" | docker run --rm -i -v "${SELENIUM_GRID_MOUNT}":/opt/selenium/config.d busybox \
     sh -c "mkdir -p /opt/selenium/config.d && cat > /opt/selenium/config.d/config.toml"
+  rm -f "$tmp_config"
   export SELENIUM_GRID_MOUNT
 else
   export SELENIUM_GRID_MOUNT="$(pwd)/tools/environment/selenium-grid"
+  render_config "$CONFIG_PATH" "${SELENIUM_GRID_MOUNT}/config.toml"
 fi
 
 extract_grid_image() {
