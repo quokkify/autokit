@@ -258,11 +258,13 @@ jobs:
             source tools/environment/.nginx.env
             set +a
           fi
-          if [[ -n "${NGINX_BASE_URL:-}" ]]; then
-            export BASE_URL="${NGINX_BASE_URL}"
-          else
-            echo "NGINX_BASE_URL is not set" >&2
-            exit 1
+          if [[ "${{ matrix.profile }}" == "web" ]]; then
+            if [[ -n "${NGINX_BASE_URL:-}" ]]; then
+              export BASE_URL="${NGINX_BASE_URL}"
+            else
+              echo "NGINX_BASE_URL is not set for web profile" >&2
+              exit 1
+            fi
           fi
 
           ./gradlew ${{ matrix.module }}:check --no-daemon --console=plain --stacktrace "${EXTRA_ARGS[@]}"
