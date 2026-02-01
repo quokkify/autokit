@@ -53,10 +53,7 @@ echo "[selenium-grid] starting selenium hub + node"
 docker compose "${COMPOSE_FILES[@]}" up -d selenium-hub selenium-node-docker
 
 get_hub_url() {
-  local host="localhost"
-  if [[ "${CI:-}" == "true" ]]; then
-    host="dind"
-  fi
+  local host="${1:-localhost}"
   local port_line
   port_line=$(docker compose "${COMPOSE_FILES[@]}" port selenium-hub 4444 | head -n1 || true)
   if [[ -n "$port_line" ]]; then
@@ -67,8 +64,9 @@ get_hub_url() {
   fi
 }
 
-HUB_URL="$(get_hub_url)"
-STATUS_URL="${HUB_URL}/status"
+REMOTE_HUB_URL="$(get_hub_url "${CI:+dind}")"
+HEALTHCHECK_URL="$(get_hub_url "localhost")"
+STATUS_URL="${HEALTHCHECK_URL}/status"
 
 wait_interval_in_seconds=1
 max_wait_time_in_seconds=30
@@ -107,4 +105,4 @@ if [ $SECONDS -ge $end_time ]; then
   exit 1
 fi
 
-echo "BROWSER_REMOTE_URL=${HUB_URL}" > tools/environment/.selenium-grid.env
+echo "BROWSER_REMOTE_URL=${REMOTE_HUB_URL}" > tools/environment/.selenium-grid.env
