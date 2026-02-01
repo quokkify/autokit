@@ -25,8 +25,8 @@ if [[ "${CI:-}" == "true" ]]; then
   SELENIUM_GRID_MOUNT="selenium-grid-config"
   echo "[selenium-grid] preparing volume ${SELENIUM_GRID_MOUNT}"
   docker volume create "${SELENIUM_GRID_MOUNT}" >/dev/null
-  cat "$CONFIG_PATH" | docker run --rm -i -v "${SELENIUM_GRID_MOUNT}":/opt/selenium busybox \
-    sh -c "mkdir -p /opt/selenium/assets && cat > /opt/selenium/config.toml"
+  cat "$CONFIG_PATH" | docker run --rm -i -v "${SELENIUM_GRID_MOUNT}":/opt/selenium/config.d busybox \
+    sh -c "mkdir -p /opt/selenium/config.d && cat > /opt/selenium/config.d/config.toml"
   export SELENIUM_GRID_MOUNT
 else
   export SELENIUM_GRID_MOUNT="$(pwd)/tools/environment/selenium-grid"
