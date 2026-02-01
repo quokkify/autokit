@@ -81,13 +81,6 @@ for profile in "${TOKENS[@]}"; do
       if [[ "${CI:-}" == "true" && "${EXECUTION_MODE:-}" == "DIND" ]]; then
         host="nginx"
         port="80"
-      elif [[ "${CI:-}" == "true" ]]; then
-        host="host.docker.internal"
-        if [[ -n "$port_line" ]]; then
-          port="${port_line##*:}"
-        else
-          port="80"
-        fi
       else
         host="localhost"
         if [[ -n "$port_line" ]]; then
