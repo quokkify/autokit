@@ -34,7 +34,16 @@ time_left=$max_wait_time_in_seconds
 
 echo "[selenium-grid] waiting for ${STATUS_URL}"
 while [ $SECONDS -lt $end_time ]; do
-  response="$(curl -sL "$STATUS_URL" || true)"
+  if [[ "${CI:-}" == "true" ]]; then
+    hub_container="$(docker compose "${COMPOSE_FILES[@]}" ps -q selenium-hub | head -n1 || true)"
+    if [[ -n "$hub_container" ]]; then
+      response="$(docker run --rm --network "container:${hub_container}" curlimages/curl:8.5.0 -sL "$STATUS_URL" || true)"
+    else
+      response=""
+    fi
+  else
+    response="$(curl -sL "$STATUS_URL" || true)"
+  fi
   if echo "$response" | tr -d '\n ' | grep -q '"ready":true'; then
     echo "[selenium-grid] ready"
     break
