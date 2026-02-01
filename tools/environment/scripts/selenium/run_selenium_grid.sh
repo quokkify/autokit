@@ -115,7 +115,7 @@ if [[ "${CI:-}" == "true" ]]; then
       cat tools/environment/.nginx.env || true
     fi
     echo "[selenium-grid] probe from selenium-node-docker:"
-    docker exec "$node_container" sh -lc "wget -qO- http://dind:80/table/ | head -c 200 || true"
-    docker exec "$node_container" sh -lc "wget -qO- http://nginx:80/table/ | head -c 200 || true"
+    docker exec "$node_container" sh -lc "wget -S -O- http://dind:80/table/ 2>&1 | head -c 300; echo \" rc=\$?\""
+    docker exec "$node_container" sh -lc "wget -S -O- http://nginx:80/table/ 2>&1 | head -c 300; echo \" rc=\$?\""
   fi
 fi
