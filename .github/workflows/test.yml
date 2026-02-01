@@ -107,8 +107,6 @@ jobs:
             module: ":integrations:selenide"
             slug: "integrations-selenide"
             profile: "web"
-            base_url_hosted: "http://127.0.0.1:8080"
-            base_url_self_hosted: "http://dind:8080"
 
           - name: "integrations • testrail • core"
             module: ":integrations:testrail:testrail-core"
@@ -262,13 +260,9 @@ jobs:
           fi
           if [[ -n "${NGINX_BASE_URL:-}" ]]; then
             export BASE_URL="${NGINX_BASE_URL}"
-          fi
-          if [[ -z "${BASE_URL:-}" && -n "${{ matrix.base_url_hosted }}" ]]; then
-            if [[ "${{ needs.detect-runner.outputs.is_self_hosted }}" == "true" ]]; then
-              export BASE_URL="${{ matrix.base_url_self_hosted }}"
-            else
-              export BASE_URL="${{ matrix.base_url_hosted }}"
-            fi
+          else
+            echo "NGINX_BASE_URL is not set" >&2
+            exit 1
           fi
 
           ./gradlew ${{ matrix.module }}:check --no-daemon --console=plain --stacktrace "${EXTRA_ARGS[@]}"
