@@ -3,6 +3,8 @@ set -euo pipefail
 COMPOSE_FILES=(-f tools/environment/docker/docker-compose.yml)
 if [[ "${CI:-}" == "true" ]]; then
   COMPOSE_FILES+=(-f tools/environment/docker/docker-compose.ci.yml)
+else
+  COMPOSE_FILES+=(-f tools/environment/docker/docker-compose.local.yml)
 fi
 
 PROFILE="${1:-all}"

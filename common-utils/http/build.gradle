@@ -4,5 +4,8 @@ ext {
 
 dependencies {
     implementation project(":common-utils:core")
-    implementation"org.apache.httpcomponents.core5:httpcore5:${httpcore5}"
+    testImplementation project(":common-utils:jackson:json")
+    testImplementation project(":testng-extensions")
+
+    implementation "org.apache.httpcomponents.core5:httpcore5:${httpcore5}"
 }

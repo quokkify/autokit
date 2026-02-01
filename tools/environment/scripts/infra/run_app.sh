@@ -40,6 +40,19 @@ echo "[infra] docker compose up: ${PROFILES_ARGS[*]}"
 COMPOSE_FILES=(-f tools/environment/docker/docker-compose.yml)
 if [[ "${CI:-}" == "true" ]]; then
   COMPOSE_FILES+=(-f tools/environment/docker/docker-compose.ci.yml)
+else
+  COMPOSE_FILES+=(-f tools/environment/docker/docker-compose.local.yml)
+fi
+
+if [[ "${CI:-}" == "true" ]]; then
+  for profile in "${TOKENS[@]}"; do
+    profile="$(echo "$profile" | xargs)"
+    if [[ "$profile" == "web" ]]; then
+      echo "[infra] building nginx image for CI"
+      docker compose "${COMPOSE_FILES[@]}" build nginx
+      break
+    fi
+  done
 fi
 
 docker compose \
@@ -53,6 +66,50 @@ for profile in "${TOKENS[@]}"; do
       info "[infra] mock hook: upload expectations"
       ./tools/environment/scripts/mock/run_mock_server.sh
       ./tools/environment/scripts/mock/upload_expectations.sh
+      ;;
+    web)
+      info "[infra] web hook: start selenium grid"
+      ./tools/environment/scripts/selenium/run_selenium_grid.sh
+      info "[infra] web hook: set nginx url"
+      COMPOSE_FILES=(-f tools/environment/docker/docker-compose.yml)
+      if [[ "${CI:-}" == "true" ]]; then
+        COMPOSE_FILES+=(-f tools/environment/docker/docker-compose.ci.yml)
+      else
+        COMPOSE_FILES+=(-f tools/environment/docker/docker-compose.local.yml)
+      fi
+      port_line=$(docker compose "${COMPOSE_FILES[@]}" port nginx 80 | head -n1 || true)
+      if [[ "${CI:-}" == "true" && "${EXECUTION_MODE:-}" == "DIND" ]]; then
+        host="nginx"
+        port="80"
+      else
+        host="localhost"
+        if [[ -n "$port_line" ]]; then
+          port="${port_line##*:}"
+        else
+          port="80"
+        fi
+      fi
+      echo "NGINX_BASE_URL=http://${host}:${port}" > tools/environment/.nginx.env
+      ;;
+    storage)
+      info "[infra] storage hook: set mongo url"
+      COMPOSE_FILES=(-f tools/environment/docker/docker-compose.yml)
+      if [[ "${CI:-}" == "true" ]]; then
+        COMPOSE_FILES+=(-f tools/environment/docker/docker-compose.ci.yml)
+      else
+        COMPOSE_FILES+=(-f tools/environment/docker/docker-compose.local.yml)
+      fi
+      port_line=$(docker compose "${COMPOSE_FILES[@]}" port mongodb 27017 | head -n1 || true)
+      if [[ -n "$port_line" ]]; then
+        port="${port_line##*:}"
+      else
+        port="27017"
+      fi
+      host="localhost"
+      if [[ "${CI:-}" == "true" ]]; then
+        host="dind"
+      fi
+      echo "MONGODB_URL=mongodb://${host}:${port}" > tools/environment/.mongo.env
       ;;
     *)
       : # no-op
