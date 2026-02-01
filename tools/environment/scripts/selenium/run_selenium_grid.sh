@@ -110,12 +110,14 @@ echo "BROWSER_REMOTE_URL=${REMOTE_HUB_URL}" > tools/environment/.selenium-grid.e
 if [[ "${CI:-}" == "true" ]]; then
   node_container="$(docker compose "${COMPOSE_FILES[@]}" ps -q selenium-node-docker | head -n1 || true)"
   if [[ -n "$node_container" ]]; then
-    if [[ -f tools/environment/.nginx.env ]]; then
-      echo "[selenium-grid] nginx env:"
-      cat tools/environment/.nginx.env || true
+    nginx_port_line="$(docker compose "${COMPOSE_FILES[@]}" port nginx 80 | head -n1 || true)"
+    if [[ -n "$nginx_port_line" ]]; then
+      nginx_port="${nginx_port_line##*:}"
+    else
+      nginx_port="80"
     fi
     echo "[selenium-grid] probe from selenium-node-docker:"
-    docker exec "$node_container" sh -lc "wget -S -O- http://host.docker.internal:80/table/ 2>&1 | head -c 300; echo \" rc=\$?\""
+    docker exec "$node_container" sh -lc "wget -S -O- http://host.docker.internal:${nginx_port}/table/ 2>&1 | head -c 300; echo \" rc=\$?\""
     docker exec "$node_container" sh -lc "wget -S -O- http://nginx:80/table/ 2>&1 | head -c 300; echo \" rc=\$?\""
   fi
 fi
