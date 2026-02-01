@@ -6,9 +6,26 @@ if [[ "${CI:-}" == "true" ]]; then
   COMPOSE_FILES+=(-f tools/environment/docker/docker-compose.ci.yml)
 fi
 
+CONFIG_PATH="tools/environment/selenium-grid/config.toml"
+if [[ -d "$CONFIG_PATH" ]]; then
+  echo "[selenium-grid] config path is a directory: $CONFIG_PATH"
+  if [[ "${CI:-}" == "true" ]]; then
+    rm -rf "$CONFIG_PATH"
+  else
+    exit 1
+  fi
+fi
+
+if [[ ! -f "$CONFIG_PATH" ]]; then
+  echo "[selenium-grid] missing config file: $CONFIG_PATH"
+  exit 1
+fi
+
+export SELENIUM_GRID_CONFIG="$(pwd)/${CONFIG_PATH}"
+
 extract_grid_image() {
   local line
-  line="$(grep -E '^[[:space:]]*configs[[:space:]]*=' tools/environment/selenium-grid/config.toml | head -n1 || true)"
+  line="$(grep -E '^[[:space:]]*configs[[:space:]]*=' "$CONFIG_PATH" | head -n1 || true)"
   if [[ -z "$line" ]]; then
     return
   fi
