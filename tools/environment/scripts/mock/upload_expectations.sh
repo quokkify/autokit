@@ -13,9 +13,9 @@ find "$DIR" -type f -name "*.json" | while read -r file; do
       echo "❌ MockServer container not found"
       exit 1
     fi
-    docker run --rm --network "container:${container_id}" curlimages/curl:8.5.0 \
+    cat "$file" | docker run --rm -i --network "container:${container_id}" curlimages/curl:8.5.0 \
       -s -X PUT "http://localhost:1080/mockserver/expectation" \
-      -d @"$file" \
+      -d @- \
       -H "Content-Type: application/json"
   else
     curl -s -X PUT "$MOCKSERVER_URL/mockserver/expectation" \
