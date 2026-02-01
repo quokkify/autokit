@@ -42,6 +42,17 @@ if [[ "${CI:-}" == "true" ]]; then
   COMPOSE_FILES+=(-f tools/environment/docker/docker-compose.ci.yml)
 fi
 
+if [[ "${CI:-}" == "true" ]]; then
+  for profile in "${TOKENS[@]}"; do
+    profile="$(echo "$profile" | xargs)"
+    if [[ "$profile" == "web" ]]; then
+      echo "[infra] building nginx image for CI"
+      docker compose "${COMPOSE_FILES[@]}" build nginx
+      break
+    fi
+  done
+fi
+
 docker compose \
   "${COMPOSE_FILES[@]}" \
   "${PROFILES_ARGS[@]}" up -d

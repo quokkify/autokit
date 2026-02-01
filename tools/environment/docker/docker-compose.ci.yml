@@ -1,5 +1,6 @@
 services:
   nginx:
+    image: ci-nginx
     build:
       context: ../nginx
       dockerfile: Dockerfile.ci
