@@ -28,6 +28,6 @@ public interface TestNGExtension extends Config, Reloadable, Mutable {
   ExecutionMode mode();
 
   enum ExecutionMode {
-    LOCAL, CI
+    LOCAL, CI, DIND
   }
 }

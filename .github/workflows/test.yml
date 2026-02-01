@@ -82,6 +82,8 @@ jobs:
     env:
       CI: "true"
       COMPOSE_PROJECT_NAME: ci-${{ github.run_id }}-${{ matrix.slug }}
+      EXECUTION_MODE: ${{ needs.detect-runner.outputs.is_self_hosted == 'true' && 'DIND' || 'CI' }}
+      LOG4J_CONFIGURATION_FILE: classpath:log4j2-ci.xml
     strategy:
       fail-fast: false
       max-parallel: 4
