@@ -263,6 +263,14 @@ jobs:
             source tools/environment/.mongo.env
             set +a
           fi
+          if [[ -f tools/environment/.nginx.env ]]; then
+            set -a
+            source tools/environment/.nginx.env
+            set +a
+          fi
+          if [[ -n "${NGINX_BASE_URL:-}" && -z "${BASE_URL:-}" ]]; then
+            export BASE_URL="${NGINX_BASE_URL}"
+          fi
 
           ./gradlew ${{ matrix.module }}:check --no-daemon --console=plain --stacktrace "${EXTRA_ARGS[@]}"
         shell: bash
