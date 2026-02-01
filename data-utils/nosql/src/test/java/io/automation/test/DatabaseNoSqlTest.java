@@ -27,7 +27,8 @@ public class DatabaseNoSqlTest extends BaseDatabaseTest {
 
   @BeforeClass(alwaysRun = true)
   public void initResources() {
-    mongoClient = MongoClients.create("mongodb://localhost:27017");
+    String mongoUrl = System.getenv().getOrDefault("MONGODB_URL", "mongodb://localhost:27017");
+    mongoClient = MongoClients.create(mongoUrl);
     NoSqlFactory noSqlFactory = new NoSqlFactory(mongoClient, "test");
     noSqlFactory.getThreadLocalDatastore().getMapper().mapPackageFromClass(DatabaseTestUserMongo.class);
     noSqlFactory.getThreadLocalDatastore().ensureIndexes();

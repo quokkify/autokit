@@ -58,6 +58,24 @@ for profile in "${TOKENS[@]}"; do
       info "[infra] web hook: start selenium grid"
       ./tools/environment/scripts/selenium/run_selenium_grid.sh
       ;;
+    storage)
+      info "[infra] storage hook: set mongo url"
+      COMPOSE_FILES=(-f tools/environment/docker/docker-compose.yml)
+      if [[ "${CI:-}" == "true" ]]; then
+        COMPOSE_FILES+=(-f tools/environment/docker/docker-compose.ci.yml)
+      fi
+      port_line=$(docker compose "${COMPOSE_FILES[@]}" port mongodb 27017 | head -n1 || true)
+      if [[ -n "$port_line" ]]; then
+        port="${port_line##*:}"
+      else
+        port="27017"
+      fi
+      host="localhost"
+      if [[ "${CI:-}" == "true" ]]; then
+        host="dind"
+      fi
+      echo "MONGODB_URL=mongodb://${host}:${port}" > tools/environment/.mongo.env
+      ;;
     *)
       : # no-op
       ;;

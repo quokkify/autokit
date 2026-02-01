@@ -1,7 +1,7 @@
 services:
   nginx:
     ports:
-      - "127.0.0.1:8080:80"
+      - "0:80"
   kafka:
     ports: []
   zookeeper:
@@ -15,7 +15,8 @@ services:
   centrifugo:
     ports: []
   mongodb:
-    ports: []
+    ports:
+      - "0:27017"
 
 networks:
   default:
