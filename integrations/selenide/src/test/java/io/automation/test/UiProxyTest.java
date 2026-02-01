@@ -6,6 +6,7 @@ import java.util.NoSuchElementException;
 
 import com.codeborne.selenide.Configuration;
 import de.sstoehr.harreader.model.Har;
+import io.automation.annotation.SingleThread;
 import io.automation.config.ConfigRegistry;
 import io.automation.config.TestNGExtension;
 import io.automation.parser.HarParser;
@@ -25,8 +26,8 @@ public class UiProxyTest extends BaseTest {
 
   @BeforeClass
   public void enableProxy() {
-    if (TESTNG_CONFIG.mode() == TestNGExtension.ExecutionMode.DIND) {
-      throw new SkipException("Proxy test is skipped for DIND runs");
+    if (TESTNG_CONFIG.mode() != TestNGExtension.ExecutionMode.LOCAL) {
+      throw new SkipException("Proxy test is skipped for non-local runs");
     }
     Configuration.proxyEnabled = true;
   }
@@ -37,6 +38,7 @@ public class UiProxyTest extends BaseTest {
   }
 
   @TmsLink("UI_PROXY_ID_1")
+  @SingleThread
   @Test(description = "Verify proxy 'Har' recording")
   public void testProxyHar() {
     String searchLinkText = "Speed Test";
