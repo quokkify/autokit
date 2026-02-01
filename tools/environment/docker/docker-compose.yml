@@ -25,13 +25,12 @@ services:
       - selenium-hub
       - docker-socket-proxy
     volumes:
-      - ../selenium-grid/assets:/opt/selenium/assets
-      - ${SELENIUM_GRID_CONFIG:-../selenium-grid/config.toml}:/opt/selenium/docker.toml:ro
+      - ${SELENIUM_GRID_MOUNT:-../selenium-grid}:/opt/selenium:ro
     environment:
       SE_EVENT_BUS_HOST: selenium-hub
       SE_EVENT_BUS_PUBLISH_PORT: "4442"
       SE_EVENT_BUS_SUBSCRIBE_PORT: "4443"
-      SE_NODE_DOCKER_CONFIG_FILENAME: docker.toml
+      SE_NODE_DOCKER_CONFIG_FILENAME: config.toml
       SE_OPTS: --enable-managed-downloads true --enable-cdp false
 
   docker-socket-proxy:
