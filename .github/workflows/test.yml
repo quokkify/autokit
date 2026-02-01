@@ -113,6 +113,10 @@ jobs:
             module: ":data-utils:sql"
             slug: "data-utils-sql"
             profile: "none"
+          - name: "data-utils • nosql"
+            module: ":data-utils:nosql"
+            slug: "data-utils-nosql"
+            profile: "storage"
 
           # =========================
           # Common utils

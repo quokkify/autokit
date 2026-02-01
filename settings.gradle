@@ -15,7 +15,7 @@ include(":integrations:selenide")        // Wrapper around Selenide for user int
 // DATA ACCESS MODULES (SQL / NoSQL)
 // ============================================================================
 include(":data-utils:sql")               // Utilities for relational databases (JDBC, migrations, etc.)
-//include(":data-utils:nosql")             // Utilities for non-relational databases (Mongo, Redis, etc.)
+include(":data-utils:nosql")             // Utilities for non-relational databases (Mongo, Redis, etc.)
 
 // ============================================================================
 // COMMON UTILS (runtime modules, used in services and tests)
