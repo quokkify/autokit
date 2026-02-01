@@ -23,6 +23,10 @@ services:
       DISABLE_AUTO_UPDATE: "true"
       DOCKER_HOST: tcp://dind:2375
       DOCKER_TLS_CERTDIR: ""
+      RUNNER_TOOL_CACHE: /opt/hostedtoolcache
+    volumes:
+      - runner-toolcache:/opt/hostedtoolcache
 
 volumes:
   dind-data:
+  runner-toolcache:
