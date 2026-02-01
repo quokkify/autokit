@@ -6,6 +6,23 @@ if [[ "${CI:-}" == "true" ]]; then
   COMPOSE_FILES+=(-f tools/environment/docker/docker-compose.ci.yml)
 fi
 
+extract_grid_image() {
+  local line
+  line="$(grep -E '^[[:space:]]*configs[[:space:]]*=' tools/environment/selenium-grid/config.toml | head -n1 || true)"
+  if [[ -z "$line" ]]; then
+    return
+  fi
+  echo "$line" \
+    | sed -E 's/.*\[[[:space:]]*"([^"]+)".*/\1/' \
+    | grep -E '.+/.+:.+' || true
+}
+
+GRID_IMAGE="$(extract_grid_image)"
+if [[ -n "$GRID_IMAGE" ]]; then
+  echo "[selenium-grid] pulling grid image: ${GRID_IMAGE}"
+  docker pull "$GRID_IMAGE"
+fi
+
 echo "[selenium-grid] starting selenium hub + node"
 docker compose "${COMPOSE_FILES[@]}" up -d selenium-hub selenium-node-docker
 

@@ -6,4 +6,4 @@ selenium-manager = true
 [docker]
 configs = ["selenium/standalone-chromium:144.0", '{"browserName": "chrome"}']
 host-config-keys = ["Dns", "DnsOptions", "DnsSearch", "ExtraHosts", "Binds"]
-url = "http://127.0.0.1:2375"
+url = "http://docker-socket-proxy:2375"

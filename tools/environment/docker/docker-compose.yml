@@ -10,25 +10,43 @@ services:
 
   selenium-hub:
     profiles: [web]
-    image: selenium/hub:4.27.0
+    image: selenium/hub:4.40.0-20260120
     environment:
       SE_SUB_PATH: /wd/hub
     ports:
+      - "4442:4442"
+      - "4443:4443"
       - "4444:4444"
 
   selenium-node-docker:
     profiles: [web]
-    image: selenium/node-docker:4.27.0
+    image: selenium/node-docker:4.40.0-20260120
     depends_on:
       - selenium-hub
+      - docker-socket-proxy
     volumes:
       - ../selenium-grid/assets:/opt/selenium/assets
       - ../selenium-grid/config.toml:/opt/selenium/docker.toml:ro
-      - /var/run/docker.sock:/var/run/docker.sock
     environment:
       SE_EVENT_BUS_HOST: selenium-hub
+      SE_EVENT_BUS_PUBLISH_PORT: "4442"
+      SE_EVENT_BUS_SUBSCRIBE_PORT: "4443"
       SE_NODE_DOCKER_CONFIG_FILENAME: docker.toml
       SE_OPTS: --enable-managed-downloads true --enable-cdp false
+
+  docker-socket-proxy:
+    profiles: [web]
+    image: tecnativa/docker-socket-proxy:0.1.1
+    environment:
+      CONTAINERS: 1
+      IMAGES: 1
+      INFO: 1
+      NETWORKS: 1
+      VOLUMES: 1
+      POST: 1
+      DELETE: 1
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
 
   kafka:
     profiles: [messaging]
