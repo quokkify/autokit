@@ -78,16 +78,9 @@ for profile in "${TOKENS[@]}"; do
         COMPOSE_FILES+=(-f tools/environment/docker/docker-compose.local.yml)
       fi
       port_line=$(docker compose "${COMPOSE_FILES[@]}" port nginx 80 | head -n1 || true)
-      if [[ "${CI:-}" == "true" && "${EXECUTION_MODE:-}" == "DIND" ]]; then
+      if [[ "${CI:-}" == "true" ]]; then
         host="nginx"
         port="80"
-      elif [[ "${CI:-}" == "true" ]]; then
-        host="host.docker.internal"
-        if [[ -n "$port_line" ]]; then
-          port="${port_line##*:}"
-        else
-          port="80"
-        fi
       else
         host="localhost"
         if [[ -n "$port_line" ]]; then
