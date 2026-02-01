@@ -79,7 +79,12 @@ get_hub_url() {
   fi
 }
 
-REMOTE_HUB_URL="$(get_hub_url "${CI:+dind}")"
+if [[ "${CI:-}" == "true" && "${EXECUTION_MODE:-}" == "DIND" ]]; then
+  remote_host="dind"
+else
+  remote_host="localhost"
+fi
+REMOTE_HUB_URL="$(get_hub_url "${remote_host}")"
 HEALTHCHECK_URL="$(get_hub_url "localhost")"
 STATUS_URL="${HEALTHCHECK_URL}/status"
 
