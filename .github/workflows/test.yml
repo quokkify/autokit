@@ -240,14 +240,6 @@ jobs:
       - name: 🚀 Run tests
         run: |
           EXTRA_ARGS=()
-          if [[ -n "${{ matrix.base_url_hosted }}" ]]; then
-            if [[ "${{ needs.detect-runner.outputs.is_self_hosted }}" == "true" ]]; then
-              export BASE_URL="${{ matrix.base_url_self_hosted }}"
-            else
-              export BASE_URL="${{ matrix.base_url_hosted }}"
-            fi
-          fi
-
           if [[ -f tools/environment/.selenium-grid.env ]]; then
             set -a
             source tools/environment/.selenium-grid.env
@@ -268,8 +260,15 @@ jobs:
             source tools/environment/.nginx.env
             set +a
           fi
-          if [[ -n "${NGINX_BASE_URL:-}" && -z "${BASE_URL:-}" ]]; then
+          if [[ -n "${NGINX_BASE_URL:-}" ]]; then
             export BASE_URL="${NGINX_BASE_URL}"
+          fi
+          if [[ -z "${BASE_URL:-}" && -n "${{ matrix.base_url_hosted }}" ]]; then
+            if [[ "${{ needs.detect-runner.outputs.is_self_hosted }}" == "true" ]]; then
+              export BASE_URL="${{ matrix.base_url_self_hosted }}"
+            else
+              export BASE_URL="${{ matrix.base_url_hosted }}"
+            fi
           fi
 
           ./gradlew ${{ matrix.module }}:check --no-daemon --console=plain --stacktrace "${EXTRA_ARGS[@]}"
