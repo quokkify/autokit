@@ -124,6 +124,7 @@ public abstract class Navigation {
       throw new RuntimeException(e);
     }
     Allure.step("Open page by url: '%s'".formatted(pageUrl));
+    System.out.println("Open page URL=" + pageUrl);
     return Selenide.open(pageUrl, pageClass);
   }
 

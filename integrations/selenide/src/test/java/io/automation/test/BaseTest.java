@@ -21,6 +21,7 @@ public class BaseTest {
 
   @BeforeSuite(alwaysRun = true)
   protected void beforeSuite() {
+    System.out.println("BASE_URL=" + APP_CONFIG.baseUrl());
     Browser.setDefaultConfigurations();
     com.codeborne.selenide.Configuration.headless = true;
     if (Objects.nonNull(BROWSER_CONFIGURATION.remoteUrl())) {
