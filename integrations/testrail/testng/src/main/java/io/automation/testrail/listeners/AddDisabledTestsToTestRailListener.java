@@ -2,11 +2,17 @@ package io.automation.testrail.listeners;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.ServiceLoader;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import io.automation.config.ConfigRegistry;
+import io.automation.constant.StringConstant;
 import io.automation.testrail.configs.TestRailConfiguration;
+import io.automation.testrail.tickets.TicketSource;
 import io.automation.testrail.utils.TestRailHelper;
 import io.automation.testrail.utils.TestRailTestFilterRules;
 import io.automation.util.TestUtils;
@@ -30,7 +36,9 @@ public class AddDisabledTestsToTestRailListener implements ISuiteListener {
   @Override
   public void onFinish(ISuite suite) {
     if (!IS_TESTRAIL_ENABLED) return;
-    setDisabledTestsAsFailedToTestRail(new ArrayList<>(suite.getExcludedMethods()));
+    List<ITestNGMethod> excludedMethods = new ArrayList<>(suite.getExcludedMethods());
+    setDisabledTestsAsFailedToTestRail(excludedMethods);
+    addTicketBugsToTestRail(excludedMethods);
     if (CONFIG.closeTestRun()) {
       TestRailHelper.closeActualTestRuns();
     }
@@ -56,8 +64,60 @@ public class AddDisabledTestsToTestRailListener implements ISuiteListener {
         });
   }
 
+  private void addTicketBugsToTestRail(List<ITestNGMethod> excludedTests) {
+    List<TicketSource> sources = loadTicketSources();
+    if (sources.isEmpty()) {
+      return;
+    }
+    Map<String, String> commentsByTestCase = buildCommentsByTestCase(sources);
+    if (commentsByTestCase.isEmpty()) {
+      return;
+    }
+    excludedTests.stream()
+        .filter(test -> Objects.nonNull(TestUtils.getTestAnnotation(test, TmsLink.class)))
+        .filter(test -> commentsByTestCase.containsKey(getTestCaseId(test)))
+        .forEach(test -> {
+          String testCaseId = getTestCaseId(test);
+          AtomicReference<String> commentMessage =
+              new AtomicReference<>(commentsByTestCase.get(testCaseId));
+          if (TestRailTestFilterRules.needRunTest(testCaseId)) {
+            TestRailHelper.addTestResultForDisabledTest(
+                testCaseId,
+                CONFIG.userIdAssignedDisabledTests(),
+                commentMessage.get());
+          }
+        });
+  }
+
   private static String getTestCaseId(ITestNGMethod test) {
     return TestUtils.getTestAnnotation(test, TmsLink.class).value();
   }
 
+  private static List<TicketSource> loadTicketSources() {
+    return StreamSupport.stream(ServiceLoader.load(TicketSource.class).spliterator(), false)
+        .filter(TicketSource::isEnabled)
+        .toList();
+  }
+
+  private static Map<String, String> buildCommentsByTestCase(List<TicketSource> sources) {
+    Map<String, List<String>> segmentsByTestCase = new java.util.HashMap<>();
+    sources.forEach(source ->
+        source.getTestCasesWithBugs().forEach((testCaseId, tickets) -> {
+          if (tickets == null || tickets.isEmpty()) {
+            return;
+          }
+          String ticketsString = tickets.stream()
+              .map(source::buildTicketLink)
+              .collect(Collectors.joining(StringConstant.COMMA_SPACE));
+          String segment = "**%s:** %s".formatted(source.label(), ticketsString);
+          segmentsByTestCase.computeIfAbsent(testCaseId, key -> new ArrayList<>()).add(segment);
+        }));
+
+    return segmentsByTestCase.entrySet().stream()
+        .collect(Collectors.toMap(
+            Map.Entry::getKey,
+            entry -> "TC-%s is disabled via %s".formatted(
+                entry.getKey(),
+                String.join(StringConstant.SEMICOLON_SPACE, entry.getValue()))));
+  }
 }
