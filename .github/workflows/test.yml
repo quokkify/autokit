@@ -244,6 +244,10 @@ jobs:
             COMPOSE_FILES+=(-f tools/environment/docker/docker-compose.ci.yml)
           fi
 
+          echo "== nginx source files =="
+          ls -la tools/environment/nginx/conf.d || true
+          ls -la tools/environment/nginx/html || true
+
           echo "== docker compose config (nginx) =="
           docker compose "${COMPOSE_FILES[@]}" config | sed -n '1,160p'
 
