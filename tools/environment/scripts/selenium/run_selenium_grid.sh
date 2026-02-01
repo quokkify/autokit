@@ -106,3 +106,16 @@ if [ $SECONDS -ge $end_time ]; then
 fi
 
 echo "BROWSER_REMOTE_URL=${REMOTE_HUB_URL}" > tools/environment/.selenium-grid.env
+
+if [[ "${CI:-}" == "true" ]]; then
+  node_container="$(docker compose "${COMPOSE_FILES[@]}" ps -q selenium-node-docker | head -n1 || true)"
+  if [[ -n "$node_container" ]]; then
+    if [[ -f tools/environment/.nginx.env ]]; then
+      echo "[selenium-grid] nginx env:"
+      cat tools/environment/.nginx.env || true
+    fi
+    echo "[selenium-grid] probe from selenium-node-docker:"
+    docker exec "$node_container" sh -lc "wget -qO- http://dind:80/table/ | head -c 200 || true"
+    docker exec "$node_container" sh -lc "wget -qO- http://nginx:80/table/ | head -c 200 || true"
+  fi
+fi
