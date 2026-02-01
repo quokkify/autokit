@@ -40,6 +40,8 @@ echo "[infra] docker compose up: ${PROFILES_ARGS[*]}"
 COMPOSE_FILES=(-f tools/environment/docker/docker-compose.yml)
 if [[ "${CI:-}" == "true" ]]; then
   COMPOSE_FILES+=(-f tools/environment/docker/docker-compose.ci.yml)
+else
+  COMPOSE_FILES+=(-f tools/environment/docker/docker-compose.local.yml)
 fi
 
 if [[ "${CI:-}" == "true" ]]; then
@@ -72,6 +74,8 @@ for profile in "${TOKENS[@]}"; do
       COMPOSE_FILES=(-f tools/environment/docker/docker-compose.yml)
       if [[ "${CI:-}" == "true" ]]; then
         COMPOSE_FILES+=(-f tools/environment/docker/docker-compose.ci.yml)
+      else
+        COMPOSE_FILES+=(-f tools/environment/docker/docker-compose.local.yml)
       fi
       port_line=$(docker compose "${COMPOSE_FILES[@]}" port nginx 80 | head -n1 || true)
       if [[ -n "$port_line" ]]; then
@@ -90,6 +94,8 @@ for profile in "${TOKENS[@]}"; do
       COMPOSE_FILES=(-f tools/environment/docker/docker-compose.yml)
       if [[ "${CI:-}" == "true" ]]; then
         COMPOSE_FILES+=(-f tools/environment/docker/docker-compose.ci.yml)
+      else
+        COMPOSE_FILES+=(-f tools/environment/docker/docker-compose.local.yml)
       fi
       port_line=$(docker compose "${COMPOSE_FILES[@]}" port mongodb 27017 | head -n1 || true)
       if [[ -n "$port_line" ]]; then

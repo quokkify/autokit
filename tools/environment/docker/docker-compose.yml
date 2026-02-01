@@ -2,9 +2,6 @@ services:
   nginx:
     profiles: [web]
     image: nginx:1.29.4@sha256:c881927c4077710ac4b1da63b83aa163937fb47457950c267d92f7e4dedf4aec
-    volumes:
-      - ../nginx/conf.d:/etc/nginx/conf.d:ro
-      - ../nginx/html:/usr/share/nginx/html:ro
     ports:
       - "80:80"
 
