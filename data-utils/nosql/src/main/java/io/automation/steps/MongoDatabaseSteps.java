@@ -2,9 +2,6 @@ package io.automation.steps;
 
 import java.util.List;
 
-import io.automation.entity.nosql.MongoEntityInterface;
-import io.automation.service.NoSqlFactory;
-
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import dev.morphia.DeleteOptions;
@@ -12,6 +9,8 @@ import dev.morphia.UpdateOptions;
 import dev.morphia.query.Query;
 import dev.morphia.query.filters.Filters;
 import dev.morphia.query.updates.UpdateOperator;
+import io.automation.entity.nosql.MongoEntityInterface;
+import io.automation.service.NoSqlFactory;
 import io.qameta.allure.Step;
 
 /**

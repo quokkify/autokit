@@ -2,14 +2,13 @@ package io.automation.test;
 
 import java.util.List;
 
-import io.automation.entity.nosql.DatabaseTestUserMongo;
-import io.automation.service.NoSqlFactory;
-import io.automation.steps.MongoDatabaseSteps;
-
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import dev.morphia.query.filters.Filters;
 import dev.morphia.query.updates.UpdateOperators;
+import io.automation.entity.nosql.DatabaseTestUserMongo;
+import io.automation.service.NoSqlFactory;
+import io.automation.steps.MongoDatabaseSteps;
 import io.qameta.allure.TmsLink;
 import org.assertj.core.api.Assertions;
 import org.testng.annotations.AfterClass;
