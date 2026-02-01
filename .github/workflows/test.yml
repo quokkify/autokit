@@ -224,14 +224,34 @@ jobs:
       - name: 🔨Build with Gradle
         uses: gradle/actions/setup-gradle@f29f5a9d7b09a7c6b29859002d29d24e1674c884 # v5
 
-      - name: 🧩 Install Chrome (self-hosted web)
+      - name: 🧩 Install Chromium (ARM self-hosted)
         if: ${{ needs.detect-runner.outputs.is_self_hosted == 'true' && matrix.profile == 'web' }}
-        id: setup-chrome
-        uses: browser-actions/setup-chrome@v2
-        with:
-          chrome-version: stable
-          install-chromedriver: true
-          install-dependencies: true
+        run: |
+          set -euo pipefail
+
+          if ! command -v chromium >/dev/null 2>&1 && ! command -v chromium-browser >/dev/null 2>&1; then
+            if command -v sudo >/dev/null 2>&1; then
+              SUDO="sudo"
+            else
+              SUDO=""
+            fi
+
+            $SUDO apt-get update
+            $SUDO apt-get install -y chromium chromium-driver || \
+              $SUDO apt-get install -y chromium-browser || \
+              $SUDO apt-get install -y chromium-chromedriver
+          fi
+
+          if command -v chromium >/dev/null 2>&1; then
+            echo "CHROME_BIN=$(command -v chromium)" >> "$GITHUB_ENV"
+          elif command -v chromium-browser >/dev/null 2>&1; then
+            echo "CHROME_BIN=$(command -v chromium-browser)" >> "$GITHUB_ENV"
+          fi
+
+          if command -v chromedriver >/dev/null 2>&1; then
+            echo "CHROMEDRIVER_PATH=$(command -v chromedriver)" >> "$GITHUB_ENV"
+          fi
+        shell: bash
 
       - name: 🟢 Start Infra
         if: ${{ matrix.profile != 'none' }}
@@ -251,9 +271,11 @@ jobs:
       - name: 🚀 Run tests
         run: |
           EXTRA_ARGS=()
-          if [[ "${{ needs.detect-runner.outputs.is_self_hosted }}" == "true" && "${{ matrix.profile }}" == "web" ]]; then
-            EXTRA_ARGS+=("-Dwebdriver.chrome.driver=${{ steps.setup-chrome.outputs.chromedriver-path }}")
-            EXTRA_ARGS+=("-Dchrome.binary=${{ steps.setup-chrome.outputs.chrome-path }}")
+          if [[ -n "${CHROMEDRIVER_PATH:-}" ]]; then
+            EXTRA_ARGS+=("-Dwebdriver.chrome.driver=${CHROMEDRIVER_PATH}")
+          fi
+          if [[ -n "${CHROME_BIN:-}" ]]; then
+            EXTRA_ARGS+=("-Dchrome.binary=${CHROME_BIN}")
           fi
 
           if [[ -n "${{ matrix.base_url_hosted }}" ]]; then
