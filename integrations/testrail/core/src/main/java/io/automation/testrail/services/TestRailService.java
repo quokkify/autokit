@@ -2,11 +2,10 @@ package io.automation.testrail.services;
 
 import java.util.Objects;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.automation.testrail.models.TestPlan;
 import io.automation.testrail.models.TestRun;
 import io.automation.testrail.utils.TestRailDataGenerator;
-
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 public class TestRailService {
 
