@@ -2,7 +2,6 @@ package io.automation.testrail.services;
 
 import java.util.List;
 
-import io.automation.http.HttpResponseData;
 import io.automation.testrail.models.CaseFields;
 import io.automation.testrail.models.CustomAutomationTypes;
 import io.automation.testrail.models.Section;
@@ -13,6 +12,7 @@ import io.automation.testrail.models.TestPlan;
 import io.automation.testrail.models.TestRun;
 import io.automation.testrail.models.TestRunFromSuite;
 import io.automation.testrail.models.TestSuite;
+import io.automation.http.HttpResponseData;
 
 public interface TestRailClient {
 

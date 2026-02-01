@@ -22,7 +22,6 @@ public interface JiraConfiguration extends Config {
 
   @Key("JIRA_BUG_QUERY")
   String jiraBugQuery();
-
   @Key("BUG_EXECUTION_SCOPE")
   @DefaultValue("ALL_TESTS")
   String bugExecutionScope();
