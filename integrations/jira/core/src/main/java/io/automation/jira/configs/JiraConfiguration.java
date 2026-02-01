@@ -1,6 +1,7 @@
 package io.automation.jira.configs;
 
 import org.aeonbits.owner.Config;
+import io.automation.constant.BugExecutionScope;
 
 @Config.LoadPolicy(Config.LoadType.MERGE)
 @Config.Sources({
@@ -22,7 +23,8 @@ public interface JiraConfiguration extends Config {
 
   @Key("JIRA_BUG_QUERY")
   String jiraBugQuery();
+
   @Key("BUG_EXECUTION_SCOPE")
   @DefaultValue("ALL_TESTS")
-  String bugExecutionScope();
+  BugExecutionScope bugExecutionScope();
 }

@@ -65,7 +65,7 @@ public class AllureBugTrackerListener implements IInvokedMethodListener, ISuiteL
   }
 
   private static BugExecutionScope bugExecutionScope() {
-    return BugExecutionScope.valueOf(CONFIG.bugExecutionScope());
+    return CONFIG.bugExecutionScope();
   }
 
   private static boolean isJiraEnabled() {

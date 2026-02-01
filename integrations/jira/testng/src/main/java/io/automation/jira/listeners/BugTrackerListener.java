@@ -90,7 +90,7 @@ public class BugTrackerListener implements IMethodInterceptor, IExecutionListene
   }
 
   private static BugExecutionScope bugExecutionScope() {
-    return BugExecutionScope.valueOf(CONFIG.bugExecutionScope());
+    return CONFIG.bugExecutionScope();
   }
 
   private static boolean isJiraEnabled() {
