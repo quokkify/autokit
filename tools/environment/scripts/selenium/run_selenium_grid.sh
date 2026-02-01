@@ -149,5 +149,7 @@ if [[ "${CI:-}" == "true" ]]; then
     echo "[selenium-grid] probe from selenium-node-docker:"
     docker exec "$node_container" sh -lc "wget -S -O- http://host.docker.internal:${nginx_port}/table/ 2>&1 | head -c 300; echo \" rc=\$?\""
     docker exec "$node_container" sh -lc "wget -S -O- http://nginx:80/table/ 2>&1 | head -c 300; echo \" rc=\$?\""
+    docker exec "$node_container" sh -lc "wget -S -O- http://nginx:80/horizontal_table/ 2>&1 | head -c 300; echo \" rc=\$?\""
+    docker exec "$node_container" sh -lc "wget -qO- http://nginx:80/horizontal_table/ | grep -q iframeResult && echo \"[selenium-grid] iframeResult found\" || echo \"[selenium-grid] iframeResult missing\""
   fi
 fi
