@@ -235,6 +235,33 @@ jobs:
         run: ./tools/environment/scripts/infra/run_app.sh "${{ matrix.profile }}"
         shell: bash
 
+      - name: 🧪 Debug infra (web)
+        if: ${{ matrix.profile == 'web' }}
+        run: |
+          set -euo pipefail
+          COMPOSE_FILES=(-f tools/environment/docker/docker-compose.yml)
+          if [[ "${CI:-}" == "true" ]]; then
+            COMPOSE_FILES+=(-f tools/environment/docker/docker-compose.ci.yml)
+          fi
+
+          echo "== docker compose config (nginx) =="
+          docker compose "${COMPOSE_FILES[@]}" config | sed -n '1,160p'
+
+          echo "== docker compose ps nginx =="
+          docker compose "${COMPOSE_FILES[@]}" ps -a nginx || true
+
+          nginx_id="$(docker compose "${COMPOSE_FILES[@]}" ps -q nginx | head -n1 || true)"
+          echo "nginx_container=${nginx_id}"
+          if [[ -n "${nginx_id}" ]]; then
+            echo "== nginx logs (last 200) =="
+            docker logs --tail=200 "${nginx_id}" || true
+            echo "== nginx conf.d =="
+            docker exec "${nginx_id}" sh -lc "ls -la /etc/nginx/conf.d || true; echo '---'; sed -n '1,120p' /etc/nginx/conf.d/*.conf 2>/dev/null || true"
+            echo "== nginx listening ports =="
+            docker exec "${nginx_id}" sh -lc "ss -lntp || netstat -lntp || true"
+          fi
+        shell: bash
+
       - name: 🚀 Run tests
         run: |
           EXTRA_ARGS=()
