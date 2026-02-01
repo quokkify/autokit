@@ -1,5 +1,8 @@
 services:
   nginx:
+    build:
+      context: ../nginx
+      dockerfile: Dockerfile.ci
     ports:
       - "0:80"
   kafka:

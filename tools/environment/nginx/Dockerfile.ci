@@ -1,0 +1,4 @@
+FROM nginx:1.29.4
+
+COPY conf.d/ /etc/nginx/conf.d/
+COPY html/ /usr/share/nginx/html/
