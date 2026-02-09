@@ -17,7 +17,6 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvParser;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.automation.util.FileUtils;
 
 /**
@@ -28,7 +27,7 @@ import io.automation.util.FileUtils;
  *   <li><b>Core (schema-first)</b>: methods that accept an explicit {@link CsvSchema} to avoid duplication.</li>
  *   <li><b>Convenience</b>: thin overloads that delegate to core with a default header-based schema.</li>
  *   <li>No checked exceptions are thrown; all are wrapped into {@link RuntimeException} with context.</li>
- *   <li>Configured with {@link JavaTimeModule}; supports POJO/record constructor binding
+ *   <li>Configured with classpath module auto-discovery; supports POJO/record constructor binding
  *       (use {@code @JsonProperty} when column names differ).</li>
  * </ul>
  */
@@ -37,25 +36,32 @@ public final class CsvConverter {
   /**
    * Default mapper for CSV (trimming spaces, forgiving trailing columns).
    */
-  private static final CsvMapper CSV = CsvMapper.builder()
-      .addModule(new JavaTimeModule())
-      .enable(CsvParser.Feature.TRIM_SPACES)
-      .enable(CsvParser.Feature.IGNORE_TRAILING_UNMAPPABLE)
-      .enable(CsvParser.Feature.WRAP_AS_ARRAY)
-      .build();
+  private static final CsvMapper CSV = createCsvMapper(false, true);
 
   /**
    * Mapper for CSV that skips nulls during serialization.
    */
-  private static final CsvMapper CSV_NON_NULL = CsvMapper.builder()
-      .addModule(new JavaTimeModule())
-      .enable(CsvParser.Feature.TRIM_SPACES)
-      .enable(CsvParser.Feature.IGNORE_TRAILING_UNMAPPABLE)
-      .enable(CsvParser.Feature.WRAP_AS_ARRAY)
-      .defaultPropertyInclusion(JsonInclude.Value.construct(JsonInclude.Include.NON_NULL, JsonInclude.Include.ALWAYS))
-      .build();
+  private static final CsvMapper CSV_NON_NULL = createCsvMapper(true, true);
 
   private CsvConverter() {
+  }
+
+  static CsvMapper createCsvMapper(boolean ignoreNullFields, boolean registerDiscoveredModules) {
+    CsvMapper.Builder builder = CsvMapper.builder()
+        .enable(CsvParser.Feature.TRIM_SPACES)
+        .enable(CsvParser.Feature.IGNORE_TRAILING_UNMAPPABLE)
+        .enable(CsvParser.Feature.WRAP_AS_ARRAY);
+
+    if (ignoreNullFields) {
+      builder.defaultPropertyInclusion(
+          JsonInclude.Value.construct(JsonInclude.Include.NON_NULL, JsonInclude.Include.ALWAYS));
+    }
+
+    CsvMapper mapper = builder.build();
+    if (registerDiscoveredModules) {
+      mapper.findAndRegisterModules();
+    }
+    return mapper;
   }
 
   /* =========================
