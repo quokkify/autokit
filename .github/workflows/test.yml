@@ -42,7 +42,9 @@ jobs:
                 ? pr.head.repo.full_name === pr.base.repo.full_name
                 : false;
               const association = pr?.author_association || 'NONE';
-              allowSelfHosted = sameRepo && trusted.has(association);
+              const authorLogin = (pr?.user?.login || '').toLowerCase();
+              const isRenovateBot = authorLogin === 'renovate[bot]';
+              allowSelfHosted = sameRepo && (trusted.has(association) || isRenovateBot);
             }
 
             if (!allowSelfHosted) {
