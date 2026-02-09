@@ -5,7 +5,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 /**
  * Utilities for XML serialization and deserialization using Jackson XmlMapper.
@@ -13,28 +12,36 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
  * <p>Notes:
  * <ul>
  *   <li>No checked exceptions are thrown; they are wrapped into {@link RuntimeException}.</li>
- *   <li>Configured with {@link JavaTimeModule}, XML declaration disabled by default.</li>
+ *   <li>Configured with XML defaults and classpath module auto-discovery.</li>
  * </ul>
  * </p>
  */
 public final class XmlConverter {
 
-  private static final XmlMapper XML = XmlMapper.builder()
-      .addModule(new JavaTimeModule())
-      .disable(ToXmlGenerator.Feature.WRITE_XML_DECLARATION)
-      .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
-      .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
-      .build();
-
-  private static final XmlMapper XML_NON_NULL = XmlMapper.builder()
-      .addModule(new JavaTimeModule())
-      .disable(ToXmlGenerator.Feature.WRITE_XML_DECLARATION)
-      .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
-      .defaultPropertyInclusion(JsonInclude.Value.construct(JsonInclude.Include.NON_NULL, JsonInclude.Include.ALWAYS))
-      .build();
+  private static final XmlMapper XML = createXmlMapper(false, true);
+  private static final XmlMapper XML_NON_NULL = createXmlMapper(true, true);
 
   private XmlConverter() {
     // prevent instantiation
+  }
+
+  static XmlMapper createXmlMapper(boolean ignoreNullFields, boolean registerDiscoveredModules) {
+    XmlMapper.Builder builder = XmlMapper.builder()
+        .disable(ToXmlGenerator.Feature.WRITE_XML_DECLARATION)
+        .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+
+    if (!ignoreNullFields) {
+      builder.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+    } else {
+      builder.defaultPropertyInclusion(
+          JsonInclude.Value.construct(JsonInclude.Include.NON_NULL, JsonInclude.Include.ALWAYS));
+    }
+
+    XmlMapper mapper = builder.build();
+    if (registerDiscoveredModules) {
+      mapper.findAndRegisterModules();
+    }
+    return mapper;
   }
 
   /* =========================
