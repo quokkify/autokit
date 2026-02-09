@@ -17,7 +17,6 @@ services:
     environment:
       REPO_URL: ${REPO_URL}
       RUNNER_TOKEN: ${RUNNER_TOKEN}
-      RUNNER_NAME: ${RUNNER_NAME}
       LABELS: ${RUNNER_LABELS}
       RUNNER_EPHEMERAL: "true"
       DISABLE_AUTO_UPDATE: "true"
