@@ -44,7 +44,9 @@ jobs:
                 const baseRepo = run.repository?.full_name;
                 const sameRepo = headRepo && baseRepo ? headRepo === baseRepo : false;
                 const association = run.actor?.association || 'NONE';
-                allowSelfHosted = sameRepo && trusted.has(association);
+                const actorLogin = (run.actor?.login || '').toLowerCase();
+                const isRenovateBot = actorLogin === 'renovate[bot]';
+                allowSelfHosted = sameRepo && (trusted.has(association) || isRenovateBot);
               }
             }
 
