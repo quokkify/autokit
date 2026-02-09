@@ -1,6 +1,7 @@
 ext {
     aeonbits = "1.0.12"
     assertj = "3.27.7"
+    jetbrains_annotations = "26.0.2-1"
     hamcrest = "3.0"
     testng = "7.12.0"
     faker = "2.5.3"
@@ -86,10 +87,17 @@ subprojects {
             api "org.apache.commons:commons-text:1.15.0"
         }
 
-        compileOnly "org.jetbrains:annotations:26.0.2-1"
-        annotationProcessor "org.jetbrains:annotations:26.0.2-1"
-        testCompileOnly "org.jetbrains:annotations:26.0.2-1"
-        testAnnotationProcessor "org.jetbrains:annotations:26.0.2-1"
+        compileOnly "org.jetbrains:annotations:${jetbrains_annotations}"
+        annotationProcessor "org.jetbrains:annotations:${jetbrains_annotations}"
+        testCompileOnly "org.jetbrains:annotations:${jetbrains_annotations}"
+        testAnnotationProcessor "org.jetbrains:annotations:${jetbrains_annotations}"
+
+        if (project.path != ":testng-extensions") {
+            testImplementation project(":testng-extensions")
+        }
+        testImplementation "org.assertj:assertj-core"
+        testImplementation "org.apache.logging.log4j:log4j-core"
+        testImplementation "org.apache.logging.log4j:log4j-slf4j2-impl"
 
         compileOnly "com.github.spotbugs:spotbugs-annotations:${spotbugs_annotations}"
         testCompileOnly "com.github.spotbugs:spotbugs-annotations:${spotbugs_annotations}"

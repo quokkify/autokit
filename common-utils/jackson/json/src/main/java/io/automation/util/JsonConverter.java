@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 /**
  * Utilities for JSON serialization and deserialization using Jackson.
@@ -16,25 +15,34 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
  * <p>Notes:
  * <ul>
  *   <li>No checked exceptions are thrown; they are wrapped into {@link RuntimeException}.</li>
- *   <li>Configured with {@link JavaTimeModule} and sane date defaults.</li>
+ *   <li>Configured with sane date defaults and classpath module auto-discovery.</li>
  * </ul>
  * </p>
  */
 public final class JsonConverter {
 
-  private static final ObjectMapper JSON = JsonMapper.builder()
-      .addModule(new JavaTimeModule())
-      .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
-      .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false)
-      .build();
-
-  private static final ObjectMapper JSON_NON_NULL = JsonMapper.builder()
-      .addModule(new JavaTimeModule())
-      .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
-      .defaultPropertyInclusion(JsonInclude.Value.construct(JsonInclude.Include.NON_NULL, JsonInclude.Include.ALWAYS))
-      .build();
+  private static final ObjectMapper JSON = createJsonMapper(false, true);
+  private static final ObjectMapper JSON_NON_NULL = createJsonMapper(true, true);
 
   private JsonConverter() {
+  }
+
+  static ObjectMapper createJsonMapper(boolean ignoreNullFields, boolean registerDiscoveredModules) {
+    JsonMapper.Builder builder = JsonMapper.builder()
+        .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+
+    if (!ignoreNullFields) {
+      builder.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+    } else {
+      builder.defaultPropertyInclusion(
+          JsonInclude.Value.construct(JsonInclude.Include.NON_NULL, JsonInclude.Include.ALWAYS));
+    }
+
+    ObjectMapper mapper = builder.build();
+    if (registerDiscoveredModules) {
+      mapper.findAndRegisterModules();
+    }
+    return mapper;
   }
 
   /**
