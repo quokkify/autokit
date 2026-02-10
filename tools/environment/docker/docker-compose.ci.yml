@@ -9,7 +9,7 @@ services:
       - "0:80"
   kafka:
     ports:
-      - "0:29092"
+      - "29092:29092"
   kafka-ui:
     ports:
       - "0:8080"

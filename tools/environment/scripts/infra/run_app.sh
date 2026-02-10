@@ -57,6 +57,13 @@ if [[ "${CI:-}" == "true" ]]; then
     if [[ "$profile" == "web" ]]; then
       needs_nginx_build="true"
     fi
+    if [[ "$profile" == "messaging" ]]; then
+      if [[ "${EXECUTION_MODE:-}" == "DIND" ]]; then
+        export KAFKA_EXTERNAL_HOST=dind
+      else
+        export KAFKA_EXTERNAL_HOST=localhost
+      fi
+    fi
   done
   if [[ "$needs_nginx_build" == "true" ]]; then
     echo "[infra] building nginx image for CI"
@@ -154,16 +161,18 @@ for profile in "${TOKENS[@]}"; do
     messaging)
       info "[infra] messaging hook: waiting for kafka readiness"
       ready="false"
-      for _ in {1..40}; do
+      for _ in {1..90}; do
         if docker compose "${COMPOSE_FILES[@]}" exec -T kafka \
-          kafka-topics.sh --bootstrap-server kafka:9092 --list >/dev/null 2>&1; then
+          kafka-topics.sh --bootstrap-server kafka:9092 --list 2>/dev/null | grep -Fxq messages; then
           ready="true"
           break
         fi
-        sleep 1
+        sleep 2
       done
       if [[ "$ready" != "true" ]]; then
-        warning "[infra] messaging hook: kafka not ready after timeout"
+        error "[infra] messaging hook: kafka is not ready after timeout"
+        docker compose "${COMPOSE_FILES[@]}" logs --tail=200 kafka zookeeper || true
+        exit 1
       fi
 
       info "[infra] messaging hook: set kafka bootstrap and kafka-ui url"
