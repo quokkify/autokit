@@ -111,6 +111,33 @@ for profile in "${TOKENS[@]}"; do
       fi
       echo "MONGODB_URL=mongodb://${host}:${port}" > tools/environment/.mongo.env
       ;;
+    redis)
+      info "[infra] redis hook: waiting for PING"
+      ready="false"
+      for _ in {1..30}; do
+        if docker compose "${COMPOSE_FILES[@]}" exec -T redis redis-cli ping >/dev/null 2>&1; then
+          ready="true"
+          break
+        fi
+        sleep 1
+      done
+      if [[ "$ready" != "true" ]]; then
+        warning "[infra] redis hook: PING not ready after timeout"
+      fi
+      info "[infra] redis hook: set redis host and port"
+      port_line=$(docker compose "${COMPOSE_FILES[@]}" port redis 6379 | head -n1 || true)
+      if [[ -n "$port_line" ]]; then
+        port="${port_line##*:}"
+      else
+        port="6379"
+      fi
+      host="localhost"
+      if [[ "${CI:-}" == "true" && "${EXECUTION_MODE:-}" == "DIND" ]]; then
+        host="dind"
+      fi
+      echo "REDIS_HOST=${host}" > tools/environment/.redis.env
+      echo "REDIS_PORT=${port}" >> tools/environment/.redis.env
+      ;;
     *)
       : # no-op
       ;;
