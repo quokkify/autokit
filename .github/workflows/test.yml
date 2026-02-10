@@ -121,6 +121,11 @@ jobs:
             slug: "integrations-testrail-testng"
             profile: "none"
 
+          - name: "integrations • reportportal • testng"
+            module: ":integrations:reportportal:testng"
+            slug: "integrations-reportportal-testng"
+            profile: "reporting"
+
           # =========================
           # Data utils
           # =========================
@@ -264,6 +269,11 @@ jobs:
           if [[ -f tools/environment/.nginx.env ]]; then
             set -a
             source tools/environment/.nginx.env
+            set +a
+          fi
+          if [[ -f tools/environment/.reportportal.env ]]; then
+            set -a
+            source tools/environment/.reportportal.env
             set +a
           fi
           if [[ "${{ matrix.profile }}" == "web" ]]; then
