@@ -26,23 +26,51 @@ fi
 
 endpoint="http://${host}:${port}"
 
-for _ in {1..60}; do
-  if curl -sS -f "${endpoint}/ui/health" >/dev/null 2>&1; then
+ready="false"
+for _ in {1..90}; do
+  if curl -sS -f "${endpoint}/ui/health" >/dev/null 2>&1 \
+      && curl -sS -f "${endpoint}/uat/health" >/dev/null 2>&1 \
+      && curl -sS -f "${endpoint}/api/health" >/dev/null 2>&1; then
+    ready="true"
     break
   fi
   sleep 2
 done
+if [[ "$ready" != "true" ]]; then
+  echo "[reporting] report portal services are not healthy on ${endpoint}" >&2
+  exit 1
+fi
 
-token_response="$(curl -sS -f --user 'ui:uiman' \
-  -H 'Content-Type: application/x-www-form-urlencoded' \
-  --data-urlencode 'grant_type=password' \
-  --data-urlencode "username=${admin_user}" \
-  --data-urlencode "password=${admin_password}" \
-  "${endpoint}/uat/sso/oauth/token")"
+candidate_users="${REPORTPORTAL_CANDIDATE_USERS:-${admin_user},superadmin,default}"
+last_response=""
+token=""
+IFS=',' read -ra USERS <<<"$candidate_users"
+for user in "${USERS[@]}"; do
+  user="$(echo "$user" | xargs)"
+  [[ -z "$user" ]] && continue
+  for _ in {1..40}; do
+    token_response="$(curl -sS --show-error \
+      --user 'ui:uiman' \
+      -H 'Content-Type: application/x-www-form-urlencoded' \
+      --data-urlencode 'grant_type=password' \
+      --data-urlencode "username=${user}" \
+      --data-urlencode "password=${admin_password}" \
+      "${endpoint}/uat/sso/oauth/token" || true)"
+    last_response="$token_response"
+    token="$(printf '%s' "$token_response" \
+      | sed -n 's/.*"access_token"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p')"
+    if [[ -n "$token" ]]; then
+      break 2
+    fi
+    sleep 2
+  done
+done
 
-token="$(printf '%s' "$token_response" | sed -n 's/.*"access_token"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p')"
 if [[ -z "$token" ]]; then
   echo "[reporting] access token is empty" >&2
+  if [[ -n "$last_response" ]]; then
+    echo "[reporting] oauth response (truncated): ${last_response:0:500}" >&2
+  fi
   exit 1
 fi
 
