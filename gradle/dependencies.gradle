@@ -21,7 +21,7 @@ ext {
     guava = "33.5.0-jre"
     googleauth = "1.5.0"
     json = "20250107"
-    jira_rest_client_core = "6.0.2"
+    jira_rest_client_core = "7.0.1"
     fugue = "6.0.1"
     opencsv = "5.10"
     commons_io = "2.21.0"
