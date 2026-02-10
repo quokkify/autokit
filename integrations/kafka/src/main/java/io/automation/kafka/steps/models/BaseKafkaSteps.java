@@ -257,9 +257,9 @@ public abstract class BaseKafkaSteps<M extends KafkaMessageValue, V extends Kafk
 
   private List<KafkaMessage<String, String>> sortedMessagesByPartition(List<KafkaMessage<String, String>> messages) {
     return messages.stream()
-        .sorted(Comparator.comparingInt((KafkaMessage<String, String> message) -> message.getPartition())
+        .sorted(Comparator.comparingInt((KafkaMessage<String, String> message) -> message.partition())
             .thenComparing(
-                Comparator.comparingLong((KafkaMessage<String, String> message) -> message.getOffset()).reversed()))
+                Comparator.comparingLong((KafkaMessage<String, String> message) -> message.offset()).reversed()))
         .collect(Collectors.toList());
   }
 
@@ -277,7 +277,7 @@ public abstract class BaseKafkaSteps<M extends KafkaMessageValue, V extends Kafk
   private List<M> getConvertedMessages(List<KafkaMessage<String, String>> messageList) {
     Class<M> messageValueClassType = (Class<M>) ReflectionUtils.getGenericClassType(this.getClass(), 0);
     return messageList.stream()
-        .map(message -> (M) JsonConverter.fromString(message.getValue(), messageValueClassType))
+        .map(message -> (M) JsonConverter.fromString(message.value(), messageValueClassType))
         .collect(Collectors.toList());
   }
 }

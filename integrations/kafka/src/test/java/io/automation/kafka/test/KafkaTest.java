@@ -30,7 +30,7 @@ public class KafkaTest {
   public void initResources() {
     try {
       String kafkaAddress = resolveKafkaAddress();
-      ConnectionProperties connectionProperties = ConnectionProperties.builder().bootstrapServers(kafkaAddress).build();
+      ConnectionProperties connectionProperties = new ConnectionProperties(kafkaAddress);
       kafkaProducerSteps =
           new KafkaProducerSteps<>(connectionProperties, StringSerializer.class, StringSerializer.class);
       kafkaConsumerSteps =
@@ -51,9 +51,9 @@ public class KafkaTest {
     List<KafkaMessage<String, String>> messages = kafkaConsumerSteps.getMessages(TOPIC_NAME);
     Assertions.assertThat(messages)
         .anySatisfy(actual -> {
-          Assertions.assertThat(actual.getTopicName()).isEqualTo(message.getTopicName());
-          Assertions.assertThat(actual.getKey()).isEqualTo(message.getKey());
-          Assertions.assertThat(actual.getValue()).isEqualTo(message.getValue());
+          Assertions.assertThat(actual.topicName()).isEqualTo(message.topicName());
+          Assertions.assertThat(actual.key()).isEqualTo(message.key());
+          Assertions.assertThat(actual.value()).isEqualTo(message.value());
         });
   }
 

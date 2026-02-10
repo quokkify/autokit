@@ -54,20 +54,21 @@ public class KafkaService {
 
   private void setKafkaConnectionProperties() {
     if (!SecurityProtocol.SSL.name().equals(kafkaConfig.securityProtocol())) {
-      connectionProperties = ConnectionProperties.builder().bootstrapServers(kafkaConfig.kafkaServerAddress()).build();
+      connectionProperties = new ConnectionProperties(kafkaConfig.kafkaServerAddress());
     } else {
       connectionProperties = getSslKafkaConnectionProperties();
     }
   }
 
   private ConnectionProperties getSslKafkaConnectionProperties() {
-    return ConnectionProperties.builder().bootstrapServers(kafkaConfig.kafkaServerAddress())
-        .securityProtocol(kafkaConfig.securityProtocol())
-        .sslKeystoreLocation(FileUtils.getResourcePath(kafkaConfig.sslKeystoreLocation()))
-        .sslKeystorePassword(kafkaConfig.sslKeystorePassword())
-        .sslTruststoreLocation(FileUtils.getResourcePath(kafkaConfig.sslTruststoreLocation()))
-        .sslTruststorePassword(kafkaConfig.sslTruststorePassword())
-        .build();
+    return new ConnectionProperties(
+        kafkaConfig.kafkaServerAddress(),
+        kafkaConfig.securityProtocol(),
+        FileUtils.getResourcePath(kafkaConfig.sslTruststoreLocation()),
+        kafkaConfig.sslTruststorePassword(),
+        FileUtils.getResourcePath(kafkaConfig.sslKeystoreLocation()),
+        kafkaConfig.sslKeystorePassword()
+    );
   }
 
   public void closeKafka() {

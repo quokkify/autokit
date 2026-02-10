@@ -50,15 +50,15 @@ public class ClientProducer<K, V> implements Closeable {
       Class<T> keySerializerClass,
       Class<E> valueSerializerClass) {
     var props = new Properties();
-    props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, connectionProperties.getBootstrapServers());
+    props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, connectionProperties.bootstrapServers());
     props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, keySerializerClass.getName());
     props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, valueSerializerClass.getName());
-    if (StringUtils.isNotEmpty(connectionProperties.getSecurityProtocol())) {
-      props.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, connectionProperties.getSecurityProtocol());
-      props.put(SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG, connectionProperties.getSslTruststoreLocation());
-      props.put(SslConfigs.SSL_TRUSTSTORE_PASSWORD_CONFIG, connectionProperties.getSslTruststorePassword());
-      props.put(SslConfigs.SSL_KEYSTORE_LOCATION_CONFIG, connectionProperties.getSslKeystoreLocation());
-      props.put(SslConfigs.SSL_KEYSTORE_PASSWORD_CONFIG, connectionProperties.getSslKeystorePassword());
+    if (StringUtils.isNotEmpty(connectionProperties.securityProtocol())) {
+      props.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, connectionProperties.securityProtocol());
+      props.put(SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG, connectionProperties.sslTruststoreLocation());
+      props.put(SslConfigs.SSL_TRUSTSTORE_PASSWORD_CONFIG, connectionProperties.sslTruststorePassword());
+      props.put(SslConfigs.SSL_KEYSTORE_LOCATION_CONFIG, connectionProperties.sslKeystoreLocation());
+      props.put(SslConfigs.SSL_KEYSTORE_PASSWORD_CONFIG, connectionProperties.sslKeystorePassword());
     }
     LOG.info("Create kafka producer with properties:\n{}",
         props.toString().replace(StringConstant.COMMA_SPACE, StringUtils.LF));
@@ -74,7 +74,7 @@ public class ClientProducer<K, V> implements Closeable {
   public RecordMetadata syncSend(KafkaMessage<K, V> message) {
     try {
       Future<RecordMetadata> future = producer.send(
-          new ProducerRecord<>(message.getTopicName(), message.getKey(), message.getValue()));
+          new ProducerRecord<>(message.topicName(), message.key(), message.value()));
       return future.get();
     } catch (InterruptedException e) {
       Thread.currentThread().interrupt();
@@ -91,7 +91,7 @@ public class ClientProducer<K, V> implements Closeable {
    * @param callback callback for ack result
    */
   public void asyncSend(KafkaMessage<K, V> message, Callback callback) {
-    producer.send(new ProducerRecord<>(message.getTopicName(), message.getKey(), message.getValue()), callback);
+    producer.send(new ProducerRecord<>(message.topicName(), message.key(), message.value()), callback);
   }
 
   /**
@@ -100,7 +100,7 @@ public class ClientProducer<K, V> implements Closeable {
    * @param message Type of {@link KafkaMessage}
    */
   public void asyncSend(KafkaMessage<K, V> message) {
-    producer.send(new ProducerRecord<>(message.getTopicName(), message.getKey(), message.getValue()));
+    producer.send(new ProducerRecord<>(message.topicName(), message.key(), message.value()));
   }
 
   @Override

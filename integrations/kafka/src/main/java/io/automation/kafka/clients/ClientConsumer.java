@@ -61,18 +61,18 @@ public class ClientConsumer<K, V> implements Closeable {
       Class<T> keyDeserializerClass,
       Class<E> valueDeserializerClass) {
     var props = new Properties();
-    props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, connectionProperties.getBootstrapServers());
+    props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, connectionProperties.bootstrapServers());
     props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, keyDeserializerClass.getName());
     props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, valueDeserializerClass.getName());
     props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, OFFSET_LATEST);
     props.put(ConsumerConfig.GROUP_ID_CONFIG, GROUP_NAME + UUID.randomUUID());
     props.put(ConsumerConfig.ISOLATION_LEVEL_CONFIG, IsolationLevel.READ_COMMITTED.toString().toLowerCase(Locale.ROOT));
-    if (StringUtils.isNotEmpty(connectionProperties.getSecurityProtocol())) {
-      props.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, connectionProperties.getSecurityProtocol());
-      props.put(SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG, connectionProperties.getSslTruststoreLocation());
-      props.put(SslConfigs.SSL_TRUSTSTORE_PASSWORD_CONFIG, connectionProperties.getSslTruststorePassword());
-      props.put(SslConfigs.SSL_KEYSTORE_LOCATION_CONFIG, connectionProperties.getSslKeystoreLocation());
-      props.put(SslConfigs.SSL_KEYSTORE_PASSWORD_CONFIG, connectionProperties.getSslKeystorePassword());
+    if (StringUtils.isNotEmpty(connectionProperties.securityProtocol())) {
+      props.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, connectionProperties.securityProtocol());
+      props.put(SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG, connectionProperties.sslTruststoreLocation());
+      props.put(SslConfigs.SSL_TRUSTSTORE_PASSWORD_CONFIG, connectionProperties.sslTruststorePassword());
+      props.put(SslConfigs.SSL_KEYSTORE_LOCATION_CONFIG, connectionProperties.sslKeystoreLocation());
+      props.put(SslConfigs.SSL_KEYSTORE_PASSWORD_CONFIG, connectionProperties.sslKeystorePassword());
     }
     LOG.info("Create kafka consumer with properties:\n{}",
         props.toString().replace(StringConstant.COMMA_SPACE, StringUtils.LF));
