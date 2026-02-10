@@ -20,7 +20,7 @@ import io.automation.testrail.models.TestRun;
 import io.automation.testrail.models.TestRunFromSuite;
 import io.automation.testrail.models.TestSuite;
 import io.automation.testrail.services.TestRailClient;
-import io.automation.testrail.services.TestRailHttpClient;
+import io.automation.testrail.services.TestRailFeignClient;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -33,7 +33,7 @@ public final class TestRailHelper {
 
   private static final Logger LOG = LogManager.getLogger(TestRailHelper.class);
   private static final TestRailConfiguration CONFIG = ConfigRegistry.get(TestRailConfiguration.class);
-  private static final TestRailClient TEST_RAIL_CLIENT = new TestRailHttpClient();
+  private static final TestRailClient TEST_RAIL_CLIENT = new TestRailFeignClient();
   private static final Integer TAG_FIELD_CONFIG_INDEX = 0;
   private static final String TAGS_SYSTEM_NAME = "custom_tags";
   private static final Integer AUTOMATION_TYPE_FIELD_CONFIG_INDEX = 0;
@@ -167,27 +167,29 @@ public final class TestRailHelper {
   }
 
   public static boolean deleteTestRun(int testRunId) {
-    return TEST_RAIL_CLIENT.deleteTestRun(testRunId).statusCode() == 200;
+    return TEST_RAIL_CLIENT.deleteTestRun(testRunId);
   }
 
   public static TestSuite getTestSuite(int suiteId) {
-    return TEST_RAIL_CLIENT.getTestSuiteAsModel(suiteId);
+    return TEST_RAIL_CLIENT.findTestSuite(suiteId)
+        .orElseThrow(() -> new RuntimeException("Test suite with id '%d' was not found".formatted(suiteId)));
   }
 
   public static TestPlan getTestPlan(int planId) {
-    return TEST_RAIL_CLIENT.getTestPlanAsModel(planId);
+    return TEST_RAIL_CLIENT.findTestPlan(planId)
+        .orElseThrow(() -> new RuntimeException("Test plan with id '%d' was not found".formatted(planId)));
   }
 
   public static boolean isExistTestSuite(int suiteId) {
-    return TEST_RAIL_CLIENT.getTestSuite(suiteId).statusCode() == 200;
+    return TEST_RAIL_CLIENT.existsTestSuite(suiteId);
   }
 
   public static boolean isExistTestPlan(int planId) {
-    return TEST_RAIL_CLIENT.getTestPlan(planId).statusCode() == 200;
+    return TEST_RAIL_CLIENT.existsTestPlan(planId);
   }
 
   public static boolean isExistTestRun(int runId) {
-    return TEST_RAIL_CLIENT.getTestRun(runId).statusCode() == 200;
+    return TEST_RAIL_CLIENT.existsTestRun(runId);
   }
 
   public static Integer getUserId() {
@@ -200,10 +202,7 @@ public final class TestRailHelper {
    * @return test run
    */
   public static TestRun getTestRun(Integer testRunId) {
-    return TEST_RAIL_CLIENT.getTestRuns().stream()
-        .filter(testRun -> testRun.getId().equals(testRunId))
-        .findFirst()
-        .orElse(null);
+    return TEST_RAIL_CLIENT.findTestRun(testRunId).orElse(null);
   }
 
   public static TestCase getTestCase(int testCaseId) {

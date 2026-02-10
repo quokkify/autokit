@@ -8,7 +8,6 @@ import com.codeborne.selenide.BasicAuthCredentials;
 import com.codeborne.selenide.Selenide;
 import io.automation.annotation.PageUrl;
 import io.automation.impl.Page;
-import io.automation.util.UrlHelper;
 import io.qameta.allure.Allure;
 
 /**
@@ -50,7 +49,7 @@ public abstract class Navigation {
   protected <T extends Page> T openPage(Class<T> pageClass, Map<String, Object> queryParams, Object... urlParams) {
     String fullPageUrl;
     try {
-      fullPageUrl = UrlHelper.addQueryParameters(getPageUrl(pageClass, urlParams), queryParams);
+      fullPageUrl = NavigationUrlUtils.addQueryParameters(getPageUrl(pageClass, urlParams), queryParams);
     } catch (URISyntaxException e) {
       throw new RuntimeException(e);
     }
@@ -83,7 +82,7 @@ public abstract class Navigation {
   protected <T extends Page> T openPage(Class<T> pageClass, Map<String, Object> queryParams) {
     String fullPageUrl;
     try {
-      fullPageUrl = UrlHelper.addQueryParameters(getPageUrl(pageClass), queryParams);
+      fullPageUrl = NavigationUrlUtils.addQueryParameters(getPageUrl(pageClass), queryParams);
     } catch (URISyntaxException e) {
       throw new RuntimeException(e);
     }
@@ -98,7 +97,7 @@ public abstract class Navigation {
   protected void openPage(String fullPageUrl) {
     if (Objects.nonNull(basicAuthCredentials)) {
       try {
-        Selenide.open(UrlHelper.getPageUrlWithCredentials(
+        Selenide.open(NavigationUrlUtils.getPageUrlWithCredentials(
             fullPageUrl,
             basicAuthCredentials.login(),
             basicAuthCredentials.password())
@@ -115,7 +114,7 @@ public abstract class Navigation {
     String pageUrl;
     try {
       pageUrl = Objects.nonNull(basicAuthCredentials)
-          ? UrlHelper.getPageUrlWithCredentials(
+          ? NavigationUrlUtils.getPageUrlWithCredentials(
           fullPageUrl,
           basicAuthCredentials.login(),
           basicAuthCredentials.password())
