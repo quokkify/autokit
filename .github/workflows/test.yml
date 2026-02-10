@@ -191,11 +191,6 @@ jobs:
             slug: "common-utils-html"
             profile: "none"
 
-          - name: "common-utils • http"
-            module: ":common-utils:http"
-            slug: "common-utils-http"
-            profile: "none"
-
           - name: "common-utils • jwt"
             module: ":common-utils:jwt"
             slug: "common-utils-jwt"
