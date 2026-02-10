@@ -3,3 +3,7 @@ services:
     volumes:
       - ../nginx/conf.d:/etc/nginx/conf.d:ro
       - ../nginx/html:/usr/share/nginx/html:ro
+  reportportal-gateway:
+    ports:
+      - "${REPORTPORTAL_PUBLISHED_PORT:-8084}:8080"
+      - "${REPORTPORTAL_DASHBOARD_PORT:-8085}:8081"

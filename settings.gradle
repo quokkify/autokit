@@ -18,6 +18,9 @@ project(":integrations:jira:testrail").projectDir = file("integrations/jira/test
 include(":integrations:testrail:testrail-core")   // TestRail core integration
 project(":integrations:testrail:testrail-core").projectDir = file("integrations/testrail/core")
 include(":integrations:testrail:testng") // TestRail TestNG integration
+include(":integrations:reportportal:reportportal-core") // ReportPortal core integration
+project(":integrations:reportportal:reportportal-core").projectDir = file("integrations/reportportal/core")
+include(":integrations:reportportal:testng") // ReportPortal TestNG integration
 
 // ============================================================================
 // DATA ACCESS MODULES (SQL / NoSQL)

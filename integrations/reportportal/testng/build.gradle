@@ -1,0 +1,19 @@
+description = "ReportPortal TestNG integration"
+
+ext {
+    artifactId = "reportportal-testng"
+}
+
+dependencies {
+    implementation project(":integrations:reportportal:reportportal-core")
+    implementation project(":integrations:testrail:testrail-core")
+    implementation project(":common-utils:core")
+    implementation project(":common-utils:config")
+    implementation project(":testng-extensions")
+
+    implementation "com.epam.reportportal:agent-java-testng:${reportportal}"
+    implementation "io.qameta.allure:allure-testng:${allure}"
+    api "org.apache.commons:commons-lang3"
+
+    testImplementation "io.github.openfeign:feign-core:${feign}"
+}
