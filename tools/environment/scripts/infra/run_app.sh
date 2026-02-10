@@ -151,6 +151,43 @@ for profile in "${TOKENS[@]}"; do
       info "[infra] reporting hook: bootstrap report portal environment"
       ./tools/environment/scripts/reportportal/bootstrap_reportportal.sh
       ;;
+    messaging)
+      info "[infra] messaging hook: waiting for kafka readiness"
+      ready="false"
+      for _ in {1..40}; do
+        if docker compose "${COMPOSE_FILES[@]}" exec -T kafka \
+          kafka-topics.sh --bootstrap-server kafka:9092 --list >/dev/null 2>&1; then
+          ready="true"
+          break
+        fi
+        sleep 1
+      done
+      if [[ "$ready" != "true" ]]; then
+        warning "[infra] messaging hook: kafka not ready after timeout"
+      fi
+
+      info "[infra] messaging hook: set kafka bootstrap and kafka-ui url"
+      kafka_port_line=$(docker compose "${COMPOSE_FILES[@]}" port kafka 29092 | head -n1 || true)
+      kafka_ui_port_line=$(docker compose "${COMPOSE_FILES[@]}" port kafka-ui 8080 | head -n1 || true)
+      if [[ -n "$kafka_port_line" ]]; then
+        kafka_port="${kafka_port_line##*:}"
+      else
+        kafka_port="29092"
+      fi
+      if [[ -n "$kafka_ui_port_line" ]]; then
+        kafka_ui_port="${kafka_ui_port_line##*:}"
+      else
+        kafka_ui_port="8086"
+      fi
+
+      host="localhost"
+      if [[ "${CI:-}" == "true" && "${EXECUTION_MODE:-}" == "DIND" ]]; then
+        host="dind"
+      fi
+      echo "KAFKA_BOOTSTRAP_SERVERS=${host}:${kafka_port}" > tools/environment/.kafka.env
+      echo "KAFKA_SERVER_ADDRESS=${host}:${kafka_port}" >> tools/environment/.kafka.env
+      echo "KAFKA_UI_URL=http://${host}:${kafka_ui_port}" >> tools/environment/.kafka.env
+      ;;
     *)
       : # no-op
       ;;

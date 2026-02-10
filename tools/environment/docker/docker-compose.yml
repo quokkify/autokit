@@ -67,6 +67,19 @@ services:
     depends_on:
       - zookeeper
 
+  kafka-ui:
+    profiles: [messaging]
+    image: provectuslabs/kafka-ui:v0.7.2
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+      KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
+    ports:
+      - "${KAFKA_UI_PUBLISHED_PORT:-8086}:8080"
+    depends_on:
+      - kafka
+      - zookeeper
+
   zookeeper:
     profiles: [messaging]
     image: zookeeper:3.9@sha256:f0f1d5e4a2763041ce1f7fc25e2b5347a2a0dfb0eaf0f46a49fe2e01945f9f09
