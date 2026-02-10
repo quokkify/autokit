@@ -8,7 +8,11 @@ services:
     ports:
       - "0:80"
   kafka:
-    ports: []
+    ports:
+      - "${KAFKA_PUBLISHED_PORT:-0}:29092"
+  kafka-ui:
+    ports:
+      - "0:8080"
   zookeeper:
     ports: []
   mock-server:

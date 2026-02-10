@@ -126,6 +126,11 @@ jobs:
             slug: "integrations-reportportal-testng"
             profile: "reporting"
 
+          - name: "integrations • kafka"
+            module: ":integrations:kafka"
+            slug: "integrations-kafka"
+            profile: "messaging"
+
           # =========================
           # Data utils
           # =========================
@@ -275,6 +280,14 @@ jobs:
             set -a
             source tools/environment/.reportportal.env
             set +a
+          fi
+          if [[ -f tools/environment/.kafka.env ]]; then
+            set -a
+            source tools/environment/.kafka.env
+            set +a
+          fi
+          if [[ -n "${KAFKA_BOOTSTRAP_SERVERS:-}" ]]; then
+            export KAFKA_SERVER_ADDRESS="${KAFKA_BOOTSTRAP_SERVERS}"
           fi
           if [[ "${{ matrix.profile }}" == "web" ]]; then
             if [[ -n "${NGINX_BASE_URL:-}" ]]; then
