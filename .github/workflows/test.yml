@@ -239,11 +239,12 @@ jobs:
         uses: gradle/actions/setup-gradle@f29f5a9d7b09a7c6b29859002d29d24e1674c884 # v5
 
       - name: 🟢 Start Infra
-        if: ${{ matrix.profile != 'none' }}
+        if: ${{ github.event_name == 'pull_request' && matrix.profile != 'none' }}
         run: ./tools/environment/scripts/infra/run_app.sh "${{ matrix.profile }}"
         shell: bash
 
       - name: 🚀 Run tests
+        if: ${{ github.event_name == 'pull_request' }}
         run: |
           if [[ -f tools/environment/.selenium-grid.env ]]; then
             set -a
@@ -282,13 +283,24 @@ jobs:
           ./gradlew ${{ matrix.module }}:check --no-daemon --console=plain --stacktrace
         shell: bash
 
+      - name: 🧱 Build (compile + checkstyle, no tests)
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        run: |
+          ./gradlew \
+            ${{ matrix.module }}:classes \
+            ${{ matrix.module }}:testClasses \
+            ${{ matrix.module }}:checkstyleMain \
+            ${{ matrix.module }}:checkstyleTest \
+            --no-daemon --console=plain --stacktrace
+        shell: bash
+
       - name: 🛑 Stop Infra
-        if: ${{ matrix.profile != 'none' && always() }}
+        if: ${{ github.event_name == 'pull_request' && matrix.profile != 'none' && always() }}
         run: ./tools/environment/scripts/infra/stop_app.sh
         shell: bash
 
       - name: 📦 Packing docker compose logs as artifact
-        if: ${{ matrix.profile != 'none' && always() }}
+        if: ${{ github.event_name == 'pull_request' && matrix.profile != 'none' && always() }}
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
           name: docker-logs-${{ matrix.slug }}

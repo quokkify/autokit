@@ -19,12 +19,6 @@ services:
       - "0:4444"
   centrifugo:
     ports: []
-  mongodb:
-    ports:
-      - "0:27017"
-  redis:
-    ports:
-      - "0:6379"
 
 networks:
   default:
