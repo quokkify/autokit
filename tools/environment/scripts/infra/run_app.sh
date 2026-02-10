@@ -45,14 +45,23 @@ else
 fi
 
 if [[ "${CI:-}" == "true" ]]; then
+  needs_nginx_build="false"
   for profile in "${TOKENS[@]}"; do
     profile="$(echo "$profile" | xargs)"
+    if [[ "$profile" == "storage" ]]; then
+      export MONGODB_PUBLISHED_PORT=0
+    fi
+    if [[ "$profile" == "redis" ]]; then
+      export REDIS_PUBLISHED_PORT=0
+    fi
     if [[ "$profile" == "web" ]]; then
-      echo "[infra] building nginx image for CI"
-      docker compose "${COMPOSE_FILES[@]}" build nginx
-      break
+      needs_nginx_build="true"
     fi
   done
+  if [[ "$needs_nginx_build" == "true" ]]; then
+    echo "[infra] building nginx image for CI"
+    docker compose "${COMPOSE_FILES[@]}" build nginx
+  fi
 fi
 
 docker compose \
