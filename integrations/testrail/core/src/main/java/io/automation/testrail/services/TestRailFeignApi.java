@@ -16,7 +16,6 @@ import io.automation.testrail.models.TestDataList;
 import io.automation.testrail.models.TestPlan;
 import io.automation.testrail.models.TestRailUser;
 import io.automation.testrail.models.TestRun;
-import io.automation.testrail.models.TestRunFromSuite;
 import io.automation.testrail.models.TestRuns;
 import io.automation.testrail.models.TestSuite;
 
