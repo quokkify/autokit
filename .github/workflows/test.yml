@@ -128,10 +128,15 @@ jobs:
             module: ":data-utils:sql"
             slug: "data-utils-sql"
             profile: "none"
-          - name: "data-utils • nosql"
-            module: ":data-utils:nosql"
-            slug: "data-utils-nosql"
+          - name: "data-utils • nosql • morphia"
+            module: ":data-utils:nosql:morphia"
+            slug: "data-utils-nosql-morphia"
             profile: "storage"
+
+          - name: "data-utils • nosql • redis"
+            module: ":data-utils:nosql:redis"
+            slug: "data-utils-nosql-redis"
+            profile: "redis"
 
           # =========================
           # Common utils
@@ -253,6 +258,11 @@ jobs:
           if [[ -f tools/environment/.mongo.env ]]; then
             set -a
             source tools/environment/.mongo.env
+            set +a
+          fi
+          if [[ -f tools/environment/.redis.env ]]; then
+            set -a
+            source tools/environment/.redis.env
             set +a
           fi
           if [[ -f tools/environment/.nginx.env ]]; then

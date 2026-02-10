@@ -1,0 +1,7 @@
+ext {
+    artifactId = "nosql-redis"
+}
+
+dependencies {
+    api "org.redisson:redisson:${redisson}"
+}
