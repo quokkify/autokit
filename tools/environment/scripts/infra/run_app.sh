@@ -22,6 +22,18 @@ error() {
   echo -e "\033[1;31mError: $1\033[0m"
 }
 
+find_free_port() {
+  local port
+  for _ in {1..100}; do
+    port=$(( (RANDOM % 20000) + 20000 ))
+    if ! (echo >/dev/tcp/127.0.0.1/"${port}") >/dev/null 2>&1; then
+      echo "${port}"
+      return 0
+    fi
+  done
+  return 1
+}
+
 PROFILE="${1:-none}"
 
 if [[ "$PROFILE" == "none" || -z "$PROFILE" ]]; then
@@ -56,6 +68,22 @@ if [[ "${CI:-}" == "true" ]]; then
     fi
     if [[ "$profile" == "web" ]]; then
       needs_nginx_build="true"
+    fi
+    if [[ "$profile" == "messaging" ]]; then
+      if [[ "${EXECUTION_MODE:-}" == "DIND" ]]; then
+        export KAFKA_EXTERNAL_HOST=dind
+      else
+        export KAFKA_EXTERNAL_HOST=localhost
+      fi
+      if [[ -z "${KAFKA_PUBLISHED_PORT:-}" || "${KAFKA_PUBLISHED_PORT:-}" == "0" ]]; then
+        kafka_dynamic_port="$(find_free_port || true)"
+        if [[ -z "${kafka_dynamic_port}" ]]; then
+          error "[infra] messaging hook: cannot allocate free host port for kafka"
+          exit 1
+        fi
+        export KAFKA_PUBLISHED_PORT="${kafka_dynamic_port}"
+      fi
+      export KAFKA_EXTERNAL_PORT="${KAFKA_PUBLISHED_PORT}"
     fi
   done
   if [[ "$needs_nginx_build" == "true" ]]; then
@@ -150,6 +178,45 @@ for profile in "${TOKENS[@]}"; do
     reporting)
       info "[infra] reporting hook: bootstrap report portal environment"
       ./tools/environment/scripts/reportportal/bootstrap_reportportal.sh
+      ;;
+    messaging)
+      info "[infra] messaging hook: waiting for kafka readiness"
+      ready="false"
+      for _ in {1..90}; do
+        if docker compose "${COMPOSE_FILES[@]}" exec -T kafka \
+          kafka-topics.sh --bootstrap-server kafka:9092 --list 2>/dev/null | grep -Fxq messages; then
+          ready="true"
+          break
+        fi
+        sleep 2
+      done
+      if [[ "$ready" != "true" ]]; then
+        error "[infra] messaging hook: kafka is not ready after timeout"
+        docker compose "${COMPOSE_FILES[@]}" logs --tail=200 kafka zookeeper || true
+        exit 1
+      fi
+
+      info "[infra] messaging hook: set kafka bootstrap and kafka-ui url"
+      kafka_port_line=$(docker compose "${COMPOSE_FILES[@]}" port kafka 29092 | head -n1 || true)
+      kafka_ui_port_line=$(docker compose "${COMPOSE_FILES[@]}" port kafka-ui 8080 | head -n1 || true)
+      if [[ -n "$kafka_port_line" ]]; then
+        kafka_port="${kafka_port_line##*:}"
+      else
+        kafka_port="29092"
+      fi
+      if [[ -n "$kafka_ui_port_line" ]]; then
+        kafka_ui_port="${kafka_ui_port_line##*:}"
+      else
+        kafka_ui_port="8086"
+      fi
+
+      host="localhost"
+      if [[ "${CI:-}" == "true" && "${EXECUTION_MODE:-}" == "DIND" ]]; then
+        host="dind"
+      fi
+      echo "KAFKA_BOOTSTRAP_SERVERS=${host}:${kafka_port}" > tools/environment/.kafka.env
+      echo "KAFKA_SERVER_ADDRESS=${host}:${kafka_port}" >> tools/environment/.kafka.env
+      echo "KAFKA_UI_URL=http://${host}:${kafka_ui_port}" >> tools/environment/.kafka.env
       ;;
     *)
       : # no-op
