@@ -3,9 +3,8 @@ package io.automation.testrail.listeners;
 import java.util.Map;
 import java.util.Objects;
 
-import io.automation.util.TestUtils;
 import io.automation.testrail.utils.TestRailHelper;
-
+import io.automation.util.TestUtils;
 import io.qameta.allure.Allure;
 import io.qameta.allure.TmsLink;
 import org.apache.commons.lang3.StringUtils;

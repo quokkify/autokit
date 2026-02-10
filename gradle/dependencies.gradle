@@ -1,6 +1,7 @@
 ext {
     aeonbits = "1.0.12"
     assertj = "3.27.7"
+    jetbrains_annotations = "26.0.2-1"
     hamcrest = "3.0"
     testng = "7.12.0"
     faker = "2.5.3"
@@ -20,8 +21,8 @@ ext {
     guava = "33.5.0-jre"
     googleauth = "1.5.0"
     json = "20250107"
-    jira_rest_client_core = "6.0.2"
-    fugue = "6.0.1"
+    jira_rest_client_core = "7.0.1"
+    fugue = "6.1.2"
     opencsv = "5.10"
     commons_io = "2.21.0"
     jcabi_ssh = "1.9.0"
@@ -38,13 +39,14 @@ ext {
     jjschema = "1.16"
     report_portal_rest_assured = "5.3.4"
     report_portal_client_java = "5.2.15"
-    hibernate = "7.2.2.Final"
-    hibernate_type = "3.15.1"
+    hibernate = "7.2.4.Final"
+    hibernate_type = "3.15.2"
     jakarta_persistence_api = "3.2.0"
     querydsl = "5.1.0"
     jedis = "5.2.0"
     redisson = "3.52.0"
-    morphia = "2.2.9"
+    morphia = "2.5.2"
+    mongodb_driver = "5.6.3"
     reportportal = "5.4.3"
     java_websocket = "1.6.0"
     kafka = "4.0.0"
@@ -86,10 +88,17 @@ subprojects {
             api "org.apache.commons:commons-text:1.15.0"
         }
 
-        compileOnly "org.jetbrains:annotations:26.0.2-1"
-        annotationProcessor "org.jetbrains:annotations:26.0.2-1"
-        testCompileOnly "org.jetbrains:annotations:26.0.2-1"
-        testAnnotationProcessor "org.jetbrains:annotations:26.0.2-1"
+        compileOnly "org.jetbrains:annotations:${jetbrains_annotations}"
+        annotationProcessor "org.jetbrains:annotations:${jetbrains_annotations}"
+        testCompileOnly "org.jetbrains:annotations:${jetbrains_annotations}"
+        testAnnotationProcessor "org.jetbrains:annotations:${jetbrains_annotations}"
+
+        if (project.path != ":testng-extensions") {
+            testImplementation project(":testng-extensions")
+        }
+        testImplementation "org.assertj:assertj-core"
+        testImplementation "org.apache.logging.log4j:log4j-core"
+        testImplementation "org.apache.logging.log4j:log4j-slf4j2-impl"
 
         compileOnly "com.github.spotbugs:spotbugs-annotations:${spotbugs_annotations}"
         testCompileOnly "com.github.spotbugs:spotbugs-annotations:${spotbugs_annotations}"

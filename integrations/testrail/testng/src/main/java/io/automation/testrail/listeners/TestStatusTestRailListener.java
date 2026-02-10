@@ -6,7 +6,6 @@ import io.automation.config.ConfigRegistry;
 import io.automation.testrail.configs.TestRailConfiguration;
 import io.automation.testrail.utils.TestRailHelper;
 import io.automation.util.TestUtils;
-
 import io.qameta.allure.TmsLink;
 import org.apache.commons.lang3.StringUtils;
 import org.testng.ITestListener;

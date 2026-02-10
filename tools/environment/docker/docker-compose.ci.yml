@@ -1,17 +1,27 @@
 services:
   nginx:
+    image: ci-nginx
+    build:
+      context: ../nginx
+      dockerfile: Dockerfile.ci
+    volumes: []
     ports:
-      - "127.0.0.1:8080:80"
+      - "0:80"
   kafka:
     ports: []
   zookeeper:
     ports: []
   mock-server:
-    ports: []
+    ports:
+      - "0:1080"
+  selenium-hub:
+    ports:
+      - "0:4444"
   centrifugo:
     ports: []
   mongodb:
-    ports: []
+    ports:
+      - "0:27017"
   redis:
     ports: []
 

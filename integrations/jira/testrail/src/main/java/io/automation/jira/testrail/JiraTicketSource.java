@@ -4,12 +4,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import com.atlassian.jira.rest.client.api.domain.Issue;
 import io.automation.config.ConfigRegistry;
 import io.automation.jira.configs.JiraConfiguration;
 import io.automation.jira.services.JiraService;
 import io.automation.testrail.tickets.TicketSource;
-
-import com.atlassian.jira.rest.client.api.domain.Issue;
 import org.apache.commons.lang3.StringUtils;
 
 public class JiraTicketSource implements TicketSource {

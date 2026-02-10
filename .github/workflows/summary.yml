@@ -8,6 +8,10 @@ permissions:
   actions: read
   contents: read
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   detect-runner:
     name: Select runner
@@ -40,7 +44,9 @@ jobs:
                 const baseRepo = run.repository?.full_name;
                 const sameRepo = headRepo && baseRepo ? headRepo === baseRepo : false;
                 const association = run.actor?.association || 'NONE';
-                allowSelfHosted = sameRepo && trusted.has(association);
+                const actorLogin = (run.actor?.login || '').toLowerCase();
+                const isRenovateBot = actorLogin === 'renovate[bot]';
+                allowSelfHosted = sameRepo && (trusted.has(association) || isRenovateBot);
               }
             }
 
@@ -81,7 +87,7 @@ jobs:
 
     steps:
       - name: 🔨Checkout
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
       - name: 📦 Download artifacts
         uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7

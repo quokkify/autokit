@@ -5,6 +5,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.automation.config.ConfigRegistry;
 import io.automation.http.HttpClientFactory;
 import io.automation.http.HttpCoreClient;
@@ -28,10 +31,6 @@ import io.automation.testrail.models.TestSuite;
 import io.automation.testrail.utils.TestRailDataGenerator;
 import io.automation.testrail.utils.TestRailHelper;
 import io.automation.util.JsonConverter;
-
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

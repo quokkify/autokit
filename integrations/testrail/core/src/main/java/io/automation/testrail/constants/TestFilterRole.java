@@ -11,5 +11,5 @@ public interface TestFilterRole {
    *
    * @param testCaseId case id from TestRail
    */
-  public Boolean filterByCaseId(String testCaseId);
+  Boolean filterByCaseId(String testCaseId);
 }

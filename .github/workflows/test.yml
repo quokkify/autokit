@@ -8,6 +8,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   detect-runner:
     name: Select runner
@@ -38,7 +42,9 @@ jobs:
                 ? pr.head.repo.full_name === pr.base.repo.full_name
                 : false;
               const association = pr?.author_association || 'NONE';
-              allowSelfHosted = sameRepo && trusted.has(association);
+              const authorLogin = (pr?.user?.login || '').toLowerCase();
+              const isRenovateBot = authorLogin === 'renovate[bot]';
+              allowSelfHosted = sameRepo && (trusted.has(association) || isRenovateBot);
             }
 
             if (!allowSelfHosted) {
@@ -78,6 +84,7 @@ jobs:
     env:
       CI: "true"
       COMPOSE_PROJECT_NAME: ci-${{ github.run_id }}-${{ matrix.slug }}
+      EXECUTION_MODE: ${{ needs.detect-runner.outputs.is_self_hosted == 'true' && 'DIND' || 'CI' }}
     strategy:
       fail-fast: false
       max-parallel: 4
@@ -103,8 +110,16 @@ jobs:
             module: ":integrations:selenide"
             slug: "integrations-selenide"
             profile: "web"
-            base_url_hosted: "http://127.0.0.1:8080"
-            base_url_self_hosted: "http://dind:8080"
+
+          - name: "integrations • testrail • core"
+            module: ":integrations:testrail:testrail-core"
+            slug: "integrations-testrail-core"
+            profile: "none"
+
+          - name: "integrations • testrail • testng"
+            module: ":integrations:testrail:testng"
+            slug: "integrations-testrail-testng"
+            profile: "none"
 
           - name: "integrations • testrail • core"
             module: ":integrations:testrail:core"
@@ -123,6 +138,10 @@ jobs:
             module: ":data-utils:sql"
             slug: "data-utils-sql"
             profile: "none"
+          - name: "data-utils • nosql"
+            module: ":data-utils:nosql"
+            slug: "data-utils-nosql"
+            profile: "storage"
 
           - name: "data-utils • nosql • redis"
             module: ":data-utils:nosql:redis"
@@ -209,14 +228,22 @@ jobs:
 
     steps:
       - name: 🔨Checkout
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
-      - name: 🔨Set up JDK
+      - name: 🔨Set up JDK (self-hosted, no cache)
+        if: ${{ needs.detect-runner.outputs.is_self_hosted == 'true' }}
+        uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5
+        with:
+          distribution: "temurin"
+          java-version: "21"
+
+      - name: 🔨Set up JDK (github-hosted, cache gradle)
+        if: ${{ needs.detect-runner.outputs.is_self_hosted != 'true' }}
         uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5
         with:
           distribution: "temurin"
           cache: "gradle"
-          java-version: "25"
+          java-version: "21"
 
       - name: 🔨Build with Gradle
         uses: gradle/actions/setup-gradle@f29f5a9d7b09a7c6b29859002d29d24e1674c884 # v5
@@ -226,25 +253,39 @@ jobs:
         run: ./tools/environment/scripts/infra/run_app.sh "${{ matrix.profile }}"
         shell: bash
 
-      - name: Set BASE_URL for selenide
-        if: ${{ matrix.base_url_hosted }}
-        run: |
-          if [[ "${{ needs.detect-runner.outputs.is_self_hosted }}" == "true" ]]; then
-            echo "BASE_URL=${{ matrix.base_url_self_hosted }}" >> "$GITHUB_ENV"
-          else
-            echo "BASE_URL=${{ matrix.base_url_hosted }}" >> "$GITHUB_ENV"
-          fi
-        shell: bash
-
       - name: 🚀 Run tests
-        run: ./gradlew ${{ matrix.module }}:check --no-daemon --console=plain --stacktrace
-        shell: bash
+        run: |
+          if [[ -f tools/environment/.selenium-grid.env ]]; then
+            set -a
+            source tools/environment/.selenium-grid.env
+            set +a
+          fi
+          if [[ -f tools/environment/.mock-server.env ]]; then
+            set -a
+            source tools/environment/.mock-server.env
+            set +a
+          fi
+          if [[ -f tools/environment/.mongo.env ]]; then
+            set -a
+            source tools/environment/.mongo.env
+            set +a
+          fi
+          if [[ -f tools/environment/.nginx.env ]]; then
+            set -a
+            source tools/environment/.nginx.env
+            set +a
+          fi
+          if [[ "${{ matrix.profile }}" == "web" ]]; then
+            if [[ -n "${NGINX_BASE_URL:-}" ]]; then
+              export BASE_URL="${NGINX_BASE_URL}"
+            else
+              echo "NGINX_BASE_URL is not set for web profile" >&2
+              exit 1
+            fi
+          fi
 
-      - name: 🐳 Collecting logs from all docker containers
-        if: ${{ matrix.profile != 'none' && always() }}
-        uses: jwalton/gh-docker-logs@2741064ab9d7af54b0b1ffb6076cf64c16f0220e # v2
-        with:
-          dest: logs
+          ./gradlew ${{ matrix.module }}:check --no-daemon --console=plain --stacktrace
+        shell: bash
 
       - name: 🛑 Stop Infra
         if: ${{ matrix.profile != 'none' && always() }}

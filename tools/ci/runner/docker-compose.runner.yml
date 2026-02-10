@@ -1,6 +1,6 @@
 services:
   dind:
-    image: docker:29.2-dind@sha256:a284d31e4db9a9916fd9be44380263eaeafedf0e3048a859f978922b5a0c16fc
+    image: docker:29.2-dind@sha256:8bcbad4b45f0bff9d3e809d85a7ac589390f0be8acbc526850c998c35c1243fd
     privileged: true
     environment:
       DOCKER_TLS_CERTDIR: ""
@@ -17,12 +17,17 @@ services:
     environment:
       REPO_URL: ${REPO_URL}
       RUNNER_TOKEN: ${RUNNER_TOKEN}
-      RUNNER_NAME: ${RUNNER_NAME}
       LABELS: ${RUNNER_LABELS}
       RUNNER_EPHEMERAL: "true"
       DISABLE_AUTO_UPDATE: "true"
       DOCKER_HOST: tcp://dind:2375
       DOCKER_TLS_CERTDIR: ""
+      RUNNER_TOOL_CACHE: /opt/hostedtoolcache
+    volumes:
+      - runner-toolcache:/opt/hostedtoolcache
+      - runner-gradle-cache:/home/runner/.gradle
 
 volumes:
   dind-data:
+  runner-toolcache:
+  runner-gradle-cache:
