@@ -5,9 +5,12 @@ ext {
 }
 
 dependencies {
-    implementation project(":common-utils:http")
     implementation project(":common-utils:config")
     implementation project(":common-utils:core")
     implementation project(":common-utils:jackson:json")
+    implementation "io.github.openfeign:feign-core:${feign}"
+    implementation "io.github.openfeign:feign-jackson:${feign}"
+    implementation "io.github.openfeign:feign-okhttp:${feign}"
+    implementation "com.squareup.okhttp3:okhttp:${okhttp}"
     api "org.apache.commons:commons-lang3"
 }

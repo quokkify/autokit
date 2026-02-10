@@ -40,7 +40,6 @@ include(":common-utils:introspection")    // Reflection and introspection helper
 include(":common-utils:awaitility")       // Runtime wrappers for Awaitility (async waiting)
 include(":common-utils:file")             // File I/O utilities
 include(":common-utils:html")             // HTML utilities (rendering, parsing)
-include(":common-utils:http")             // HTTP helpers (URL building, query parameters, conversions)
 include(":common-utils:jwt")              // JWT utilities (token handling with Nimbus JOSE/JWT)
 //include(":common-utils:aspects")          // Runtime AOP helpers (cross-cutting concerns, reporting)
 include(":common-utils:config")           // Configuration utilities (YAML/JSON configs, property mapping)

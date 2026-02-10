@@ -1,8 +1,8 @@
 package io.automation.testrail.services;
 
 import java.util.List;
+import java.util.Optional;
 
-import io.automation.http.HttpResponseData;
 import io.automation.testrail.models.CaseFields;
 import io.automation.testrail.models.CustomAutomationTypes;
 import io.automation.testrail.models.Section;
@@ -30,9 +30,7 @@ public interface TestRailClient {
 
   List<Section> getSectionsAsModel(int projectId, int suiteId);
 
-  TestRun getTestRunAsModel(Integer testRunId);
-
-  HttpResponseData getTestRun(Integer testRunId);
+  Optional<TestRun> findTestRun(int testRunId);
 
   TestRun addRun(TestRun run);
 
@@ -40,9 +38,7 @@ public interface TestRailClient {
 
   TestRun closeTestRun(int testRunId);
 
-  TestPlan getTestPlanAsModel(int testPlanId);
-
-  HttpResponseData getTestPlan(int testPlanId);
+  Optional<TestPlan> findTestPlan(int testPlanId);
 
   void addPassedTestResult(int testRunId, String testCaseId);
 
@@ -58,9 +54,7 @@ public interface TestRailClient {
 
   List<TestSuite> getAllSuitesAsModel();
 
-  TestSuite getTestSuiteAsModel(int testSuiteId);
-
-  HttpResponseData getTestSuite(int testSuiteId);
+  Optional<TestSuite> findTestSuite(int testSuiteId);
 
   List<CaseFields> getCaseFields();
 
@@ -68,5 +62,11 @@ public interface TestRailClient {
 
   void updateCaseAutomationType(String testCaseId, CustomAutomationTypes automationType);
 
-  HttpResponseData deleteTestRun(int testRunId);
+  boolean deleteTestRun(int testRunId);
+
+  boolean existsTestRun(int runId);
+
+  boolean existsTestPlan(int planId);
+
+  boolean existsTestSuite(int suiteId);
 }
