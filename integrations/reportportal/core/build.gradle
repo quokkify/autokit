@@ -1,0 +1,12 @@
+description = "ReportPortal core integration"
+
+ext {
+    artifactId = "reportportal-core"
+}
+
+dependencies {
+    implementation project(":common-utils:config")
+    implementation project(":common-utils:core")
+    implementation project(":integrations:testrail:testrail-core")
+    api "org.apache.commons:commons-lang3"
+}

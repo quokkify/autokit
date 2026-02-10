@@ -147,6 +147,10 @@ for profile in "${TOKENS[@]}"; do
       echo "REDIS_HOST=${host}" > tools/environment/.redis.env
       echo "REDIS_PORT=${port}" >> tools/environment/.redis.env
       ;;
+    reporting)
+      info "[infra] reporting hook: bootstrap report portal environment"
+      ./tools/environment/scripts/reportportal/bootstrap_reportportal.sh
+      ;;
     *)
       : # no-op
       ;;
