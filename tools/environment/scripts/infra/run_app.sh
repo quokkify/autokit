@@ -22,6 +22,18 @@ error() {
   echo -e "\033[1;31mError: $1\033[0m"
 }
 
+find_free_port() {
+  local port
+  for _ in {1..100}; do
+    port=$(( (RANDOM % 20000) + 20000 ))
+    if ! (echo >/dev/tcp/127.0.0.1/"${port}") >/dev/null 2>&1; then
+      echo "${port}"
+      return 0
+    fi
+  done
+  return 1
+}
+
 PROFILE="${1:-none}"
 
 if [[ "$PROFILE" == "none" || -z "$PROFILE" ]]; then
@@ -63,6 +75,15 @@ if [[ "${CI:-}" == "true" ]]; then
       else
         export KAFKA_EXTERNAL_HOST=localhost
       fi
+      if [[ -z "${KAFKA_PUBLISHED_PORT:-}" || "${KAFKA_PUBLISHED_PORT:-}" == "0" ]]; then
+        kafka_dynamic_port="$(find_free_port || true)"
+        if [[ -z "${kafka_dynamic_port}" ]]; then
+          error "[infra] messaging hook: cannot allocate free host port for kafka"
+          exit 1
+        fi
+        export KAFKA_PUBLISHED_PORT="${kafka_dynamic_port}"
+      fi
+      export KAFKA_EXTERNAL_PORT="${KAFKA_PUBLISHED_PORT}"
     fi
   done
   if [[ "$needs_nginx_build" == "true" ]]; then
