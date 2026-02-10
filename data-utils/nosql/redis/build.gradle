@@ -4,5 +4,4 @@ ext {
 
 dependencies {
     api "org.redisson:redisson:${redisson}"
-    testImplementation project(":testng-extensions")
 }

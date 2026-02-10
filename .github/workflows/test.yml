@@ -121,16 +121,6 @@ jobs:
             slug: "integrations-testrail-testng"
             profile: "none"
 
-          - name: "integrations • testrail • core"
-            module: ":integrations:testrail:core"
-            slug: "integrations-testrail-core"
-            profile: "none"
-
-          - name: "integrations • testrail • testng"
-            module: ":integrations:testrail:testng"
-            slug: "integrations-testrail-testng"
-            profile: "none"
-
           # =========================
           # Data utils
           # =========================
@@ -138,9 +128,9 @@ jobs:
             module: ":data-utils:sql"
             slug: "data-utils-sql"
             profile: "none"
-          - name: "data-utils • nosql"
-            module: ":data-utils:nosql"
-            slug: "data-utils-nosql"
+          - name: "data-utils • nosql • morphia"
+            module: ":data-utils:nosql:morphia"
+            slug: "data-utils-nosql-morphia"
             profile: "storage"
 
           - name: "data-utils • nosql • redis"

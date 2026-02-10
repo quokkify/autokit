@@ -2,13 +2,4 @@ ext {
     artifactId = "nosql"
 }
 
-dependencies {
-    implementation project(":common-utils:core")
-    testImplementation project(":testng-extensions")
-
-    api "io.qameta.allure:allure-java-commons:${allure}"
-    api "dev.morphia.morphia:morphia-core:${morphia}"
-    api "org.mongodb:mongodb-driver-sync:${mongodb_driver}"
-
-    testImplementation "org.assertj:assertj-core:${assertj}"
-}
+// Parent aggregator module for NoSQL subprojects (morphia, redis).

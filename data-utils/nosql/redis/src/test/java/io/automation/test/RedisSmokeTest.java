@@ -1,5 +1,9 @@
 package io.automation.test;
 
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+
 import org.redisson.Redisson;
 import org.redisson.api.RBucket;
 import org.redisson.api.RMap;
@@ -19,6 +23,7 @@ public class RedisSmokeTest {
     String password = System.getProperty("redis.password", System.getenv().getOrDefault("REDIS_PASSWORD", ""));
     String clusterNodes = System.getProperty("redis.cluster.nodes",
         System.getenv().getOrDefault("REDIS_CLUSTER_NODES", ""));
+    verifyRedisAvailability(host, port);
 
     Config config = new Config();
     config.setCodec(StringCodec.INSTANCE);
@@ -56,6 +61,18 @@ public class RedisSmokeTest {
       client.getKeys().delete(prefix + ":bucket", prefix + ":map", prefix + ":set");
     } finally {
       client.shutdown();
+    }
+  }
+
+  private static void verifyRedisAvailability(String host, String port) {
+    int parsedPort = Integer.parseInt(port);
+    try (Socket socket = new Socket()) {
+      socket.connect(new InetSocketAddress(host, parsedPort), 2000);
+    } catch (IOException e) {
+      throw new AssertionError(
+          "Redis is required for RedisSmokeTest but is unreachable at " + host + ":" + parsedPort
+              + ". Start Redis infra or set REDIS_HOST/REDIS_PORT.",
+          e);
     }
   }
 }
