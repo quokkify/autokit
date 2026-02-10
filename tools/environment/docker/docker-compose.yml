@@ -129,7 +129,11 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     healthcheck:
-      test: [ "CMD-SHELL", "curl -f http://localhost:8081/api/http/routers || wget -q --spider http://localhost:8081/api/http/routers || exit 1" ]
+      test:
+        [
+          "CMD-SHELL",
+          "curl -f http://localhost:8081/api/http/routers || wget -q --spider http://localhost:8081/api/http/routers || exit 1",
+        ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -146,7 +150,7 @@ services:
     volumes:
       - reportportal-postgres:/bitnami/postgresql
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -d $$POSTGRES_DB -U $$POSTGRES_USER" ]
+      test: ["CMD-SHELL", "pg_isready -d $$POSTGRES_DB -U $$POSTGRES_USER"]
       interval: 10s
       timeout: 120s
       retries: 10
@@ -167,7 +171,7 @@ services:
         rabbitmq_shovel
         rabbitmq_shovel_management
     healthcheck:
-      test: [ "CMD", "rabbitmqctl", "status" ]
+      test: ["CMD", "rabbitmqctl", "status"]
       interval: 30s
       timeout: 30s
       retries: 5
@@ -190,7 +194,11 @@ services:
     volumes:
       - reportportal-opensearch:/usr/share/opensearch/data
     healthcheck:
-      test: [ "CMD-SHELL", "curl -s -f http://localhost:9200/_cluster/health | grep -q '\"status\":\"green\"\\|\"status\":\"yellow\"'" ]
+      test:
+        [
+          "CMD-SHELL",
+          "curl -s -f http://localhost:9200/_cluster/health | grep -q '\"status\":\"green\"\\|\"status\":\"yellow\"'",
+        ]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -297,7 +305,11 @@ services:
     volumes:
       - reportportal-storage:/data/storage
     healthcheck:
-      test: [ "CMD-SHELL", "curl -f http://localhost:8686/health || wget -q --spider http://localhost:8686/health || exit 1" ]
+      test:
+        [
+          "CMD-SHELL",
+          "curl -f http://localhost:8686/health || wget -q --spider http://localhost:8686/health || exit 1",
+        ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -362,7 +374,11 @@ services:
     volumes:
       - reportportal-storage:/data/storage
     healthcheck:
-      test: [ "CMD-SHELL", "curl -f http://localhost:8585/health || wget -q --spider http://localhost:8585/health || exit 1" ]
+      test:
+        [
+          "CMD-SHELL",
+          "curl -f http://localhost:8585/health || wget -q --spider http://localhost:8585/health || exit 1",
+        ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -410,7 +426,11 @@ services:
     volumes:
       - reportportal-storage:/data/storage
     healthcheck:
-      test: [ "CMD-SHELL", "curl -f http://localhost:9999/health || wget -q --spider http://localhost:9999/health || exit 1" ]
+      test:
+        [
+          "CMD-SHELL",
+          "curl -f http://localhost:9999/health || wget -q --spider http://localhost:9999/health || exit 1",
+        ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -446,7 +466,11 @@ services:
     volumes:
       - reportportal-storage:/data/storage
     healthcheck:
-      test: [ "CMD-SHELL", "curl -f http://localhost:5001 || wget -q --spider http://localhost:5001/ || exit 1" ]
+      test:
+        [
+          "CMD-SHELL",
+          "curl -f http://localhost:5001 || wget -q --spider http://localhost:5001/ || exit 1",
+        ]
       interval: 30s
       timeout: 10s
       retries: 3
