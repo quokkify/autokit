@@ -23,7 +23,8 @@ services:
     ports:
       - "0:27017"
   redis:
-    ports: []
+    ports:
+      - "0:6379"
 
 networks:
   default:

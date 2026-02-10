@@ -260,6 +260,11 @@ jobs:
             source tools/environment/.mongo.env
             set +a
           fi
+          if [[ -f tools/environment/.redis.env ]]; then
+            set -a
+            source tools/environment/.redis.env
+            set +a
+          fi
           if [[ -f tools/environment/.nginx.env ]]; then
             set -a
             source tools/environment/.nginx.env

@@ -124,6 +124,19 @@ for profile in "${TOKENS[@]}"; do
       if [[ "$ready" != "true" ]]; then
         warning "[infra] redis hook: PING not ready after timeout"
       fi
+      info "[infra] redis hook: set redis host and port"
+      port_line=$(docker compose "${COMPOSE_FILES[@]}" port redis 6379 | head -n1 || true)
+      if [[ -n "$port_line" ]]; then
+        port="${port_line##*:}"
+      else
+        port="6379"
+      fi
+      host="localhost"
+      if [[ "${CI:-}" == "true" && "${EXECUTION_MODE:-}" == "DIND" ]]; then
+        host="dind"
+      fi
+      echo "REDIS_HOST=${host}" > tools/environment/.redis.env
+      echo "REDIS_PORT=${port}" >> tools/environment/.redis.env
       ;;
     *)
       : # no-op
