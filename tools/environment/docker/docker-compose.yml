@@ -7,7 +7,7 @@ services:
 
   selenium-hub:
     profiles: [web]
-    image: selenium/hub:4.40.0-20260120
+    image: selenium/hub:4.40.0-20260120@sha256:e49e85c3a481f3c63292436266bb56a72036dc977ab0fd5a9ec7fbd78c5636fa
     environment:
       SE_SUB_PATH: /wd/hub
     ports:
@@ -17,7 +17,7 @@ services:
 
   selenium-node-docker:
     profiles: [web]
-    image: selenium/node-docker:4.40.0-20260120
+    image: selenium/node-docker:4.40.0-20260120@sha256:adf92f879b1024086d7ce0070c3a8a48324cd97c1e1278bdf150cfc692192f55
     depends_on:
       - selenium-hub
       - docker-socket-proxy
