@@ -99,3 +99,15 @@ select_runtime_host_for_port() {
   echo "$preferred_host"
   return 0
 }
+
+find_free_port() {
+  local port
+  for _ in {1..100}; do
+    port=$(( (RANDOM % 20000) + 20000 ))
+    if ! (echo >/dev/tcp/127.0.0.1/"${port}") >/dev/null 2>&1; then
+      echo "${port}"
+      return 0
+    fi
+  done
+  return 1
+}
