@@ -65,9 +65,194 @@ jobs:
               core.setOutput('is_self_hosted', 'false');
             }
 
+  check-formatting:
+    name: Lint (Prettier)
+    needs: detect-runner
+    runs-on: ${{ fromJson(needs.detect-runner.outputs.runs_on) }}
+    if: ${{ github.event_name != 'pull_request_target' }}
+    permissions:
+      contents: read
+    steps:
+      - name: 🔨Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: 🔧 Set up Node
+        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6
+        with:
+          node-version: "24"
+
+      - name: 🔬Check repository through Prettier
+        uses: creyD/prettier_action@8c18391fdc98ed0d884c6345f03975edac71b8f0 # v4.6
+        with:
+          prettier_options: --check .
+
+  build-all:
+    name: "Build • ${{ matrix.name }}"
+    needs: [detect-runner, check-formatting]
+    runs-on: ${{ fromJson(needs.detect-runner.outputs.runs_on) }}
+    if: ${{ github.event_name != 'pull_request_target' }}
+    permissions:
+      contents: read
+    env:
+      CI: "true"
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        include:
+          - name: "testng-extensions"
+            module: ":testng-extensions"
+            slug: "testng-extensions"
+
+          - name: "common-utils • core"
+            module: ":common-utils:core"
+            slug: "common-utils-core"
+
+          - name: "common-utils • jackson • parent"
+            module: ":common-utils:jackson:parent"
+            slug: "common-utils-jackson-parent"
+
+          - name: "common-utils • jackson • csv"
+            module: ":common-utils:jackson:csv"
+            slug: "common-utils-jackson-csv"
+
+          - name: "common-utils • jackson • xml"
+            module: ":common-utils:jackson:xml"
+            slug: "common-utils-jackson-xml"
+
+          - name: "common-utils • jackson • json"
+            module: ":common-utils:jackson:json"
+            slug: "common-utils-jackson-json"
+
+          - name: "common-utils • jackson • yaml"
+            module: ":common-utils:jackson:yaml"
+            slug: "common-utils-jackson-yaml"
+
+          - name: "common-utils • introspection"
+            module: ":common-utils:introspection"
+            slug: "common-utils-introspection"
+
+          - name: "common-utils • awaitility"
+            module: ":common-utils:awaitility"
+            slug: "common-utils-awaitility"
+
+          - name: "common-utils • file"
+            module: ":common-utils:file"
+            slug: "common-utils-file"
+
+          - name: "common-utils • html"
+            module: ":common-utils:html"
+            slug: "common-utils-html"
+
+          - name: "common-utils • jwt"
+            module: ":common-utils:jwt"
+            slug: "common-utils-jwt"
+
+          - name: "common-utils • config"
+            module: ":common-utils:config"
+            slug: "common-utils-config"
+
+          - name: "common-utils • signature"
+            module: ":common-utils:signature"
+            slug: "common-utils-signature"
+
+          - name: "common-utils • console"
+            module: ":common-utils:console"
+            slug: "common-utils-console"
+
+          - name: "data-utils • sql"
+            module: ":data-utils:sql"
+            slug: "data-utils-sql"
+
+          - name: "data-utils • nosql • parent"
+            module: ":data-utils:nosql"
+            slug: "data-utils-nosql"
+
+          - name: "data-utils • nosql • morphia"
+            module: ":data-utils:nosql:morphia"
+            slug: "data-utils-nosql-morphia"
+
+          - name: "data-utils • nosql • redis"
+            module: ":data-utils:nosql:redis"
+            slug: "data-utils-nosql-redis"
+
+          - name: "integrations • rest-assured"
+            module: ":integrations:rest-assured"
+            slug: "integrations-rest-assured"
+
+          - name: "integrations • selenide"
+            module: ":integrations:selenide"
+            slug: "integrations-selenide"
+
+          - name: "integrations • kafka"
+            module: ":integrations:kafka"
+            slug: "integrations-kafka"
+
+          - name: "integrations • rabbitmq"
+            module: ":integrations:rabbitmq"
+            slug: "integrations-rabbitmq"
+
+          - name: "integrations • jira • core"
+            module: ":integrations:jira:jira-core"
+            slug: "integrations-jira-core"
+
+          - name: "integrations • jira • testng"
+            module: ":integrations:jira:testng"
+            slug: "integrations-jira-testng"
+
+          - name: "integrations • jira • testrail"
+            module: ":integrations:jira:testrail"
+            slug: "integrations-jira-testrail"
+
+          - name: "integrations • testrail • core"
+            module: ":integrations:testrail:testrail-core"
+            slug: "integrations-testrail-core"
+
+          - name: "integrations • testrail • testng"
+            module: ":integrations:testrail:testng"
+            slug: "integrations-testrail-testng"
+
+          - name: "integrations • reportportal • core"
+            module: ":integrations:reportportal:reportportal-core"
+            slug: "integrations-reportportal-core"
+
+          - name: "integrations • reportportal • testng"
+            module: ":integrations:reportportal:testng"
+            slug: "integrations-reportportal-testng"
+
+    steps:
+      - name: 🔨Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: 🔨Set up JDK (self-hosted, no cache)
+        if: ${{ needs.detect-runner.outputs.is_self_hosted == 'true' }}
+        uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5
+        with:
+          distribution: "temurin"
+          java-version: "21"
+
+      - name: 🔨Set up JDK (github-hosted, cache gradle)
+        if: ${{ needs.detect-runner.outputs.is_self_hosted != 'true' }}
+        uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5
+        with:
+          distribution: "temurin"
+          cache: "gradle"
+          java-version: "21"
+
+      - name: 🔨Build with Gradle
+        uses: gradle/actions/setup-gradle@f29f5a9d7b09a7c6b29859002d29d24e1674c884 # v5
+
+      - name: 🧱 Build (check, no tests)
+        run: |
+          ./gradlew \
+            ${{ matrix.module }}:check \
+            -x ${{ matrix.module }}:test \
+            --no-daemon --console=plain --stacktrace
+        shell: bash
+
   test-common:
     name: "Common • ${{ matrix.name }}"
-    needs: detect-runner
+    needs: [detect-runner, build-all]
     runs-on: ${{ fromJson(needs.detect-runner.outputs.runs_on) }}
     if: ${{ github.event_name != 'pull_request_target' }}
     permissions:
