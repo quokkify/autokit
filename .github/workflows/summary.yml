@@ -65,4 +65,3 @@ jobs:
           name: "🔬Combined test report"
           path: "artifacts/_combined/combined-junit.xml"
           reporter: java-junit
-
