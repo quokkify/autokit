@@ -124,7 +124,7 @@ for profile in "${TOKENS[@]}"; do
         error "[infra] storage hook: cannot resolve mongodb port"
         exit 1
       fi
-      host="$(resolve_runtime_host)"
+      host="$(select_runtime_host_for_port "$(resolve_runtime_host)" "${port}")"
       echo "MONGODB_URL=mongodb://${host}:${port}" > tools/environment/.mongo.env
       ;;
     redis)
@@ -141,7 +141,7 @@ for profile in "${TOKENS[@]}"; do
         error "[infra] redis hook: cannot resolve redis port"
         exit 1
       fi
-      host="$(resolve_runtime_host)"
+      host="$(select_runtime_host_for_port "$(resolve_runtime_host)" "${port}")"
       echo "REDIS_HOST=${host}" > tools/environment/.redis.env
       echo "REDIS_PORT=${port}" >> tools/environment/.redis.env
       ;;
@@ -172,7 +172,7 @@ for profile in "${TOKENS[@]}"; do
         exit 1
       fi
 
-      host="$(resolve_runtime_host)"
+      host="$(select_runtime_host_for_port "$(resolve_runtime_host)" "${kafka_port}")"
       echo "KAFKA_BOOTSTRAP_SERVERS=${host}:${kafka_port}" > tools/environment/.kafka.env
       echo "KAFKA_SERVER_ADDRESS=${host}:${kafka_port}" >> tools/environment/.kafka.env
       echo "KAFKA_UI_URL=http://${host}:${kafka_ui_port}" >> tools/environment/.kafka.env

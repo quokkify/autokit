@@ -5,7 +5,7 @@ info() {
 }
 
 warning() {
-  echo -e "\033[1;33mWarning: $1\033[0m"
+  echo -e "\033[1;33mWarning: $1\033[0m" >&2
 }
 
 error() {
@@ -72,4 +72,30 @@ wait_until() {
   done
 
   return 1
+}
+
+is_tcp_reachable() {
+  local host="$1"
+  local port="$2"
+  (echo >/dev/tcp/"${host}"/"${port}") >/dev/null 2>&1
+}
+
+select_runtime_host_for_port() {
+  local preferred_host="$1"
+  local port="$2"
+  local fallback_host="${3:-localhost}"
+
+  if wait_until 3 1 is_tcp_reachable "$preferred_host" "$port"; then
+    echo "$preferred_host"
+    return 0
+  fi
+
+  if [[ "$preferred_host" != "$fallback_host" ]] && wait_until 3 1 is_tcp_reachable "$fallback_host" "$port"; then
+    warning "[infra] host ${preferred_host}:${port} is not reachable, fallback to ${fallback_host}:${port}"
+    echo "$fallback_host"
+    return 0
+  fi
+
+  echo "$preferred_host"
+  return 0
 }

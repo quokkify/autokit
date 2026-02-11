@@ -28,7 +28,12 @@ if [[ -z "$amqp_port" || -z "$management_port" ]]; then
   exit 1
 fi
 
-host="$(resolve_runtime_host)"
+host="$(select_runtime_host_for_port "$(resolve_runtime_host)" "${amqp_port}")"
+if ! wait_until 30 1 is_tcp_reachable "${host}" "${amqp_port}"; then
+  error "[rabbitmq] rabbitmq endpoint is not reachable on ${host}:${amqp_port}"
+  compose_cmd logs --tail=200 rabbitmq || true
+  exit 1
+fi
 
 rabbit_url_vhost="${rabbit_vhost#/}"
 if [[ -z "$rabbit_url_vhost" ]]; then

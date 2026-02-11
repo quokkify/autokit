@@ -18,7 +18,7 @@ if [[ -z "$port" ]]; then
   exit 1
 fi
 
-host="$(resolve_runtime_host)"
+host="$(select_runtime_host_for_port "$(resolve_runtime_host)" "${port}")"
 
 endpoint="http://${host}:${port}"
 
