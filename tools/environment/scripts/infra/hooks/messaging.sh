@@ -28,6 +28,14 @@ if ! kafka_ui_port="$(resolve_published_port kafka-ui 8080 8086 "${require_port}
 fi
 
 host="$(select_runtime_host_for_port "$(resolve_runtime_host)" "${kafka_port}")"
+
+info "[infra] messaging hook: waiting for external kafka endpoint ${host}:${kafka_port}"
+if ! wait_until 60 2 is_tcp_reachable "${host}" "${kafka_port}"; then
+  error "[infra] messaging hook: external kafka endpoint is not reachable: ${host}:${kafka_port}"
+  compose_cmd logs --tail=200 kafka zookeeper || true
+  exit 1
+fi
+
 echo "KAFKA_BOOTSTRAP_SERVERS=${host}:${kafka_port}" > tools/environment/.kafka.env
 echo "KAFKA_SERVER_ADDRESS=${host}:${kafka_port}" >> tools/environment/.kafka.env
 echo "KAFKA_UI_URL=http://${host}:${kafka_ui_port}" >> tools/environment/.kafka.env
