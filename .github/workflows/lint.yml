@@ -12,13 +12,51 @@ concurrency:
 
 jobs:
   detect-runner:
-    uses: ./.github/workflows/reusable-detect-runner.yml
-    with:
-      strategy: push_any
-    secrets: inherit
+    name: Select runner
+    runs-on: ubuntu-latest
     permissions:
       contents: read
       actions: read
+    outputs:
+      runs_on: ${{ steps.select.outputs.runs_on }}
+      is_self_hosted: ${{ steps.select.outputs.is_self_hosted }}
+    steps:
+      - name: Choose runner
+        id: select
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
+        with:
+          github-token: ${{ secrets.RUNNER_DISCOVERY_TOKEN || github.token }}
+          script: |
+            const labels = ['self-hosted', 'compose', 'internal'];
+            const eventName = context.eventName;
+            const allowSelfHosted = eventName === 'push';
+
+            if (!allowSelfHosted) {
+              core.setOutput('runs_on', JSON.stringify(['ubuntu-latest']));
+              core.setOutput('is_self_hosted', 'false');
+              return;
+            }
+
+            try {
+              const { data } = await github.rest.actions.listSelfHostedRunnersForRepo({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+              });
+              const hasLabels = (runner) =>
+                labels.every((label) =>
+                  runner.labels.some((item) => item.name.toLowerCase() === label)
+                );
+              const online = data.runners.find(
+                (runner) => runner.status === 'online' && hasLabels(runner)
+              );
+              const runsOn = online ? labels : ['ubuntu-latest'];
+              core.setOutput('runs_on', JSON.stringify(runsOn));
+              core.setOutput('is_self_hosted', String(Boolean(online)));
+            } catch (error) {
+              core.warning(`Runner discovery failed, falling back to github-hosted: ${error}`);
+              core.setOutput('runs_on', JSON.stringify(['ubuntu-latest']));
+              core.setOutput('is_self_hosted', 'false');
+            }
 
   check-formatting:
     needs: detect-runner
