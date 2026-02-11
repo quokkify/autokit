@@ -93,11 +93,8 @@ jobs:
     steps:
       - name: 🔨Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-
       - name: 🔨Prepare Java/Gradle
         uses: ./.github/actions/setup-java-gradle
-        with:
-          is_self_hosted: ${{ needs.detect-runner.outputs.is_self_hosted }}
 
       - name: 🧱 Build (check, no tests)
         run: |
@@ -148,11 +145,8 @@ jobs:
     steps:
       - name: 🔨Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-
       - name: 🔨Prepare Java/Gradle
         uses: ./.github/actions/setup-java-gradle
-        with:
-          is_self_hosted: ${{ needs.detect-runner.outputs.is_self_hosted }}
 
       - name: 🧱 Build (check, no tests)
         run: |
@@ -231,11 +225,8 @@ jobs:
     steps:
       - name: 🔨Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-
       - name: 🔨Prepare Java/Gradle
         uses: ./.github/actions/setup-java-gradle
-        with:
-          is_self_hosted: ${{ needs.detect-runner.outputs.is_self_hosted }}
 
       - name: 🧱 Build (check, no tests)
         run: |

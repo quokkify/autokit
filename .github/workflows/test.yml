@@ -181,8 +181,6 @@ jobs:
 
       - name: 🔨Prepare Java/Gradle
         uses: ./.github/actions/setup-java-gradle
-        with:
-          is_self_hosted: ${{ needs.detect-runner.outputs.is_self_hosted }}
 
       - name: 🧱 Build (check, no tests)
         run: |
@@ -274,8 +272,6 @@ jobs:
 
       - name: 🔨Prepare Java/Gradle
         uses: ./.github/actions/setup-java-gradle
-        with:
-          is_self_hosted: ${{ needs.detect-runner.outputs.is_self_hosted }}
 
       - name: 🚀 Run tests
         run: ./gradlew ${{ matrix.module }}:test --no-daemon --console=plain --stacktrace
@@ -333,8 +329,6 @@ jobs:
 
       - name: 🔨Prepare Java/Gradle
         uses: ./.github/actions/setup-java-gradle
-        with:
-          is_self_hosted: ${{ needs.detect-runner.outputs.is_self_hosted }}
 
       - name: 🟢 Start Infra
         if: ${{ matrix.profile != 'none' }}
@@ -498,8 +492,6 @@ jobs:
 
       - name: 🔨Prepare Java/Gradle
         uses: ./.github/actions/setup-java-gradle
-        with:
-          is_self_hosted: ${{ needs.detect-runner.outputs.is_self_hosted }}
 
       - name: 🟢 Start Infra
         if: ${{ matrix.profile != 'none' }}
