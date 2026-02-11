@@ -16,6 +16,7 @@ jobs:
   detect-runner:
     name: Select runner
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.event == 'pull_request' }}
     permissions:
       contents: read
       actions: read
@@ -31,23 +32,18 @@ jobs:
           script: |
             const labels = ['self-hosted', 'compose', 'internal'];
             const trusted = new Set(['OWNER', 'MEMBER', 'COLLABORATOR']);
-            const eventName = context.eventName;
+            const run = context.payload.workflow_run || {};
+            const runEvent = run.event || 'unknown';
             let allowSelfHosted = false;
 
-            if (eventName === 'workflow_run') {
-              const run = context.payload.workflow_run || {};
-              const runEvent = run.event || 'unknown';
-              if (runEvent === 'push') {
-                allowSelfHosted = true;
-              } else if (runEvent === 'pull_request') {
-                const headRepo = run.head_repository?.full_name;
-                const baseRepo = run.repository?.full_name;
-                const sameRepo = headRepo && baseRepo ? headRepo === baseRepo : false;
-                const association = run.actor?.association || 'NONE';
-                const actorLogin = (run.actor?.login || '').toLowerCase();
-                const isRenovateBot = actorLogin === 'renovate[bot]';
-                allowSelfHosted = sameRepo && (trusted.has(association) || isRenovateBot);
-              }
+            if (runEvent === 'pull_request') {
+              const headRepo = run.head_repository?.full_name;
+              const baseRepo = run.repository?.full_name;
+              const sameRepo = headRepo && baseRepo ? headRepo === baseRepo : false;
+              const association = run.actor?.association || 'NONE';
+              const actorLogin = (run.actor?.login || '').toLowerCase();
+              const isRenovateBot = actorLogin === 'renovate[bot]';
+              allowSelfHosted = sameRepo && (trusted.has(association) || isRenovateBot);
             }
 
             if (!allowSelfHosted) {
@@ -80,7 +76,7 @@ jobs:
   report:
     needs: detect-runner
     runs-on: ${{ fromJson(needs.detect-runner.outputs.runs_on) }}
-    if: ${{ github.event_name != 'pull_request_target' }}
+    if: ${{ github.event.workflow_run.event == 'pull_request' }}
     permissions:
       contents: read
       actions: read
@@ -96,12 +92,24 @@ jobs:
           run-id: ${{ github.event.workflow_run.id }}
           path: artifacts
 
+      - name: 🔍 Detect JUnit XML files
+        id: junit
+        shell: bash
+        run: |
+          count=$(find artifacts -type f -path "*/build/test-results/*/TEST-*.xml" | wc -l | tr -d ' ')
+          echo "count=$count" >> "$GITHUB_OUTPUT"
+          if [[ "$count" -eq 0 ]]; then
+            echo "No JUnit XML files found. Skipping report generation."
+          fi
+
       - name: 🧩 Merge JUnit XML (junitparser)
+        if: ${{ steps.junit.outputs.count != '0' }}
         shell: bash
         run: |
           ./tools/scripts/ci/merge_junit_reports.sh artifacts artifacts/_combined/combined-junit.xml
 
       - name: 🔬Combined test report
+        if: ${{ steps.junit.outputs.count != '0' }}
         uses: dorny/test-reporter@b082adf0eced0765477756c2a610396589b8c637 # v2
         with:
           name: "🔬Combined test report"

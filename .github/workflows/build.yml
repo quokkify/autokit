@@ -1,6 +1,6 @@
-name: "Run tests"
+name: "Build modules"
 on:
-  pull_request:
+  push:
     branches: [main]
 
 permissions:
@@ -28,21 +28,6 @@ jobs:
           github-token: ${{ secrets.RUNNER_DISCOVERY_TOKEN || github.token }}
           script: |
             const labels = ['self-hosted', 'compose', 'internal'];
-            const trusted = new Set(['OWNER', 'MEMBER', 'COLLABORATOR']);
-            const pr = context.payload.pull_request;
-            const sameRepo = pr?.head?.repo?.full_name && pr?.base?.repo?.full_name
-              ? pr.head.repo.full_name === pr.base.repo.full_name
-              : false;
-            const association = pr?.author_association || 'NONE';
-            const authorLogin = (pr?.user?.login || '').toLowerCase();
-            const isRenovateBot = authorLogin === 'renovate[bot]';
-            const allowSelfHosted = sameRepo && (trusted.has(association) || isRenovateBot);
-
-            if (!allowSelfHosted) {
-              core.setOutput('runs_on', JSON.stringify(['ubuntu-latest']));
-              core.setOutput('is_self_hosted', 'false');
-              return;
-            }
 
             try {
               const { data } = await github.rest.actions.listSelfHostedRunnersForRepo({
@@ -65,17 +50,14 @@ jobs:
               core.setOutput('is_self_hosted', 'false');
             }
 
-  test-common:
-    name: "Common • ${{ matrix.name }}"
+  build-common:
+    name: "Build common • ${{ matrix.name }}"
     needs: detect-runner
     runs-on: ${{ fromJson(needs.detect-runner.outputs.runs_on) }}
-    if: ${{ github.event_name != 'pull_request_target' }}
     permissions:
       contents: read
     env:
       CI: "true"
-      COMPOSE_PROJECT_NAME: ci-${{ github.run_id }}-${{ matrix.slug }}
-      EXECUTION_MODE: ${{ needs.detect-runner.outputs.is_self_hosted == 'true' && 'DIND' || 'CI' }}
     strategy:
       fail-fast: false
       max-parallel: 4
@@ -163,31 +145,31 @@ jobs:
       - name: 🔨Build with Gradle
         uses: gradle/actions/setup-gradle@f29f5a9d7b09a7c6b29859002d29d24e1674c884 # v5
 
-      - name: 🚀 Run tests
-        run: ./gradlew ${{ matrix.module }}:test --no-daemon --console=plain --stacktrace
+      - name: 🧱 Build (check, no tests)
+        run: |
+          ./gradlew \
+            ${{ matrix.module }}:check \
+            -x ${{ matrix.module }}:test \
+            --no-daemon --console=plain --stacktrace
         shell: bash
 
-      - name: 📦 Pack test results as artifact
+      - name: 📦 Pack checkstyle reports as artifact
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         if: always()
         with:
-          name: test-report-common-${{ matrix.slug }}
+          name: build-report-common-${{ matrix.slug }}
           retention-days: 3
           path: |
-            **/build/reports
-            **/build/test-results
+            **/build/reports/checkstyle
 
-  test-data:
-    name: "Data • ${{ matrix.name }}"
-    needs: [detect-runner, test-common]
+  build-data:
+    name: "Build data • ${{ matrix.name }}"
+    needs: [detect-runner, build-common]
     runs-on: ${{ fromJson(needs.detect-runner.outputs.runs_on) }}
-    if: ${{ github.event_name != 'pull_request_target' }}
     permissions:
       contents: read
     env:
       CI: "true"
-      COMPOSE_PROJECT_NAME: ci-${{ github.run_id }}-${{ matrix.slug }}
-      EXECUTION_MODE: ${{ needs.detect-runner.outputs.is_self_hosted == 'true' && 'DIND' || 'CI' }}
     strategy:
       fail-fast: false
       max-parallel: 4
@@ -196,22 +178,18 @@ jobs:
           - name: "data-utils • sql"
             module: ":data-utils:sql"
             slug: "data-utils-sql"
-            profile: "none"
 
           - name: "data-utils • nosql • parent"
             module: ":data-utils:nosql"
             slug: "data-utils-nosql"
-            profile: "none"
 
           - name: "data-utils • nosql • morphia"
             module: ":data-utils:nosql:morphia"
             slug: "data-utils-nosql-morphia"
-            profile: "storage"
 
           - name: "data-utils • nosql • redis"
             module: ":data-utils:nosql:redis"
             slug: "data-utils-nosql-redis"
-            profile: "redis"
 
     steps:
       - name: 🔨Checkout
@@ -235,102 +213,31 @@ jobs:
       - name: 🔨Build with Gradle
         uses: gradle/actions/setup-gradle@f29f5a9d7b09a7c6b29859002d29d24e1674c884 # v5
 
-      - name: 🟢 Start Infra
-        if: ${{ matrix.profile != 'none' }}
-        run: ./tools/environment/scripts/infra/run_app.sh "${{ matrix.profile }}"
-        shell: bash
-
-      - name: 🚀 Run tests
+      - name: 🧱 Build (check, no tests)
         run: |
-          if [[ -f tools/environment/.selenium-grid.env ]]; then
-            set -a
-            source tools/environment/.selenium-grid.env
-            set +a
-          fi
-          if [[ -f tools/environment/.mock-server.env ]]; then
-            set -a
-            source tools/environment/.mock-server.env
-            set +a
-          fi
-          if [[ -f tools/environment/.mongo.env ]]; then
-            set -a
-            source tools/environment/.mongo.env
-            set +a
-          fi
-          if [[ -f tools/environment/.redis.env ]]; then
-            set -a
-            source tools/environment/.redis.env
-            set +a
-          fi
-          if [[ -f tools/environment/.nginx.env ]]; then
-            set -a
-            source tools/environment/.nginx.env
-            set +a
-          fi
-          if [[ -f tools/environment/.reportportal.env ]]; then
-            set -a
-            source tools/environment/.reportportal.env
-            set +a
-          fi
-          if [[ -f tools/environment/.kafka.env ]]; then
-            set -a
-            source tools/environment/.kafka.env
-            set +a
-          fi
-          if [[ -f tools/environment/.rabbitmq.env ]]; then
-            set -a
-            source tools/environment/.rabbitmq.env
-            set +a
-          fi
-          if [[ -n "${KAFKA_BOOTSTRAP_SERVERS:-}" ]]; then
-            export KAFKA_SERVER_ADDRESS="${KAFKA_BOOTSTRAP_SERVERS}"
-          fi
-          if [[ "${{ matrix.profile }}" == "web" ]]; then
-            if [[ -n "${NGINX_BASE_URL:-}" ]]; then
-              export BASE_URL="${NGINX_BASE_URL}"
-            else
-              echo "NGINX_BASE_URL is not set for web profile" >&2
-              exit 1
-            fi
-          fi
-
-          ./gradlew ${{ matrix.module }}:test --no-daemon --console=plain --stacktrace
+          ./gradlew \
+            ${{ matrix.module }}:check \
+            -x ${{ matrix.module }}:test \
+            --no-daemon --console=plain --stacktrace
         shell: bash
 
-      - name: 🛑 Stop Infra
-        if: ${{ matrix.profile != 'none' && always() }}
-        run: ./tools/environment/scripts/infra/stop_app.sh
-        shell: bash
-
-      - name: 📦 Pack docker compose logs as artifact
-        if: ${{ matrix.profile != 'none' && always() }}
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
-        with:
-          name: docker-logs-data-${{ matrix.slug }}
-          retention-days: 3
-          path: logs
-
-      - name: 📦 Pack test results as artifact
+      - name: 📦 Pack checkstyle reports as artifact
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         if: always()
         with:
-          name: test-report-data-${{ matrix.slug }}
+          name: build-report-data-${{ matrix.slug }}
           retention-days: 3
           path: |
-            **/build/reports
-            **/build/test-results
+            **/build/reports/checkstyle
 
-  test-integrations:
-    name: "Integrations • ${{ matrix.name }}"
-    needs: [detect-runner, test-common]
+  build-integrations:
+    name: "Build integrations • ${{ matrix.name }}"
+    needs: [detect-runner, build-common]
     runs-on: ${{ fromJson(needs.detect-runner.outputs.runs_on) }}
-    if: ${{ github.event_name != 'pull_request_target' }}
     permissions:
       contents: read
     env:
       CI: "true"
-      COMPOSE_PROJECT_NAME: ci-${{ github.run_id }}-${{ matrix.slug }}
-      EXECUTION_MODE: ${{ needs.detect-runner.outputs.is_self_hosted == 'true' && 'DIND' || 'CI' }}
     strategy:
       fail-fast: false
       max-parallel: 4
@@ -339,57 +246,46 @@ jobs:
           - name: "integrations • rest-assured"
             module: ":integrations:rest-assured"
             slug: "integrations-rest-assured"
-            profile: "mock"
 
           - name: "integrations • selenide"
             module: ":integrations:selenide"
             slug: "integrations-selenide"
-            profile: "web"
 
           - name: "integrations • kafka"
             module: ":integrations:kafka"
             slug: "integrations-kafka"
-            profile: "messaging"
 
           - name: "integrations • rabbitmq"
             module: ":integrations:rabbitmq"
             slug: "integrations-rabbitmq"
-            profile: "rabbitmq"
 
           - name: "integrations • jira • core"
             module: ":integrations:jira:jira-core"
             slug: "integrations-jira-core"
-            profile: "none"
 
           - name: "integrations • jira • testng"
             module: ":integrations:jira:testng"
             slug: "integrations-jira-testng"
-            profile: "none"
 
           - name: "integrations • jira • testrail"
             module: ":integrations:jira:testrail"
             slug: "integrations-jira-testrail"
-            profile: "none"
 
           - name: "integrations • testrail • core"
             module: ":integrations:testrail:testrail-core"
             slug: "integrations-testrail-core"
-            profile: "none"
 
           - name: "integrations • testrail • testng"
             module: ":integrations:testrail:testng"
             slug: "integrations-testrail-testng"
-            profile: "none"
 
           - name: "integrations • reportportal • core"
             module: ":integrations:reportportal:reportportal-core"
             slug: "integrations-reportportal-core"
-            profile: "none"
 
           - name: "integrations • reportportal • testng"
             module: ":integrations:reportportal:testng"
             slug: "integrations-reportportal-testng"
-            profile: "reporting"
 
     steps:
       - name: 🔨Checkout
@@ -413,87 +309,16 @@ jobs:
       - name: 🔨Build with Gradle
         uses: gradle/actions/setup-gradle@f29f5a9d7b09a7c6b29859002d29d24e1674c884 # v5
 
-      - name: 🟢 Start Infra
-        if: ${{ matrix.profile != 'none' }}
-        run: ./tools/environment/scripts/infra/run_app.sh "${{ matrix.profile }}"
-        shell: bash
-
-      - name: 🚀 Run tests
+      - name: 🧱 Build (check, no tests)
         run: |
-          if [[ -f tools/environment/.selenium-grid.env ]]; then
-            set -a
-            source tools/environment/.selenium-grid.env
-            set +a
-          fi
-          if [[ -f tools/environment/.mock-server.env ]]; then
-            set -a
-            source tools/environment/.mock-server.env
-            set +a
-          fi
-          if [[ -f tools/environment/.mongo.env ]]; then
-            set -a
-            source tools/environment/.mongo.env
-            set +a
-          fi
-          if [[ -f tools/environment/.redis.env ]]; then
-            set -a
-            source tools/environment/.redis.env
-            set +a
-          fi
-          if [[ -f tools/environment/.nginx.env ]]; then
-            set -a
-            source tools/environment/.nginx.env
-            set +a
-          fi
-          if [[ -f tools/environment/.reportportal.env ]]; then
-            set -a
-            source tools/environment/.reportportal.env
-            set +a
-          fi
-          if [[ -f tools/environment/.kafka.env ]]; then
-            set -a
-            source tools/environment/.kafka.env
-            set +a
-          fi
-          if [[ -f tools/environment/.rabbitmq.env ]]; then
-            set -a
-            source tools/environment/.rabbitmq.env
-            set +a
-          fi
-          if [[ -n "${KAFKA_BOOTSTRAP_SERVERS:-}" ]]; then
-            export KAFKA_SERVER_ADDRESS="${KAFKA_BOOTSTRAP_SERVERS}"
-          fi
-          if [[ "${{ matrix.profile }}" == "web" ]]; then
-            if [[ -n "${NGINX_BASE_URL:-}" ]]; then
-              export BASE_URL="${NGINX_BASE_URL}"
-            else
-              echo "NGINX_BASE_URL is not set for web profile" >&2
-              exit 1
-            fi
-          fi
-
-          ./gradlew ${{ matrix.module }}:test --no-daemon --console=plain --stacktrace
+          ./gradlew ${{ matrix.module }}:check -x ${{ matrix.module }}:test --no-daemon --console=plain --stacktrace
         shell: bash
 
-      - name: 🛑 Stop Infra
-        if: ${{ matrix.profile != 'none' && always() }}
-        run: ./tools/environment/scripts/infra/stop_app.sh
-        shell: bash
-
-      - name: 📦 Pack docker compose logs as artifact
-        if: ${{ matrix.profile != 'none' && always() }}
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
-        with:
-          name: docker-logs-integrations-${{ matrix.slug }}
-          retention-days: 3
-          path: logs
-
-      - name: 📦 Pack test results as artifact
+      - name: 📦 Pack checkstyle reports as artifact
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         if: always()
         with:
-          name: test-report-integrations-${{ matrix.slug }}
+          name: build-report-integrations-${{ matrix.slug }}
           retention-days: 3
           path: |
-            **/build/reports
-            **/build/test-results
+            **/build/reports/checkstyle
