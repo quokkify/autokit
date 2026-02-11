@@ -152,7 +152,7 @@ for profile in "${TOKENS[@]}"; do
     messaging)
       info "[infra] messaging hook: waiting for kafka readiness"
       if ! wait_until 90 2 compose_cmd exec -T kafka \
-        sh -lc "kafka-topics.sh --bootstrap-server kafka:9092 --list 2>/dev/null | grep -Fxq messages"; then
+        sh -lc "/opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9092 --list 2>/dev/null | grep -Fxq messages"; then
         error "[infra] messaging hook: kafka is not ready after timeout"
         compose_cmd logs --tail=200 kafka zookeeper || true
         exit 1
