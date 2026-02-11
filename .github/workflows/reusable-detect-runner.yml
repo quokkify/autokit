@@ -12,6 +12,16 @@ on:
         required: false
         type: boolean
         default: false
+      trusted_author:
+        description: Whether PR/workflow actor is trusted (OWNER, MEMBER, COLLABORATOR)
+        required: false
+        type: boolean
+        default: false
+      is_renovate_bot:
+        description: Whether actor is renovate[bot]
+        required: false
+        type: boolean
+        default: false
     outputs:
       runs_on:
         description: Runner labels as JSON array
@@ -55,11 +65,15 @@ jobs:
             if (strategy === 'push_any') {
               allowSelfHosted = true;
             } else if (strategy === 'pr_trusted') {
-              allowSelfHosted = true;
+              allowSelfHosted =
+                ${{ inputs.same_repo }} &&
+                (${{ inputs.trusted_author }} || ${{ inputs.is_renovate_bot }});
             } else if (strategy === 'workflow_run_pr_trusted') {
               const runEvent = context.payload.workflow_run?.event || 'unknown';
               if (runEvent === 'pull_request') {
-                allowSelfHosted = true;
+                allowSelfHosted =
+                  ${{ inputs.same_repo }} &&
+                  (${{ inputs.trusted_author }} || ${{ inputs.is_renovate_bot }});
               }
             } else {
               core.warning(`Unknown strategy '${strategy}', using github-hosted runner.`);

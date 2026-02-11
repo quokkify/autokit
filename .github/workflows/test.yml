@@ -16,6 +16,8 @@ jobs:
     with:
       strategy: pr_trusted
       same_repo: ${{ github.event.pull_request.head.repo.full_name == github.event.pull_request.base.repo.full_name }}
+      trusted_author: ${{ contains(fromJson('["OWNER","MEMBER","COLLABORATOR"]'), github.event.pull_request.author_association) }}
+      is_renovate_bot: ${{ github.event.pull_request.user.login == 'renovate[bot]' }}
     secrets: inherit
 
   check-formatting:
