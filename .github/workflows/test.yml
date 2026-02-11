@@ -12,58 +12,13 @@ concurrency:
 
 jobs:
   detect-runner:
-    name: Select runner
-    runs-on: ubuntu-latest
+    uses: ./.github/workflows/reusable-detect-runner.yml
+    with:
+      strategy: pr_trusted
+    secrets: inherit
     permissions:
       contents: read
       actions: read
-    outputs:
-      runs_on: ${{ steps.select.outputs.runs_on }}
-      is_self_hosted: ${{ steps.select.outputs.is_self_hosted }}
-    steps:
-      - name: Choose runner
-        id: select
-        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
-        with:
-          github-token: ${{ secrets.RUNNER_DISCOVERY_TOKEN || github.token }}
-          script: |
-            const labels = ['self-hosted', 'compose', 'internal'];
-            const trusted = new Set(['OWNER', 'MEMBER', 'COLLABORATOR']);
-            const pr = context.payload.pull_request;
-            const sameRepo = pr?.head?.repo?.full_name && pr?.base?.repo?.full_name
-              ? pr.head.repo.full_name === pr.base.repo.full_name
-              : false;
-            const association = pr?.author_association || 'NONE';
-            const authorLogin = (pr?.user?.login || '').toLowerCase();
-            const isRenovateBot = authorLogin === 'renovate[bot]';
-            const allowSelfHosted = sameRepo && (trusted.has(association) || isRenovateBot);
-
-            if (!allowSelfHosted) {
-              core.setOutput('runs_on', JSON.stringify(['ubuntu-latest']));
-              core.setOutput('is_self_hosted', 'false');
-              return;
-            }
-
-            try {
-              const { data } = await github.rest.actions.listSelfHostedRunnersForRepo({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-              });
-              const hasLabels = (runner) =>
-                labels.every((label) =>
-                  runner.labels.some((item) => item.name.toLowerCase() === label)
-                );
-              const online = data.runners.find(
-                (runner) => runner.status === 'online' && hasLabels(runner)
-              );
-              const runsOn = online ? labels : ['ubuntu-latest'];
-              core.setOutput('runs_on', JSON.stringify(runsOn));
-              core.setOutput('is_self_hosted', String(Boolean(online)));
-            } catch (error) {
-              core.warning(`Runner discovery failed, falling back to github-hosted: ${error}`);
-              core.setOutput('runs_on', JSON.stringify(['ubuntu-latest']));
-              core.setOutput('is_self_hosted', 'false');
-            }
 
   check-formatting:
     name: Lint (Prettier)
@@ -224,23 +179,10 @@ jobs:
       - name: 🔨Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
-      - name: 🔨Set up JDK (self-hosted, no cache)
-        if: ${{ needs.detect-runner.outputs.is_self_hosted == 'true' }}
-        uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5
+      - name: 🔨Prepare Java/Gradle
+        uses: ./.github/actions/setup-java-gradle
         with:
-          distribution: "temurin"
-          java-version: "21"
-
-      - name: 🔨Set up JDK (github-hosted, cache gradle)
-        if: ${{ needs.detect-runner.outputs.is_self_hosted != 'true' }}
-        uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5
-        with:
-          distribution: "temurin"
-          cache: "gradle"
-          java-version: "21"
-
-      - name: 🔨Build with Gradle
-        uses: gradle/actions/setup-gradle@f29f5a9d7b09a7c6b29859002d29d24e1674c884 # v5
+          is_self_hosted: ${{ needs.detect-runner.outputs.is_self_hosted }}
 
       - name: 🧱 Build (check, no tests)
         run: |
@@ -330,23 +272,10 @@ jobs:
       - name: 🔨Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
-      - name: 🔨Set up JDK (self-hosted, no cache)
-        if: ${{ needs.detect-runner.outputs.is_self_hosted == 'true' }}
-        uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5
+      - name: 🔨Prepare Java/Gradle
+        uses: ./.github/actions/setup-java-gradle
         with:
-          distribution: "temurin"
-          java-version: "21"
-
-      - name: 🔨Set up JDK (github-hosted, cache gradle)
-        if: ${{ needs.detect-runner.outputs.is_self_hosted != 'true' }}
-        uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5
-        with:
-          distribution: "temurin"
-          cache: "gradle"
-          java-version: "21"
-
-      - name: 🔨Build with Gradle
-        uses: gradle/actions/setup-gradle@f29f5a9d7b09a7c6b29859002d29d24e1674c884 # v5
+          is_self_hosted: ${{ needs.detect-runner.outputs.is_self_hosted }}
 
       - name: 🚀 Run tests
         run: ./gradlew ${{ matrix.module }}:test --no-daemon --console=plain --stacktrace
@@ -402,23 +331,10 @@ jobs:
       - name: 🔨Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
-      - name: 🔨Set up JDK (self-hosted, no cache)
-        if: ${{ needs.detect-runner.outputs.is_self_hosted == 'true' }}
-        uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5
+      - name: 🔨Prepare Java/Gradle
+        uses: ./.github/actions/setup-java-gradle
         with:
-          distribution: "temurin"
-          java-version: "21"
-
-      - name: 🔨Set up JDK (github-hosted, cache gradle)
-        if: ${{ needs.detect-runner.outputs.is_self_hosted != 'true' }}
-        uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5
-        with:
-          distribution: "temurin"
-          cache: "gradle"
-          java-version: "21"
-
-      - name: 🔨Build with Gradle
-        uses: gradle/actions/setup-gradle@f29f5a9d7b09a7c6b29859002d29d24e1674c884 # v5
+          is_self_hosted: ${{ needs.detect-runner.outputs.is_self_hosted }}
 
       - name: 🟢 Start Infra
         if: ${{ matrix.profile != 'none' }}
@@ -580,23 +496,10 @@ jobs:
       - name: 🔨Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
-      - name: 🔨Set up JDK (self-hosted, no cache)
-        if: ${{ needs.detect-runner.outputs.is_self_hosted == 'true' }}
-        uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5
+      - name: 🔨Prepare Java/Gradle
+        uses: ./.github/actions/setup-java-gradle
         with:
-          distribution: "temurin"
-          java-version: "21"
-
-      - name: 🔨Set up JDK (github-hosted, cache gradle)
-        if: ${{ needs.detect-runner.outputs.is_self_hosted != 'true' }}
-        uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5
-        with:
-          distribution: "temurin"
-          cache: "gradle"
-          java-version: "21"
-
-      - name: 🔨Build with Gradle
-        uses: gradle/actions/setup-gradle@f29f5a9d7b09a7c6b29859002d29d24e1674c884 # v5
+          is_self_hosted: ${{ needs.detect-runner.outputs.is_self_hosted }}
 
       - name: 🟢 Start Infra
         if: ${{ matrix.profile != 'none' }}
@@ -682,3 +585,20 @@ jobs:
           path: |
             **/build/reports
             **/build/test-results
+
+  tests-complete:
+    name: Tests pipeline complete
+    needs: [test-data, test-integrations]
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Validate stage results
+        shell: bash
+        run: |
+          if [[ "${{ needs.test-data.result }}" != "success" || "${{ needs.test-integrations.result }}" != "success" ]]; then
+            echo "Test stages are not successful."
+            exit 1
+          fi
+          echo "All test stages completed successfully."
