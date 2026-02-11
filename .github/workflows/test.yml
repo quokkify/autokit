@@ -41,8 +41,8 @@ jobs:
         with:
           prettier_options: --check .
 
-  build-all:
-    name: "Build • ${{ matrix.name }}"
+  build-common:
+    name: "Build common • ${{ matrix.name }}"
     needs: [detect-runner, check-formatting]
     runs-on: ${{ fromJson(needs.detect-runner.outputs.runs_on) }}
     if: ${{ github.event_name != 'pull_request_target' }}
@@ -115,6 +115,35 @@ jobs:
             module: ":common-utils:console"
             slug: "common-utils-console"
 
+    steps:
+      - name: 🔨Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: 🔨Prepare Java/Gradle
+        uses: ./.github/actions/setup-java-gradle
+
+      - name: 🧱 Build (check, no tests)
+        run: |
+          ./gradlew \
+            ${{ matrix.module }}:check \
+            -x ${{ matrix.module }}:test \
+            --no-daemon --console=plain --stacktrace
+        shell: bash
+
+  build-data:
+    name: "Build data • ${{ matrix.name }}"
+    needs: [detect-runner, build-common]
+    runs-on: ${{ fromJson(needs.detect-runner.outputs.runs_on) }}
+    if: ${{ github.event_name != 'pull_request_target' }}
+    permissions:
+      contents: read
+    env:
+      CI: "true"
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        include:
           - name: "data-utils • sql"
             module: ":data-utils:sql"
             slug: "data-utils-sql"
@@ -131,6 +160,35 @@ jobs:
             module: ":data-utils:nosql:redis"
             slug: "data-utils-nosql-redis"
 
+    steps:
+      - name: 🔨Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: 🔨Prepare Java/Gradle
+        uses: ./.github/actions/setup-java-gradle
+
+      - name: 🧱 Build (check, no tests)
+        run: |
+          ./gradlew \
+            ${{ matrix.module }}:check \
+            -x ${{ matrix.module }}:test \
+            --no-daemon --console=plain --stacktrace
+        shell: bash
+
+  build-integrations:
+    name: "Build integrations • ${{ matrix.name }}"
+    needs: [detect-runner, build-common]
+    runs-on: ${{ fromJson(needs.detect-runner.outputs.runs_on) }}
+    if: ${{ github.event_name != 'pull_request_target' }}
+    permissions:
+      contents: read
+    env:
+      CI: "true"
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        include:
           - name: "integrations • rest-assured"
             module: ":integrations:rest-assured"
             slug: "integrations-rest-assured"
@@ -192,7 +250,7 @@ jobs:
 
   test-common:
     name: "Common • ${{ matrix.name }}"
-    needs: [detect-runner, build-all]
+    needs: [detect-runner, build-common]
     runs-on: ${{ fromJson(needs.detect-runner.outputs.runs_on) }}
     if: ${{ github.event_name != 'pull_request_target' }}
     permissions:
@@ -289,7 +347,7 @@ jobs:
 
   test-data:
     name: "Data • ${{ matrix.name }}"
-    needs: [detect-runner, test-common]
+    needs: [detect-runner, build-data, test-common]
     runs-on: ${{ fromJson(needs.detect-runner.outputs.runs_on) }}
     if: ${{ github.event_name != 'pull_request_target' }}
     permissions:
@@ -417,7 +475,7 @@ jobs:
 
   test-integrations:
     name: "Integrations • ${{ matrix.name }}"
-    needs: [detect-runner, test-common]
+    needs: [detect-runner, build-integrations, test-common]
     runs-on: ${{ fromJson(needs.detect-runner.outputs.runs_on) }}
     if: ${{ github.event_name != 'pull_request_target' }}
     permissions:
