@@ -34,7 +34,6 @@ jobs:
           github-token: ${{ secrets.RUNNER_DISCOVERY_TOKEN || github.token }}
           script: |
             const labels = ['self-hosted', 'compose', 'internal'];
-            const trusted = new Set(['OWNER', 'MEMBER', 'COLLABORATOR']);
             const strategy = '${{ inputs.strategy }}';
 
             const setHosted = () => {
@@ -55,10 +54,7 @@ jobs:
               const sameRepo = pr?.head?.repo?.full_name && pr?.base?.repo?.full_name
                 ? pr.head.repo.full_name === pr.base.repo.full_name
                 : false;
-              const association = pr?.author_association || 'NONE';
-              const authorLogin = (pr?.user?.login || '').toLowerCase();
-              const isRenovateBot = authorLogin === 'renovate[bot]';
-              allowSelfHosted = sameRepo && (trusted.has(association) || isRenovateBot);
+              allowSelfHosted = sameRepo;
             } else if (strategy === 'workflow_run_pr_trusted') {
               const run = context.payload.workflow_run || {};
               const runEvent = run.event || 'unknown';
@@ -66,10 +62,7 @@ jobs:
                 const headRepo = run.head_repository?.full_name;
                 const baseRepo = run.repository?.full_name;
                 const sameRepo = headRepo && baseRepo ? headRepo === baseRepo : false;
-                const association = run.actor?.association || 'NONE';
-                const actorLogin = (run.actor?.login || '').toLowerCase();
-                const isRenovateBot = actorLogin === 'renovate[bot]';
-                allowSelfHosted = sameRepo && (trusted.has(association) || isRenovateBot);
+                allowSelfHosted = sameRepo;
               }
             } else {
               core.warning(`Unknown strategy '${strategy}', using github-hosted runner.`);
