@@ -17,7 +17,7 @@ on:
 
 permissions:
   contents: read
-  actions: read
+  actions: none
 
 jobs:
   detect-runner:
@@ -41,27 +41,9 @@ jobs:
               core.setOutput('runs_on', JSON.stringify(['ubuntu-latest']));
               core.setOutput('is_self_hosted', 'false');
             };
-
-            const setSelfHostedIfOnline = async () => {
-              try {
-                const { data } = await github.rest.actions.listSelfHostedRunnersForRepo({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                });
-                const hasLabels = (runner) =>
-                  labels.every((label) =>
-                    runner.labels.some((item) => item.name.toLowerCase() === label)
-                  );
-                const online = data.runners.find(
-                  (runner) => runner.status === 'online' && hasLabels(runner)
-                );
-                const runsOn = online ? labels : ['ubuntu-latest'];
-                core.setOutput('runs_on', JSON.stringify(runsOn));
-                core.setOutput('is_self_hosted', String(Boolean(online)));
-              } catch (error) {
-                core.warning(`Runner discovery failed, falling back to github-hosted: ${error}`);
-                setHosted();
-              }
+            const setSelfHosted = () => {
+              core.setOutput('runs_on', JSON.stringify(labels));
+              core.setOutput('is_self_hosted', 'true');
             };
 
             let allowSelfHosted = false;
@@ -98,4 +80,4 @@ jobs:
               return;
             }
 
-            await setSelfHostedIfOnline();
+            setSelfHosted();
