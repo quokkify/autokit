@@ -1,0 +1,14 @@
+description = "RabbitMQ integration"
+
+ext {
+    artifactId = "rabbitmq"
+}
+
+dependencies {
+    implementation project(":common-utils:config")
+    implementation project(":common-utils:core")
+    implementation project(":testng-extensions")
+
+    implementation "com.rabbitmq:amqp-client:${rabbitmq}"
+    api "org.apache.commons:commons-lang3"
+}

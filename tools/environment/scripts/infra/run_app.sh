@@ -85,6 +85,24 @@ if [[ "${CI:-}" == "true" ]]; then
       fi
       export KAFKA_EXTERNAL_PORT="${KAFKA_PUBLISHED_PORT}"
     fi
+    if [[ "$profile" == "rabbitmq" ]]; then
+      if [[ -z "${RABBITMQ_PUBLISHED_PORT:-}" || "${RABBITMQ_PUBLISHED_PORT:-}" == "0" ]]; then
+        rabbit_dynamic_port="$(find_free_port || true)"
+        if [[ -z "${rabbit_dynamic_port}" ]]; then
+          error "[infra] rabbitmq hook: cannot allocate free host port for rabbitmq amqp"
+          exit 1
+        fi
+        export RABBITMQ_PUBLISHED_PORT="${rabbit_dynamic_port}"
+      fi
+      if [[ -z "${RABBITMQ_MANAGEMENT_PUBLISHED_PORT:-}" || "${RABBITMQ_MANAGEMENT_PUBLISHED_PORT:-}" == "0" ]]; then
+        rabbit_mgmt_dynamic_port="$(find_free_port || true)"
+        if [[ -z "${rabbit_mgmt_dynamic_port}" ]]; then
+          error "[infra] rabbitmq hook: cannot allocate free host port for rabbitmq management"
+          exit 1
+        fi
+        export RABBITMQ_MANAGEMENT_PUBLISHED_PORT="${rabbit_mgmt_dynamic_port}"
+      fi
+    fi
   done
   if [[ "$needs_nginx_build" == "true" ]]; then
     echo "[infra] building nginx image for CI"
@@ -217,6 +235,10 @@ for profile in "${TOKENS[@]}"; do
       echo "KAFKA_BOOTSTRAP_SERVERS=${host}:${kafka_port}" > tools/environment/.kafka.env
       echo "KAFKA_SERVER_ADDRESS=${host}:${kafka_port}" >> tools/environment/.kafka.env
       echo "KAFKA_UI_URL=http://${host}:${kafka_ui_port}" >> tools/environment/.kafka.env
+      ;;
+    rabbitmq)
+      info "[infra] rabbitmq hook: bootstrap rabbitmq environment"
+      ./tools/environment/scripts/rabbitmq/bootstrap_rabbitmq.sh
       ;;
     *)
       : # no-op

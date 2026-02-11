@@ -15,6 +15,10 @@ services:
       - "0:8080"
   zookeeper:
     ports: []
+  rabbitmq:
+    ports:
+      - "0:5672"
+      - "0:15672"
   mock-server:
     ports:
       - "0:1080"

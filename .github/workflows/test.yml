@@ -131,6 +131,11 @@ jobs:
             slug: "integrations-kafka"
             profile: "messaging"
 
+          - name: "integrations • rabbitmq"
+            module: ":integrations:rabbitmq"
+            slug: "integrations-rabbitmq"
+            profile: "rabbitmq"
+
           # =========================
           # Data utils
           # =========================
@@ -284,6 +289,11 @@ jobs:
           if [[ -f tools/environment/.kafka.env ]]; then
             set -a
             source tools/environment/.kafka.env
+            set +a
+          fi
+          if [[ -f tools/environment/.rabbitmq.env ]]; then
+            set -a
+            source tools/environment/.rabbitmq.env
             set +a
           fi
           if [[ -n "${KAFKA_BOOTSTRAP_SERVERS:-}" ]]; then
