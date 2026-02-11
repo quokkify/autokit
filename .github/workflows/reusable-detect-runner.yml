@@ -55,11 +55,11 @@ jobs:
             if (strategy === 'push_any') {
               allowSelfHosted = true;
             } else if (strategy === 'pr_trusted') {
-              allowSelfHosted = ${{ inputs.same_repo }};
+              allowSelfHosted = true;
             } else if (strategy === 'workflow_run_pr_trusted') {
               const runEvent = context.payload.workflow_run?.event || 'unknown';
               if (runEvent === 'pull_request') {
-                allowSelfHosted = ${{ inputs.same_repo }};
+                allowSelfHosted = true;
               }
             } else {
               core.warning(`Unknown strategy '${strategy}', using github-hosted runner.`);
