@@ -7,6 +7,11 @@ on:
         description: One of pr_trusted, push_any, workflow_run_pr_trusted
         required: true
         type: string
+      same_repo:
+        description: Whether source and target repositories are the same (for PR-like events)
+        required: false
+        type: boolean
+        default: false
     outputs:
       runs_on:
         description: Runner labels as JSON array
@@ -50,19 +55,11 @@ jobs:
             if (strategy === 'push_any') {
               allowSelfHosted = true;
             } else if (strategy === 'pr_trusted') {
-              const pr = context.payload.pull_request;
-              const sameRepo = pr?.head?.repo?.full_name && pr?.base?.repo?.full_name
-                ? pr.head.repo.full_name === pr.base.repo.full_name
-                : false;
-              allowSelfHosted = sameRepo;
+              allowSelfHosted = ${{ inputs.same_repo }};
             } else if (strategy === 'workflow_run_pr_trusted') {
-              const run = context.payload.workflow_run || {};
-              const runEvent = run.event || 'unknown';
+              const runEvent = context.payload.workflow_run?.event || 'unknown';
               if (runEvent === 'pull_request') {
-                const headRepo = run.head_repository?.full_name;
-                const baseRepo = run.repository?.full_name;
-                const sameRepo = headRepo && baseRepo ? headRepo === baseRepo : false;
-                allowSelfHosted = sameRepo;
+                allowSelfHosted = ${{ inputs.same_repo }};
               }
             } else {
               core.warning(`Unknown strategy '${strategy}', using github-hosted runner.`);

@@ -17,6 +17,7 @@ jobs:
     uses: ./.github/workflows/reusable-detect-runner.yml
     with:
       strategy: workflow_run_pr_trusted
+      same_repo: ${{ github.event.workflow_run.head_repository.full_name == github.event.workflow_run.repository.full_name }}
     secrets: inherit
     if: ${{ github.event.workflow_run.event == 'pull_request' }}
 
