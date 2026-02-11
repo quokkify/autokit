@@ -83,9 +83,10 @@ fi
 REMOTE_HUB_URL="$(get_hub_url "${remote_host}")"
 HEALTHCHECK_URL="$(get_hub_url "localhost")"
 STATUS_URL="${HEALTHCHECK_URL}/status"
+CI_CONTAINER_STATUS_URL="http://localhost:4444/wd/hub/status"
 
 wait_interval_in_seconds=1
-max_wait_time_in_seconds=30
+max_wait_time_in_seconds=60
 end_time=$((SECONDS + max_wait_time_in_seconds))
 time_left=$max_wait_time_in_seconds
 
@@ -94,7 +95,7 @@ while [ $SECONDS -lt $end_time ]; do
   if [[ "${CI:-}" == "true" ]]; then
     hub_container="$(compose_cmd ps -q selenium-hub | head -n1 || true)"
     if [[ -n "$hub_container" ]]; then
-      response="$(docker run --rm --network "container:${hub_container}" curlimages/curl:8.5.0 -sL "$STATUS_URL" || true)"
+      response="$(docker run --rm --network "container:${hub_container}" curlimages/curl:8.5.0 -sL "$CI_CONTAINER_STATUS_URL" || true)"
     else
       response=""
     fi
