@@ -4,9 +4,9 @@ set -euo pipefail
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/../compose_utils.sh"
 init_compose_files
 
-info "[infra] messaging hook: waiting for kafka readiness"
-if ! wait_until 90 2 compose_cmd exec -T kafka \
-  sh -lc "/opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9092 --list 2>/dev/null | grep -Fxq messages"; then
+info "[infra] messaging hook: waiting for kafka readiness (topic exists and has leader)"
+if ! wait_until 120 2 compose_cmd exec -T kafka \
+  sh -lc "/opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9092 --describe --topic messages 2>/dev/null | grep -Eq 'Leader:[[:space:]]*[0-9]+' && ! /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9092 --describe --topic messages 2>/dev/null | grep -Eq 'Leader:[[:space:]]*-1'"; then
   error "[infra] messaging hook: kafka is not ready after timeout"
   compose_cmd logs --tail=200 kafka zookeeper || true
   exit 1
