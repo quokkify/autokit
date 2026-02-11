@@ -17,7 +17,7 @@ runs:
       with:
         distribution: temurin
         cache: gradle
-        java-version: '21'
+        java-version: "21"
 
     - name: 🔨Build with Gradle
       uses: gradle/actions/setup-gradle@f29f5a9d7b09a7c6b29859002d29d24e1674c884 # v5
