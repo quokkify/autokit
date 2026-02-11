@@ -1,14 +1,15 @@
 #!/bin/bash
 
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/../infra/compose_utils.sh"
+init_compose_files
+
 MOCKSERVER_URL=${1:-http://localhost:1080}
 DIR=${2:-tools/environment/mock/expectations}
 
 find "$DIR" -type f -name "*.json" | while read -r file; do
   printf "\n⏳ Uploading '%s'\n" "$file"
   if [[ "${CI:-}" == "true" ]]; then
-    container_id="$(docker compose -f tools/environment/docker/docker-compose.yml \
-      -f tools/environment/docker/docker-compose.ci.yml \
-      ps -q mock-server | head -n1 || true)"
+    container_id="$(compose_cmd ps -q mock-server | head -n1 || true)"
     if [[ -z "$container_id" ]]; then
       echo "❌ MockServer container not found"
       exit 1

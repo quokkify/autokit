@@ -1,11 +1,8 @@
 #!/bin/bash
 set -euo pipefail
-COMPOSE_FILES=(-f tools/environment/docker/docker-compose.yml)
-if [[ "${CI:-}" == "true" ]]; then
-  COMPOSE_FILES+=(-f tools/environment/docker/docker-compose.ci.yml)
-else
-  COMPOSE_FILES+=(-f tools/environment/docker/docker-compose.local.yml)
-fi
+
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/compose_utils.sh"
+init_compose_files
 
 PROFILE="${1:-all}"
 
@@ -27,7 +24,6 @@ if [[ "${CI:-}" == "true" ]]; then
   DOWN_ARGS+=( -v )
 fi
 
-docker compose \
-  "${COMPOSE_FILES[@]}" \
+compose_cmd \
   "${PROFILES_ARGS[@]}" \
   "${DOWN_ARGS[@]}"

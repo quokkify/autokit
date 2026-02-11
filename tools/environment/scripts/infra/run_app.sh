@@ -1,6 +1,8 @@
 #!/bin/bash
 set -euo pipefail
 
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/compose_utils.sh"
+
 if [[ "${CI:-}" == "true" ]]; then
   export GRADLE_OPTS="-Dorg.gradle.console=plain"
 else
@@ -48,14 +50,9 @@ for profile in "${TOKENS[@]}"; do
   [[ -n "$profile" ]] && PROFILES_ARGS+=("--profile" "$profile")
 done
 
-echo "[infra] docker compose up: ${PROFILES_ARGS[*]}"
-COMPOSE_FILES=(-f tools/environment/docker/docker-compose.yml)
-if [[ "${CI:-}" == "true" ]]; then
-  COMPOSE_FILES+=(-f tools/environment/docker/docker-compose.ci.yml)
-else
-  COMPOSE_FILES+=(-f tools/environment/docker/docker-compose.local.yml)
-fi
+init_compose_files
 
+echo "[infra] docker compose up: ${PROFILES_ARGS[*]}"
 if [[ "${CI:-}" == "true" ]]; then
   needs_nginx_build="false"
   for profile in "${TOKENS[@]}"; do
@@ -70,11 +67,7 @@ if [[ "${CI:-}" == "true" ]]; then
       needs_nginx_build="true"
     fi
     if [[ "$profile" == "messaging" ]]; then
-      if [[ "${EXECUTION_MODE:-}" == "DIND" ]]; then
-        export KAFKA_EXTERNAL_HOST=dind
-      else
-        export KAFKA_EXTERNAL_HOST=localhost
-      fi
+      export KAFKA_EXTERNAL_HOST="$(resolve_runtime_host)"
       if [[ -z "${KAFKA_PUBLISHED_PORT:-}" || "${KAFKA_PUBLISHED_PORT:-}" == "0" ]]; then
         kafka_dynamic_port="$(find_free_port || true)"
         if [[ -z "${kafka_dynamic_port}" ]]; then
@@ -106,13 +99,11 @@ if [[ "${CI:-}" == "true" ]]; then
   done
   if [[ "$needs_nginx_build" == "true" ]]; then
     echo "[infra] building nginx image for CI"
-    docker compose "${COMPOSE_FILES[@]}" build nginx
+    compose_cmd build nginx
   fi
 fi
 
-docker compose \
-  "${COMPOSE_FILES[@]}" \
-  "${PROFILES_ARGS[@]}" up -d
+compose_cmd "${PROFILES_ARGS[@]}" up -d
 
 for profile in "${TOKENS[@]}"; do
   profile="$(echo "$profile" | xargs)"
@@ -126,51 +117,36 @@ for profile in "${TOKENS[@]}"; do
       info "[infra] web hook: start selenium grid"
       ./tools/environment/scripts/selenium/run_selenium_grid.sh
       info "[infra] web hook: set nginx url"
-      COMPOSE_FILES=(-f tools/environment/docker/docker-compose.yml)
-      if [[ "${CI:-}" == "true" ]]; then
-        COMPOSE_FILES+=(-f tools/environment/docker/docker-compose.ci.yml)
-      else
-        COMPOSE_FILES+=(-f tools/environment/docker/docker-compose.local.yml)
-      fi
-      port_line=$(docker compose "${COMPOSE_FILES[@]}" port nginx 80 | head -n1 || true)
       if [[ "${CI:-}" == "true" ]]; then
         host="nginx"
         port="80"
       else
         host="localhost"
-        if [[ -n "$port_line" ]]; then
-          port="${port_line##*:}"
-        else
-          port="80"
+        if ! port="$(resolve_published_port nginx 80 80 false)"; then
+          error "[infra] web hook: cannot resolve nginx port"
+          exit 1
         fi
       fi
       echo "NGINX_BASE_URL=http://${host}:${port}" > tools/environment/.nginx.env
       ;;
     storage)
       info "[infra] storage hook: set mongo url"
-      COMPOSE_FILES=(-f tools/environment/docker/docker-compose.yml)
+      require_port="false"
       if [[ "${CI:-}" == "true" ]]; then
-        COMPOSE_FILES+=(-f tools/environment/docker/docker-compose.ci.yml)
-      else
-        COMPOSE_FILES+=(-f tools/environment/docker/docker-compose.local.yml)
+        require_port="true"
       fi
-      port_line=$(docker compose "${COMPOSE_FILES[@]}" port mongodb 27017 | head -n1 || true)
-      if [[ -n "$port_line" ]]; then
-        port="${port_line##*:}"
-      else
-        port="27017"
+      if ! port="$(resolve_published_port mongodb 27017 27017 "$require_port")"; then
+        error "[infra] storage hook: cannot resolve mongodb port"
+        exit 1
       fi
-      host="localhost"
-      if [[ "${CI:-}" == "true" && "${EXECUTION_MODE:-}" == "DIND" ]]; then
-        host="dind"
-      fi
+      host="$(resolve_runtime_host)"
       echo "MONGODB_URL=mongodb://${host}:${port}" > tools/environment/.mongo.env
       ;;
     redis)
       info "[infra] redis hook: waiting for PING"
       ready="false"
       for _ in {1..30}; do
-        if docker compose "${COMPOSE_FILES[@]}" exec -T redis redis-cli ping >/dev/null 2>&1; then
+        if compose_cmd exec -T redis redis-cli ping >/dev/null 2>&1; then
           ready="true"
           break
         fi
@@ -180,16 +156,15 @@ for profile in "${TOKENS[@]}"; do
         warning "[infra] redis hook: PING not ready after timeout"
       fi
       info "[infra] redis hook: set redis host and port"
-      port_line=$(docker compose "${COMPOSE_FILES[@]}" port redis 6379 | head -n1 || true)
-      if [[ -n "$port_line" ]]; then
-        port="${port_line##*:}"
-      else
-        port="6379"
+      require_port="false"
+      if [[ "${CI:-}" == "true" ]]; then
+        require_port="true"
       fi
-      host="localhost"
-      if [[ "${CI:-}" == "true" && "${EXECUTION_MODE:-}" == "DIND" ]]; then
-        host="dind"
+      if ! port="$(resolve_published_port redis 6379 6379 "$require_port")"; then
+        error "[infra] redis hook: cannot resolve redis port"
+        exit 1
       fi
+      host="$(resolve_runtime_host)"
       echo "REDIS_HOST=${host}" > tools/environment/.redis.env
       echo "REDIS_PORT=${port}" >> tools/environment/.redis.env
       ;;
@@ -201,7 +176,7 @@ for profile in "${TOKENS[@]}"; do
       info "[infra] messaging hook: waiting for kafka readiness"
       ready="false"
       for _ in {1..90}; do
-        if docker compose "${COMPOSE_FILES[@]}" exec -T kafka \
+        if compose_cmd exec -T kafka \
           kafka-topics.sh --bootstrap-server kafka:9092 --list 2>/dev/null | grep -Fxq messages; then
           ready="true"
           break
@@ -210,28 +185,25 @@ for profile in "${TOKENS[@]}"; do
       done
       if [[ "$ready" != "true" ]]; then
         error "[infra] messaging hook: kafka is not ready after timeout"
-        docker compose "${COMPOSE_FILES[@]}" logs --tail=200 kafka zookeeper || true
+        compose_cmd logs --tail=200 kafka zookeeper || true
         exit 1
       fi
 
       info "[infra] messaging hook: set kafka bootstrap and kafka-ui url"
-      kafka_port_line=$(docker compose "${COMPOSE_FILES[@]}" port kafka 29092 | head -n1 || true)
-      kafka_ui_port_line=$(docker compose "${COMPOSE_FILES[@]}" port kafka-ui 8080 | head -n1 || true)
-      if [[ -n "$kafka_port_line" ]]; then
-        kafka_port="${kafka_port_line##*:}"
-      else
-        kafka_port="29092"
+      require_port="false"
+      if [[ "${CI:-}" == "true" ]]; then
+        require_port="true"
       fi
-      if [[ -n "$kafka_ui_port_line" ]]; then
-        kafka_ui_port="${kafka_ui_port_line##*:}"
-      else
-        kafka_ui_port="8086"
+      if ! kafka_port="$(resolve_published_port kafka 29092 29092 "$require_port")"; then
+        error "[infra] messaging hook: cannot resolve kafka port"
+        exit 1
+      fi
+      if ! kafka_ui_port="$(resolve_published_port kafka-ui 8080 8086 "$require_port")"; then
+        error "[infra] messaging hook: cannot resolve kafka-ui port"
+        exit 1
       fi
 
-      host="localhost"
-      if [[ "${CI:-}" == "true" && "${EXECUTION_MODE:-}" == "DIND" ]]; then
-        host="dind"
-      fi
+      host="$(resolve_runtime_host)"
       echo "KAFKA_BOOTSTRAP_SERVERS=${host}:${kafka_port}" > tools/environment/.kafka.env
       echo "KAFKA_SERVER_ADDRESS=${host}:${kafka_port}" >> tools/environment/.kafka.env
       echo "KAFKA_UI_URL=http://${host}:${kafka_ui_port}" >> tools/environment/.kafka.env

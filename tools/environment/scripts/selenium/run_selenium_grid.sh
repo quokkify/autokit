@@ -1,12 +1,8 @@
 #!/bin/bash
 set -euo pipefail
 
-COMPOSE_FILES=(-f tools/environment/docker/docker-compose.yml)
-if [[ "${CI:-}" == "true" ]]; then
-  COMPOSE_FILES+=(-f tools/environment/docker/docker-compose.ci.yml)
-else
-  COMPOSE_FILES+=(-f tools/environment/docker/docker-compose.local.yml)
-fi
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/../infra/compose_utils.sh"
+init_compose_files
 
 CONFIG_PATH="tools/environment/selenium-grid/config.toml"
 if [[ -d "$CONFIG_PATH" ]]; then
@@ -65,12 +61,12 @@ if [[ -n "$GRID_IMAGE" ]]; then
 fi
 
 echo "[selenium-grid] starting selenium hub + node"
-docker compose "${COMPOSE_FILES[@]}" up -d selenium-hub selenium-node-docker
+compose_cmd up -d selenium-hub selenium-node-docker
 
 get_hub_url() {
   local host="${1:-localhost}"
   local port_line
-  port_line=$(docker compose "${COMPOSE_FILES[@]}" port selenium-hub 4444 | head -n1 || true)
+  port_line=$(compose_cmd port selenium-hub 4444 | head -n1 || true)
   if [[ -n "$port_line" ]]; then
     local port="${port_line##*:}"
     echo "http://${host}:${port}/wd/hub"
@@ -96,7 +92,7 @@ time_left=$max_wait_time_in_seconds
 echo "[selenium-grid] waiting for ${STATUS_URL}"
 while [ $SECONDS -lt $end_time ]; do
   if [[ "${CI:-}" == "true" ]]; then
-    hub_container="$(docker compose "${COMPOSE_FILES[@]}" ps -q selenium-hub | head -n1 || true)"
+    hub_container="$(compose_cmd ps -q selenium-hub | head -n1 || true)"
     if [[ -n "$hub_container" ]]; then
       response="$(docker run --rm --network "container:${hub_container}" curlimages/curl:8.5.0 -sL "$STATUS_URL" || true)"
     else
@@ -121,21 +117,21 @@ done
 
 if [ $SECONDS -ge $end_time ]; then
   echo "[selenium-grid] timeout after ${max_wait_time_in_seconds}s"
-  docker compose "${COMPOSE_FILES[@]}" logs --tail=200 selenium-hub selenium-node-docker || true
+  compose_cmd logs --tail=200 selenium-hub selenium-node-docker || true
   exit 1
 fi
 
 echo "BROWSER_REMOTE_URL=${REMOTE_HUB_URL}" > tools/environment/.selenium-grid.env
 
 if [[ "${CI:-}" == "true" ]]; then
-  node_container="$(docker compose "${COMPOSE_FILES[@]}" ps -q selenium-node-docker | head -n1 || true)"
+  node_container="$(compose_cmd ps -q selenium-node-docker | head -n1 || true)"
   if [[ -n "$node_container" ]]; then
-    nginx_port_line="$(docker compose "${COMPOSE_FILES[@]}" port nginx 80/tcp 2>/dev/null | head -n1 || true)"
+    nginx_port_line="$(compose_cmd port nginx 80/tcp 2>/dev/null | head -n1 || true)"
     if [[ -z "$nginx_port_line" ]]; then
-      nginx_port_line="$(docker compose "${COMPOSE_FILES[@]}" port nginx 80 2>/dev/null | head -n1 || true)"
+      nginx_port_line="$(compose_cmd port nginx 80 2>/dev/null | head -n1 || true)"
     fi
     echo "[selenium-grid] nginx port line: ${nginx_port_line:-<empty>}"
-    nginx_container="$(docker compose "${COMPOSE_FILES[@]}" ps -q nginx | head -n1 || true)"
+    nginx_container="$(compose_cmd ps -q nginx | head -n1 || true)"
     if [[ -n "$nginx_container" ]]; then
       echo "[selenium-grid] waiting for nginx to respond..."
       for i in $(seq 1 30); do

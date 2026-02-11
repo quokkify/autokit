@@ -1,28 +1,24 @@
 #!/bin/bash
 set -euo pipefail
 
-COMPOSE_FILES=(-f tools/environment/docker/docker-compose.yml)
-if [[ "${CI:-}" == "true" ]]; then
-  COMPOSE_FILES+=(-f tools/environment/docker/docker-compose.ci.yml)
-else
-  COMPOSE_FILES+=(-f tools/environment/docker/docker-compose.local.yml)
-fi
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/../infra/compose_utils.sh"
+init_compose_files
 
 service_name="reportportal-gateway"
 admin_user="${REPORTPORTAL_ADMIN_USER:-superadmin}"
 admin_password="${REPORTPORTAL_ADMIN_PASSWORD:-erebus}"
 
-port_line="$(docker compose "${COMPOSE_FILES[@]}" port "${service_name}" 8080 | head -n1 || true)"
-if [[ -z "$port_line" ]]; then
+require_port="false"
+if [[ "${CI:-}" == "true" ]]; then
+  require_port="true"
+fi
+port="$(resolve_published_port "${service_name}" 8080 8084 "${require_port}" || true)"
+if [[ -z "$port" ]]; then
   echo "[reporting] cannot resolve exposed port for ${service_name}" >&2
   exit 1
 fi
 
-port="${port_line##*:}"
-host="localhost"
-if [[ "${CI:-}" == "true" && "${EXECUTION_MODE:-}" == "DIND" ]]; then
-  host="dind"
-fi
+host="$(resolve_runtime_host)"
 
 endpoint="http://${host}:${port}"
 

@@ -1,16 +1,11 @@
 #!/bin/bash
 
-echo "🚀 Starting MockServer container..."
-COMPOSE_FILES=(-f tools/environment/docker/docker-compose.yml)
-if [[ "${CI:-}" == "true" ]]; then
-  COMPOSE_FILES+=(-f tools/environment/docker/docker-compose.ci.yml)
-else
-  COMPOSE_FILES+=(-f tools/environment/docker/docker-compose.local.yml)
-fi
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/../infra/compose_utils.sh"
+init_compose_files
 
-docker compose \
-  "${COMPOSE_FILES[@]}" \
-  up -d --quiet-pull mock-server
+echo "🚀 Starting MockServer container..."
+
+compose_cmd up -d --quiet-pull mock-server
 
 sleep=2
 max_count=30
@@ -19,7 +14,7 @@ status=0
 
 while true; do
   if [[ "${CI:-}" == "true" ]]; then
-    container_id="$(docker compose "${COMPOSE_FILES[@]}" ps -q mock-server | head -n1 || true)"
+    container_id="$(compose_cmd ps -q mock-server | head -n1 || true)"
     if [[ -n "$container_id" ]]; then
       status=$(docker run --rm --network "container:${container_id}" curlimages/curl:8.5.0 \
         -o /dev/null -s -w "%{http_code}" http://localhost:1080/mockserver/dashboard || true)
@@ -46,12 +41,10 @@ while true; do
 done
 
 get_mockserver_base_url() {
-  local host="localhost"
-  if [[ "${CI:-}" == "true" && "${EXECUTION_MODE:-}" == "DIND" ]]; then
-    host="dind"
-  fi
+  local host
+  host="$(resolve_runtime_host)"
   local port_line
-  port_line=$(docker compose "${COMPOSE_FILES[@]}" port mock-server 1080 | head -n1 || true)
+  port_line="$(compose_cmd port mock-server 1080 | head -n1 || true)"
   if [[ -n "$port_line" ]]; then
     local port="${port_line##*:}"
     echo "http://${host}:${port}"
