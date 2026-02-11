@@ -2,8 +2,6 @@ name: "Run tests"
 on:
   pull_request:
     branches: [main]
-  push:
-    branches: [main]
 
 permissions:
   contents: read
@@ -14,69 +12,137 @@ concurrency:
 
 jobs:
   detect-runner:
-    name: Select runner
-    runs-on: ubuntu-latest
+    uses: ./.github/workflows/reusable-detect-runner.yml
+    with:
+      strategy: pr_trusted
+      same_repo: ${{ github.event.pull_request.head.repo.full_name == github.event.pull_request.base.repo.full_name }}
+      trusted_author: ${{ contains(fromJson('["OWNER","MEMBER","COLLABORATOR"]'), github.event.pull_request.author_association) }}
+      is_renovate_bot: ${{ github.event.pull_request.user.login == 'renovate[bot]' }}
+    secrets: inherit
+
+  module-matrices:
+    uses: ./.github/workflows/reusable-module-matrices.yml
+
+  check-formatting:
+    name: Lint (Prettier)
+    needs: detect-runner
+    runs-on: ${{ fromJson(needs.detect-runner.outputs.runs_on) }}
+    if: ${{ github.event_name != 'pull_request_target' }}
     permissions:
       contents: read
-      actions: read
-    outputs:
-      runs_on: ${{ steps.select.outputs.runs_on }}
-      is_self_hosted: ${{ steps.select.outputs.is_self_hosted }}
     steps:
-      - name: Choose runner
-        id: select
-        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
+      - name: 🔨Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: 🔧 Set up Node
+        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6
         with:
-          github-token: ${{ secrets.RUNNER_DISCOVERY_TOKEN || github.token }}
-          script: |
-            const labels = ['self-hosted', 'compose', 'internal'];
-            const trusted = new Set(['OWNER', 'MEMBER', 'COLLABORATOR']);
-            const eventName = context.eventName;
-            let allowSelfHosted = false;
+          node-version: "24"
 
-            if (eventName === 'push') {
-              allowSelfHosted = true;
-            } else if (eventName === 'pull_request') {
-              const pr = context.payload.pull_request;
-              const sameRepo = pr?.head?.repo?.full_name && pr?.base?.repo?.full_name
-                ? pr.head.repo.full_name === pr.base.repo.full_name
-                : false;
-              const association = pr?.author_association || 'NONE';
-              const authorLogin = (pr?.user?.login || '').toLowerCase();
-              const isRenovateBot = authorLogin === 'renovate[bot]';
-              allowSelfHosted = sameRepo && (trusted.has(association) || isRenovateBot);
-            }
+      - name: 🔬Check repository through Prettier
+        uses: creyD/prettier_action@8c18391fdc98ed0d884c6345f03975edac71b8f0 # v4.6
+        with:
+          prettier_options: --check .
 
-            if (!allowSelfHosted) {
-              core.setOutput('runs_on', JSON.stringify(['ubuntu-latest']));
-              core.setOutput('is_self_hosted', 'false');
-              return;
-            }
+  build-common:
+    name: "Build common • ${{ matrix.name }}"
+    needs: [detect-runner, module-matrices, check-formatting]
+    runs-on: ${{ fromJson(needs.detect-runner.outputs.runs_on) }}
+    if: ${{ github.event_name != 'pull_request_target' }}
+    permissions:
+      contents: read
+    env:
+      CI: "true"
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        include: ${{ fromJson(needs.module-matrices.outputs.common_modules) }}
 
-            try {
-              const { data } = await github.rest.actions.listSelfHostedRunnersForRepo({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-              });
-              const hasLabels = (runner) =>
-                labels.every((label) =>
-                  runner.labels.some((item) => item.name.toLowerCase() === label)
-                );
-              const online = data.runners.find(
-                (runner) => runner.status === 'online' && hasLabels(runner)
-              );
-              const runsOn = online ? labels : ['ubuntu-latest'];
-              core.setOutput('runs_on', JSON.stringify(runsOn));
-              core.setOutput('is_self_hosted', String(Boolean(online)));
-            } catch (error) {
-              core.warning(`Runner discovery failed, falling back to github-hosted: ${error}`);
-              core.setOutput('runs_on', JSON.stringify(['ubuntu-latest']));
-              core.setOutput('is_self_hosted', 'false');
-            }
+    steps:
+      - name: 🔨Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
-  run-tests-on-linux:
-    name: "Linux • ${{ matrix.name }}"
-    needs: detect-runner
+      - name: 🔨Prepare Java/Gradle
+        uses: ./.github/actions/setup-java-gradle
+        with:
+          is_self_hosted: ${{ needs.detect-runner.outputs.is_self_hosted }}
+
+      - name: 🧱 Build (check, no tests)
+        run: |
+          ./gradlew \
+            ${{ matrix.module }}:check \
+            -x ${{ matrix.module }}:test \
+            --no-daemon --console=plain --stacktrace
+        shell: bash
+
+  build-data:
+    name: "Build data • ${{ matrix.name }}"
+    needs: [detect-runner, module-matrices, build-common]
+    runs-on: ${{ fromJson(needs.detect-runner.outputs.runs_on) }}
+    if: ${{ github.event_name != 'pull_request_target' }}
+    permissions:
+      contents: read
+    env:
+      CI: "true"
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        include: ${{ fromJson(needs.module-matrices.outputs.data_build_modules) }}
+
+    steps:
+      - name: 🔨Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: 🔨Prepare Java/Gradle
+        uses: ./.github/actions/setup-java-gradle
+        with:
+          is_self_hosted: ${{ needs.detect-runner.outputs.is_self_hosted }}
+
+      - name: 🧱 Build (check, no tests)
+        run: |
+          ./gradlew \
+            ${{ matrix.module }}:check \
+            -x ${{ matrix.module }}:test \
+            --no-daemon --console=plain --stacktrace
+        shell: bash
+
+  build-integrations:
+    name: "Build integrations • ${{ matrix.name }}"
+    needs: [detect-runner, module-matrices, build-common]
+    runs-on: ${{ fromJson(needs.detect-runner.outputs.runs_on) }}
+    if: ${{ github.event_name != 'pull_request_target' }}
+    permissions:
+      contents: read
+    env:
+      CI: "true"
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        include: ${{ fromJson(needs.module-matrices.outputs.integrations_build_modules) }}
+
+    steps:
+      - name: 🔨Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: 🔨Prepare Java/Gradle
+        uses: ./.github/actions/setup-java-gradle
+        with:
+          is_self_hosted: ${{ needs.detect-runner.outputs.is_self_hosted }}
+
+      - name: 🧱 Build (check, no tests)
+        run: |
+          ./gradlew \
+            ${{ matrix.module }}:check \
+            -x ${{ matrix.module }}:test \
+            --no-daemon --console=plain --stacktrace
+        shell: bash
+
+  test-common:
+    name: "Common • ${{ matrix.name }}"
+    needs: [detect-runner, module-matrices, build-common]
     runs-on: ${{ fromJson(needs.detect-runner.outputs.runs_on) }}
     if: ${{ github.event_name != 'pull_request_target' }}
     permissions:
@@ -89,172 +155,63 @@ jobs:
       fail-fast: false
       max-parallel: 4
       matrix:
-        include:
-          # =========================
-          # TestNG extensions
-          # =========================
-          - name: "testng-extensions"
-            module: ":testng-extensions"
-            slug: "testng-extensions"
-            profile: "none"
-
-          # =========================
-          # Integrations
-          # =========================
-          - name: "integrations • rest-assured"
-            module: ":integrations:rest-assured"
-            slug: "integrations-rest-assured"
-            profile: "mock"
-
-          - name: "integrations • selenide"
-            module: ":integrations:selenide"
-            slug: "integrations-selenide"
-            profile: "web"
-
-          - name: "integrations • testrail • core"
-            module: ":integrations:testrail:testrail-core"
-            slug: "integrations-testrail-core"
-            profile: "none"
-
-          - name: "integrations • testrail • testng"
-            module: ":integrations:testrail:testng"
-            slug: "integrations-testrail-testng"
-            profile: "none"
-
-          - name: "integrations • reportportal • testng"
-            module: ":integrations:reportportal:testng"
-            slug: "integrations-reportportal-testng"
-            profile: "reporting"
-
-          - name: "integrations • kafka"
-            module: ":integrations:kafka"
-            slug: "integrations-kafka"
-            profile: "messaging"
-
-          - name: "integrations • rabbitmq"
-            module: ":integrations:rabbitmq"
-            slug: "integrations-rabbitmq"
-            profile: "rabbitmq"
-
-          # =========================
-          # Data utils
-          # =========================
-          - name: "data-utils • sql"
-            module: ":data-utils:sql"
-            slug: "data-utils-sql"
-            profile: "none"
-          - name: "data-utils • nosql • morphia"
-            module: ":data-utils:nosql:morphia"
-            slug: "data-utils-nosql-morphia"
-            profile: "storage"
-
-          - name: "data-utils • nosql • redis"
-            module: ":data-utils:nosql:redis"
-            slug: "data-utils-nosql-redis"
-            profile: "redis"
-
-          # =========================
-          # Common utils
-          # =========================
-          - name: "common-utils • core"
-            module: ":common-utils:core"
-            slug: "common-utils-core"
-            profile: "none"
-
-          - name: "common-utils • jackson • parent"
-            module: ":common-utils:jackson:parent"
-            slug: "common-utils-jackson-parent"
-            profile: "none"
-
-          - name: "common-utils • jackson • csv"
-            module: ":common-utils:jackson:csv"
-            slug: "common-utils-jackson-csv"
-            profile: "none"
-
-          - name: "common-utils • jackson • xml"
-            module: ":common-utils:jackson:xml"
-            slug: "common-utils-jackson-xml"
-            profile: "none"
-
-          - name: "common-utils • jackson • json"
-            module: ":common-utils:jackson:json"
-            slug: "common-utils-jackson-json"
-            profile: "none"
-
-          - name: "common-utils • jackson • yaml"
-            module: ":common-utils:jackson:yaml"
-            slug: "common-utils-jackson-yaml"
-            profile: "none"
-
-          - name: "common-utils • introspection"
-            module: ":common-utils:introspection"
-            slug: "common-utils-introspection"
-            profile: "none"
-
-          - name: "common-utils • awaitility"
-            module: ":common-utils:awaitility"
-            slug: "common-utils-awaitility"
-            profile: "none"
-
-          - name: "common-utils • file"
-            module: ":common-utils:file"
-            slug: "common-utils-file"
-            profile: "none"
-
-          - name: "common-utils • html"
-            module: ":common-utils:html"
-            slug: "common-utils-html"
-            profile: "none"
-
-          - name: "common-utils • jwt"
-            module: ":common-utils:jwt"
-            slug: "common-utils-jwt"
-            profile: "none"
-
-          - name: "common-utils • config"
-            module: ":common-utils:config"
-            slug: "common-utils-config"
-            profile: "none"
-
-          - name: "common-utils • signature"
-            module: ":common-utils:signature"
-            slug: "common-utils-signature"
-            profile: "none"
-
-          - name: "common-utils • console"
-            module: ":common-utils:console"
-            slug: "common-utils-console"
-            profile: "none"
+        include: ${{ fromJson(needs.module-matrices.outputs.common_modules) }}
 
     steps:
       - name: 🔨Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
-      - name: 🔨Set up JDK (self-hosted, no cache)
-        if: ${{ needs.detect-runner.outputs.is_self_hosted == 'true' }}
-        uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5
+      - name: 🔨Prepare Java/Gradle
+        uses: ./.github/actions/setup-java-gradle
         with:
-          distribution: "temurin"
-          java-version: "21"
+          is_self_hosted: ${{ needs.detect-runner.outputs.is_self_hosted }}
 
-      - name: 🔨Set up JDK (github-hosted, cache gradle)
-        if: ${{ needs.detect-runner.outputs.is_self_hosted != 'true' }}
-        uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5
+      - name: 🚀 Run tests
+        run: ./gradlew ${{ matrix.module }}:test --no-daemon --console=plain --stacktrace
+        shell: bash
+
+      - name: 📦 Pack test results as artifact
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        if: always()
         with:
-          distribution: "temurin"
-          cache: "gradle"
-          java-version: "21"
+          name: test-report-common-${{ matrix.slug }}
+          retention-days: 3
+          path: |
+            **/build/reports
+            **/build/test-results
 
-      - name: 🔨Build with Gradle
-        uses: gradle/actions/setup-gradle@f29f5a9d7b09a7c6b29859002d29d24e1674c884 # v5
+  test-data:
+    name: "Data • ${{ matrix.name }}"
+    needs: [detect-runner, module-matrices, build-data, test-common]
+    runs-on: ${{ fromJson(needs.detect-runner.outputs.runs_on) }}
+    if: ${{ github.event_name != 'pull_request_target' }}
+    permissions:
+      contents: read
+    env:
+      CI: "true"
+      COMPOSE_PROJECT_NAME: ci-${{ github.run_id }}-${{ matrix.slug }}
+      EXECUTION_MODE: ${{ needs.detect-runner.outputs.is_self_hosted == 'true' && 'DIND' || 'CI' }}
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        include: ${{ fromJson(needs.module-matrices.outputs.data_test_modules) }}
+
+    steps:
+      - name: 🔨Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: 🔨Prepare Java/Gradle
+        uses: ./.github/actions/setup-java-gradle
+        with:
+          is_self_hosted: ${{ needs.detect-runner.outputs.is_self_hosted }}
 
       - name: 🟢 Start Infra
-        if: ${{ github.event_name == 'pull_request' && matrix.profile != 'none' }}
+        if: ${{ matrix.profile != 'none' }}
         run: ./tools/environment/scripts/infra/run_app.sh "${{ matrix.profile }}"
         shell: bash
 
       - name: 🚀 Run tests
-        if: ${{ github.event_name == 'pull_request' }}
         run: |
           if [[ -f tools/environment/.selenium-grid.env ]]; then
             set -a
@@ -308,39 +265,156 @@ jobs:
             fi
           fi
 
-          ./gradlew ${{ matrix.module }}:check --no-daemon --console=plain --stacktrace
-        shell: bash
-
-      - name: 🧱 Build (compile + checkstyle, no tests)
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-        run: |
-          ./gradlew \
-            ${{ matrix.module }}:classes \
-            ${{ matrix.module }}:testClasses \
-            ${{ matrix.module }}:checkstyleMain \
-            ${{ matrix.module }}:checkstyleTest \
-            --no-daemon --console=plain --stacktrace
+          ./gradlew ${{ matrix.module }}:test --no-daemon --console=plain --stacktrace
         shell: bash
 
       - name: 🛑 Stop Infra
-        if: ${{ github.event_name == 'pull_request' && matrix.profile != 'none' && always() }}
+        if: ${{ matrix.profile != 'none' && always() }}
         run: ./tools/environment/scripts/infra/stop_app.sh
         shell: bash
 
-      - name: 📦 Packing docker compose logs as artifact
-        if: ${{ github.event_name == 'pull_request' && matrix.profile != 'none' && always() }}
+      - name: 📦 Pack docker compose logs as artifact
+        if: ${{ matrix.profile != 'none' && always() }}
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
-          name: docker-logs-${{ matrix.slug }}
+          name: docker-logs-data-${{ matrix.slug }}
           retention-days: 3
           path: logs
 
-      - name: 📦Packing test results as artifact
+      - name: 📦 Pack test results as artifact
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         if: always()
         with:
-          name: test-report-linux-${{ matrix.slug }}
+          name: test-report-data-${{ matrix.slug }}
           retention-days: 3
           path: |
             **/build/reports
             **/build/test-results
+
+  test-integrations:
+    name: "Integrations • ${{ matrix.name }}"
+    needs: [detect-runner, module-matrices, build-integrations, test-common]
+    runs-on: ${{ fromJson(needs.detect-runner.outputs.runs_on) }}
+    if: ${{ github.event_name != 'pull_request_target' }}
+    permissions:
+      contents: read
+    env:
+      CI: "true"
+      COMPOSE_PROJECT_NAME: ci-${{ github.run_id }}-${{ matrix.slug }}
+      EXECUTION_MODE: ${{ needs.detect-runner.outputs.is_self_hosted == 'true' && 'DIND' || 'CI' }}
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        include: ${{ fromJson(needs.module-matrices.outputs.integrations_test_modules) }}
+
+    steps:
+      - name: 🔨Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: 🔨Prepare Java/Gradle
+        uses: ./.github/actions/setup-java-gradle
+        with:
+          is_self_hosted: ${{ needs.detect-runner.outputs.is_self_hosted }}
+
+      - name: 🟢 Start Infra
+        if: ${{ matrix.profile != 'none' }}
+        run: ./tools/environment/scripts/infra/run_app.sh "${{ matrix.profile }}"
+        shell: bash
+
+      - name: 🚀 Run tests
+        run: |
+          if [[ -f tools/environment/.selenium-grid.env ]]; then
+            set -a
+            source tools/environment/.selenium-grid.env
+            set +a
+          fi
+          if [[ -f tools/environment/.mock-server.env ]]; then
+            set -a
+            source tools/environment/.mock-server.env
+            set +a
+          fi
+          if [[ -f tools/environment/.mongo.env ]]; then
+            set -a
+            source tools/environment/.mongo.env
+            set +a
+          fi
+          if [[ -f tools/environment/.redis.env ]]; then
+            set -a
+            source tools/environment/.redis.env
+            set +a
+          fi
+          if [[ -f tools/environment/.nginx.env ]]; then
+            set -a
+            source tools/environment/.nginx.env
+            set +a
+          fi
+          if [[ -f tools/environment/.reportportal.env ]]; then
+            set -a
+            source tools/environment/.reportportal.env
+            set +a
+          fi
+          if [[ -f tools/environment/.kafka.env ]]; then
+            set -a
+            source tools/environment/.kafka.env
+            set +a
+          fi
+          if [[ -f tools/environment/.rabbitmq.env ]]; then
+            set -a
+            source tools/environment/.rabbitmq.env
+            set +a
+          fi
+          if [[ -n "${KAFKA_BOOTSTRAP_SERVERS:-}" ]]; then
+            export KAFKA_SERVER_ADDRESS="${KAFKA_BOOTSTRAP_SERVERS}"
+          fi
+          if [[ "${{ matrix.profile }}" == "web" ]]; then
+            if [[ -n "${NGINX_BASE_URL:-}" ]]; then
+              export BASE_URL="${NGINX_BASE_URL}"
+            else
+              echo "NGINX_BASE_URL is not set for web profile" >&2
+              exit 1
+            fi
+          fi
+
+          ./gradlew ${{ matrix.module }}:test --no-daemon --console=plain --stacktrace
+        shell: bash
+
+      - name: 🛑 Stop Infra
+        if: ${{ matrix.profile != 'none' && always() }}
+        run: ./tools/environment/scripts/infra/stop_app.sh
+        shell: bash
+
+      - name: 📦 Pack docker compose logs as artifact
+        if: ${{ matrix.profile != 'none' && always() }}
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: docker-logs-integrations-${{ matrix.slug }}
+          retention-days: 3
+          path: logs
+
+      - name: 📦 Pack test results as artifact
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        if: always()
+        with:
+          name: test-report-integrations-${{ matrix.slug }}
+          retention-days: 3
+          path: |
+            **/build/reports
+            **/build/test-results
+
+  tests-complete:
+    name: Tests pipeline complete
+    needs: [test-data, test-integrations]
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Validate stage results
+        shell: bash
+        run: |
+          if [[ "${{ needs.test-data.result }}" != "success" || "${{ needs.test-integrations.result }}" != "success" ]]; then
+            echo "Test stages are not successful."
+            exit 1
+          fi
+          echo "All test stages completed successfully."
