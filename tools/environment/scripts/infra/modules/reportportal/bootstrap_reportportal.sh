@@ -1,43 +1,39 @@
 #!/bin/bash
 set -euo pipefail
 
-COMPOSE_FILES=(-f tools/environment/docker/docker-compose.yml)
-if [[ "${CI:-}" == "true" ]]; then
-  COMPOSE_FILES+=(-f tools/environment/docker/docker-compose.ci.yml)
-else
-  COMPOSE_FILES+=(-f tools/environment/docker/docker-compose.local.yml)
-fi
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/../../compose_utils.sh"
+init_compose_files
 
 service_name="reportportal-gateway"
 admin_user="${REPORTPORTAL_ADMIN_USER:-superadmin}"
 admin_password="${REPORTPORTAL_ADMIN_PASSWORD:-erebus}"
 
-port_line="$(docker compose "${COMPOSE_FILES[@]}" port "${service_name}" 8080 | head -n1 || true)"
-if [[ -z "$port_line" ]]; then
-  echo "[reporting] cannot resolve exposed port for ${service_name}" >&2
+require_port="false"
+if [[ "${CI:-}" == "true" ]]; then
+  require_port="true"
+fi
+port="$(resolve_published_port "${service_name}" 8080 8084 "${require_port}" || true)"
+if [[ -z "$port" ]]; then
+  error "[reporting] cannot resolve exposed port for ${service_name}"
   exit 1
 fi
 
-port="${port_line##*:}"
-host="localhost"
-if [[ "${CI:-}" == "true" && "${EXECUTION_MODE:-}" == "DIND" ]]; then
-  host="dind"
-fi
+host="$(select_runtime_host_for_port "$(resolve_runtime_host)" "${port}")"
 
 endpoint="http://${host}:${port}"
 
-ready="false"
-for _ in {1..90}; do
+is_reportportal_healthy() {
   if curl -sS -f "${endpoint}/ui/health" >/dev/null 2>&1 \
       && curl -sS -f "${endpoint}/uat/health" >/dev/null 2>&1 \
       && curl -sS -f "${endpoint}/api/health" >/dev/null 2>&1; then
-    ready="true"
-    break
+    return 0
   fi
-  sleep 2
-done
-if [[ "$ready" != "true" ]]; then
-  echo "[reporting] report portal services are not healthy on ${endpoint}" >&2
+  return 1
+}
+
+info "[reporting] waiting for health check on ${endpoint}"
+if ! wait_until 90 2 is_reportportal_healthy; then
+  error "[reporting] report portal services are not healthy on ${endpoint}"
   exit 1
 fi
 
@@ -67,9 +63,9 @@ for user in "${USERS[@]}"; do
 done
 
 if [[ -z "$token" ]]; then
-  echo "[reporting] access token is empty" >&2
+  error "[reporting] access token is empty"
   if [[ -n "$last_response" ]]; then
-    echo "[reporting] oauth response (truncated): ${last_response:0:500}" >&2
+    warning "[reporting] oauth response (truncated): ${last_response:0:500}"
   fi
   exit 1
 fi
@@ -95,7 +91,7 @@ REPORTPORTAL_ENDPOINT=${endpoint}
 REPORTPORTAL_API_KEY=${token}
 ENV
 
-echo "[reporting] endpoint: ${endpoint}"
-echo "[reporting] project: ${project_name}"
-echo "[reporting] env file written: tools/environment/.reportportal.env"
-echo "[reporting] owner config written: integrations/reportportal/testng/src/test/resources/local_resources/reportportal-test.properties"
+info "[reporting] endpoint: ${endpoint}"
+info "[reporting] project: ${project_name}"
+info "[reporting] env file written: tools/environment/.reportportal.env"
+info "[reporting] owner config written: integrations/reportportal/testng/src/test/resources/local_resources/reportportal-test.properties"

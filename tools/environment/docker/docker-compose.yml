@@ -2,18 +2,12 @@ services:
   nginx:
     profiles: [web]
     image: nginx:1.29.5@sha256:341bf0f3ce6c5277d6002cf6e1fb0319fa4252add24ab6a0e262e0056d313208
-    ports:
-      - "80:80"
 
   selenium-hub:
     profiles: [web]
     image: selenium/hub:4.40.0-20260120@sha256:e49e85c3a481f3c63292436266bb56a72036dc977ab0fd5a9ec7fbd78c5636fa
     environment:
       SE_SUB_PATH: /wd/hub
-    ports:
-      - "4442:4442"
-      - "4443:4443"
-      - "4444:4444"
 
   selenium-node-docker:
     profiles: [web]
@@ -22,8 +16,8 @@ services:
       - selenium-hub
       - docker-socket-proxy
     volumes:
-      - ${SELENIUM_GRID_MOUNT:-../selenium-grid}:/opt/selenium/config.d:ro
-      - ../selenium-grid/assets:/opt/selenium/assets
+      - ${SELENIUM_GRID_MOUNT:-../assets/selenium-grid}:/opt/selenium/config.d:ro
+      - ../assets/selenium-grid/assets:/opt/selenium/assets
     environment:
       SE_EVENT_BUS_HOST: selenium-hub
       SE_EVENT_BUS_PUBLISH_PORT: "4442"
@@ -61,9 +55,6 @@ services:
       KAFKA_LOG4J_ROOT_LOGLEVEL: WARN
       KAFKA_CREATE_TOPICS: >
         messages:1:1
-    ports:
-      - "29092:29092"
-      - "9092:9092"
     depends_on:
       - zookeeper
 
@@ -74,8 +65,6 @@ services:
       KAFKA_CLUSTERS_0_NAME: local
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
       KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
-    ports:
-      - "${KAFKA_UI_PUBLISHED_PORT:-8086}:8080"
     depends_on:
       - kafka
       - zookeeper
@@ -83,8 +72,6 @@ services:
   zookeeper:
     profiles: [messaging]
     image: zookeeper:3.9@sha256:f0f1d5e4a2763041ce1f7fc25e2b5347a2a0dfb0eaf0f46a49fe2e01945f9f09
-    ports:
-      - "2181:2181"
 
   rabbitmq:
     profiles: [rabbitmq]
@@ -96,9 +83,6 @@ services:
       RABBITMQ_DISK_FREE_ABSOLUTE_LIMIT: 50MB
       RABBITMQ_PLUGINS: >
         rabbitmq_management
-    ports:
-      - "${RABBITMQ_PUBLISHED_PORT:-5672}:5672"
-      - "${RABBITMQ_MANAGEMENT_PUBLISHED_PORT:-15672}:15672"
     healthcheck:
       test: ["CMD", "rabbitmqctl", "status"]
       interval: 30s
@@ -115,9 +99,7 @@ services:
       MOCKSERVER_WATCH_INITIALIZATION_JSON: true
       MOCKSERVER_INITIALIZATION_JSON_PATH: /config/expectation.json
     volumes:
-      - ./mock/expectation.json:/config/expectation.json
-    ports:
-      - "1080:1080"
+      - ./assets/mock/expectation.json:/config/expectation.json
 
   centrifugo:
     profiles: [realtime]
@@ -125,8 +107,6 @@ services:
     command: centrifugo -c centrifugo_new_config.json
     volumes:
       - ./centrifugo/centrifugo_new_config.json:/centrifugo/centrifugo_new_config.json
-    ports:
-      - "8005:8000"
     environment:
       CENTRIFUGO_PORT: 8000
     ulimits:
@@ -138,14 +118,10 @@ services:
     profiles: [storage]
     image: mongo:8.2.4@sha256:6f55a078e025aa29fea2826c82f67ff2f774b82efd816c4c30bbfe67904f0bb8
     restart: always
-    ports:
-      - "${MONGODB_PUBLISHED_PORT:-27017}:27017"
 
   redis:
     profiles: [redis]
     image: redis:8.4.0@sha256:c22af04bb576503bf16b3e34a1fd2fd82de0f765afd866d2e380145e0af30d78
-    ports:
-      - "${REDIS_PUBLISHED_PORT:-6379}:6379"
 
   reportportal-gateway:
     profiles: [reporting]
@@ -157,9 +133,6 @@ services:
       - --entrypoints.traefik.address=:8081
       - --api.dashboard=true
       - --api.insecure=true
-    ports:
-      - "${REPORTPORTAL_PUBLISHED_PORT:-8084}:8080"
-      - "${REPORTPORTAL_DASHBOARD_PORT:-8085}:8081"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     healthcheck:

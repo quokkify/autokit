@@ -1,38 +1,13 @@
 #!/bin/bash
 set -euo pipefail
 
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/compose_utils.sh"
+
 if [[ "${CI:-}" == "true" ]]; then
   export GRADLE_OPTS="-Dorg.gradle.console=plain"
 else
   export GRADLE_OPTS="-Dorg.gradle.console=rich"
 fi
-
-# Blue
-info() {
-  echo -e "\033[1;34mInfo: $1\033[0m"
-}
-
-# Yellow
-warning() {
-  echo -e "\033[1;33mWarning: $1\033[0m"
-}
-
-# Red
-error() {
-  echo -e "\033[1;31mError: $1\033[0m"
-}
-
-find_free_port() {
-  local port
-  for _ in {1..100}; do
-    port=$(( (RANDOM % 20000) + 20000 ))
-    if ! (echo >/dev/tcp/127.0.0.1/"${port}") >/dev/null 2>&1; then
-      echo "${port}"
-      return 0
-    fi
-  done
-  return 1
-}
 
 PROFILE="${1:-none}"
 
@@ -48,200 +23,41 @@ for profile in "${TOKENS[@]}"; do
   [[ -n "$profile" ]] && PROFILES_ARGS+=("--profile" "$profile")
 done
 
+init_compose_files
+
 echo "[infra] docker compose up: ${PROFILES_ARGS[*]}"
-COMPOSE_FILES=(-f tools/environment/docker/docker-compose.yml)
 if [[ "${CI:-}" == "true" ]]; then
-  COMPOSE_FILES+=(-f tools/environment/docker/docker-compose.ci.yml)
-else
-  COMPOSE_FILES+=(-f tools/environment/docker/docker-compose.local.yml)
+  ./tools/environment/scripts/infra/hooks/pre_up_ci.sh "${TOKENS[@]}"
 fi
 
-if [[ "${CI:-}" == "true" ]]; then
-  needs_nginx_build="false"
-  for profile in "${TOKENS[@]}"; do
-    profile="$(echo "$profile" | xargs)"
-    if [[ "$profile" == "storage" ]]; then
-      export MONGODB_PUBLISHED_PORT=0
-    fi
-    if [[ "$profile" == "redis" ]]; then
-      export REDIS_PUBLISHED_PORT=0
-    fi
-    if [[ "$profile" == "web" ]]; then
-      needs_nginx_build="true"
-    fi
-    if [[ "$profile" == "messaging" ]]; then
-      if [[ "${EXECUTION_MODE:-}" == "DIND" ]]; then
-        export KAFKA_EXTERNAL_HOST=dind
-      else
-        export KAFKA_EXTERNAL_HOST=localhost
-      fi
-      if [[ -z "${KAFKA_PUBLISHED_PORT:-}" || "${KAFKA_PUBLISHED_PORT:-}" == "0" ]]; then
-        kafka_dynamic_port="$(find_free_port || true)"
-        if [[ -z "${kafka_dynamic_port}" ]]; then
-          error "[infra] messaging hook: cannot allocate free host port for kafka"
-          exit 1
-        fi
-        export KAFKA_PUBLISHED_PORT="${kafka_dynamic_port}"
-      fi
-      export KAFKA_EXTERNAL_PORT="${KAFKA_PUBLISHED_PORT}"
-    fi
-    if [[ "$profile" == "rabbitmq" ]]; then
-      if [[ -z "${RABBITMQ_PUBLISHED_PORT:-}" || "${RABBITMQ_PUBLISHED_PORT:-}" == "0" ]]; then
-        rabbit_dynamic_port="$(find_free_port || true)"
-        if [[ -z "${rabbit_dynamic_port}" ]]; then
-          error "[infra] rabbitmq hook: cannot allocate free host port for rabbitmq amqp"
-          exit 1
-        fi
-        export RABBITMQ_PUBLISHED_PORT="${rabbit_dynamic_port}"
-      fi
-      if [[ -z "${RABBITMQ_MANAGEMENT_PUBLISHED_PORT:-}" || "${RABBITMQ_MANAGEMENT_PUBLISHED_PORT:-}" == "0" ]]; then
-        rabbit_mgmt_dynamic_port="$(find_free_port || true)"
-        if [[ -z "${rabbit_mgmt_dynamic_port}" ]]; then
-          error "[infra] rabbitmq hook: cannot allocate free host port for rabbitmq management"
-          exit 1
-        fi
-        export RABBITMQ_MANAGEMENT_PUBLISHED_PORT="${rabbit_mgmt_dynamic_port}"
-      fi
-    fi
-  done
-  if [[ "$needs_nginx_build" == "true" ]]; then
-    echo "[infra] building nginx image for CI"
-    docker compose "${COMPOSE_FILES[@]}" build nginx
-  fi
-fi
-
-docker compose \
-  "${COMPOSE_FILES[@]}" \
-  "${PROFILES_ARGS[@]}" up -d
+compose_cmd "${PROFILES_ARGS[@]}" up -d
 
 for profile in "${TOKENS[@]}"; do
   profile="$(echo "$profile" | xargs)"
   case "$profile" in
     mock)
-      info "[infra] mock hook: upload expectations"
-      ./tools/environment/scripts/mock/run_mock_server.sh
-      ./tools/environment/scripts/mock/upload_expectations.sh
+      ./tools/environment/scripts/infra/hooks/mock.sh
       ;;
     web)
-      info "[infra] web hook: start selenium grid"
-      ./tools/environment/scripts/selenium/run_selenium_grid.sh
-      info "[infra] web hook: set nginx url"
-      COMPOSE_FILES=(-f tools/environment/docker/docker-compose.yml)
-      if [[ "${CI:-}" == "true" ]]; then
-        COMPOSE_FILES+=(-f tools/environment/docker/docker-compose.ci.yml)
-      else
-        COMPOSE_FILES+=(-f tools/environment/docker/docker-compose.local.yml)
-      fi
-      port_line=$(docker compose "${COMPOSE_FILES[@]}" port nginx 80 | head -n1 || true)
-      if [[ "${CI:-}" == "true" ]]; then
-        host="nginx"
-        port="80"
-      else
-        host="localhost"
-        if [[ -n "$port_line" ]]; then
-          port="${port_line##*:}"
-        else
-          port="80"
-        fi
-      fi
-      echo "NGINX_BASE_URL=http://${host}:${port}" > tools/environment/.nginx.env
+      ./tools/environment/scripts/infra/hooks/web.sh
       ;;
     storage)
-      info "[infra] storage hook: set mongo url"
-      COMPOSE_FILES=(-f tools/environment/docker/docker-compose.yml)
-      if [[ "${CI:-}" == "true" ]]; then
-        COMPOSE_FILES+=(-f tools/environment/docker/docker-compose.ci.yml)
-      else
-        COMPOSE_FILES+=(-f tools/environment/docker/docker-compose.local.yml)
-      fi
-      port_line=$(docker compose "${COMPOSE_FILES[@]}" port mongodb 27017 | head -n1 || true)
-      if [[ -n "$port_line" ]]; then
-        port="${port_line##*:}"
-      else
-        port="27017"
-      fi
-      host="localhost"
-      if [[ "${CI:-}" == "true" && "${EXECUTION_MODE:-}" == "DIND" ]]; then
-        host="dind"
-      fi
-      echo "MONGODB_URL=mongodb://${host}:${port}" > tools/environment/.mongo.env
+      ./tools/environment/scripts/infra/hooks/storage.sh
       ;;
     redis)
-      info "[infra] redis hook: waiting for PING"
-      ready="false"
-      for _ in {1..30}; do
-        if docker compose "${COMPOSE_FILES[@]}" exec -T redis redis-cli ping >/dev/null 2>&1; then
-          ready="true"
-          break
-        fi
-        sleep 1
-      done
-      if [[ "$ready" != "true" ]]; then
-        warning "[infra] redis hook: PING not ready after timeout"
-      fi
-      info "[infra] redis hook: set redis host and port"
-      port_line=$(docker compose "${COMPOSE_FILES[@]}" port redis 6379 | head -n1 || true)
-      if [[ -n "$port_line" ]]; then
-        port="${port_line##*:}"
-      else
-        port="6379"
-      fi
-      host="localhost"
-      if [[ "${CI:-}" == "true" && "${EXECUTION_MODE:-}" == "DIND" ]]; then
-        host="dind"
-      fi
-      echo "REDIS_HOST=${host}" > tools/environment/.redis.env
-      echo "REDIS_PORT=${port}" >> tools/environment/.redis.env
+      ./tools/environment/scripts/infra/hooks/redis.sh
       ;;
     reporting)
-      info "[infra] reporting hook: bootstrap report portal environment"
-      ./tools/environment/scripts/reportportal/bootstrap_reportportal.sh
+      ./tools/environment/scripts/infra/hooks/reporting.sh
       ;;
     messaging)
-      info "[infra] messaging hook: waiting for kafka readiness"
-      ready="false"
-      for _ in {1..90}; do
-        if docker compose "${COMPOSE_FILES[@]}" exec -T kafka \
-          kafka-topics.sh --bootstrap-server kafka:9092 --list 2>/dev/null | grep -Fxq messages; then
-          ready="true"
-          break
-        fi
-        sleep 2
-      done
-      if [[ "$ready" != "true" ]]; then
-        error "[infra] messaging hook: kafka is not ready after timeout"
-        docker compose "${COMPOSE_FILES[@]}" logs --tail=200 kafka zookeeper || true
-        exit 1
-      fi
-
-      info "[infra] messaging hook: set kafka bootstrap and kafka-ui url"
-      kafka_port_line=$(docker compose "${COMPOSE_FILES[@]}" port kafka 29092 | head -n1 || true)
-      kafka_ui_port_line=$(docker compose "${COMPOSE_FILES[@]}" port kafka-ui 8080 | head -n1 || true)
-      if [[ -n "$kafka_port_line" ]]; then
-        kafka_port="${kafka_port_line##*:}"
-      else
-        kafka_port="29092"
-      fi
-      if [[ -n "$kafka_ui_port_line" ]]; then
-        kafka_ui_port="${kafka_ui_port_line##*:}"
-      else
-        kafka_ui_port="8086"
-      fi
-
-      host="localhost"
-      if [[ "${CI:-}" == "true" && "${EXECUTION_MODE:-}" == "DIND" ]]; then
-        host="dind"
-      fi
-      echo "KAFKA_BOOTSTRAP_SERVERS=${host}:${kafka_port}" > tools/environment/.kafka.env
-      echo "KAFKA_SERVER_ADDRESS=${host}:${kafka_port}" >> tools/environment/.kafka.env
-      echo "KAFKA_UI_URL=http://${host}:${kafka_ui_port}" >> tools/environment/.kafka.env
+      ./tools/environment/scripts/infra/hooks/messaging.sh
       ;;
     rabbitmq)
-      info "[infra] rabbitmq hook: bootstrap rabbitmq environment"
-      ./tools/environment/scripts/rabbitmq/bootstrap_rabbitmq.sh
+      ./tools/environment/scripts/infra/hooks/rabbitmq.sh
       ;;
     *)
-      : # no-op
+      warning "[infra] unknown profile hook skipped: ${profile}"
       ;;
   esac
 done
