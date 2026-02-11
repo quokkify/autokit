@@ -20,6 +20,9 @@ jobs:
       is_renovate_bot: ${{ github.event.pull_request.user.login == 'renovate[bot]' }}
     secrets: inherit
 
+  module-matrices:
+    uses: ./.github/workflows/reusable-module-matrices.yml
+
   check-formatting:
     name: Lint (Prettier)
     needs: detect-runner
@@ -43,7 +46,7 @@ jobs:
 
   build-common:
     name: "Build common • ${{ matrix.name }}"
-    needs: [detect-runner, check-formatting]
+    needs: [detect-runner, module-matrices, check-formatting]
     runs-on: ${{ fromJson(needs.detect-runner.outputs.runs_on) }}
     if: ${{ github.event_name != 'pull_request_target' }}
     permissions:
@@ -54,66 +57,7 @@ jobs:
       fail-fast: false
       max-parallel: 4
       matrix:
-        include:
-          - name: "testng-extensions"
-            module: ":testng-extensions"
-            slug: "testng-extensions"
-
-          - name: "common-utils • core"
-            module: ":common-utils:core"
-            slug: "common-utils-core"
-
-          - name: "common-utils • jackson • parent"
-            module: ":common-utils:jackson:parent"
-            slug: "common-utils-jackson-parent"
-
-          - name: "common-utils • jackson • csv"
-            module: ":common-utils:jackson:csv"
-            slug: "common-utils-jackson-csv"
-
-          - name: "common-utils • jackson • xml"
-            module: ":common-utils:jackson:xml"
-            slug: "common-utils-jackson-xml"
-
-          - name: "common-utils • jackson • json"
-            module: ":common-utils:jackson:json"
-            slug: "common-utils-jackson-json"
-
-          - name: "common-utils • jackson • yaml"
-            module: ":common-utils:jackson:yaml"
-            slug: "common-utils-jackson-yaml"
-
-          - name: "common-utils • introspection"
-            module: ":common-utils:introspection"
-            slug: "common-utils-introspection"
-
-          - name: "common-utils • awaitility"
-            module: ":common-utils:awaitility"
-            slug: "common-utils-awaitility"
-
-          - name: "common-utils • file"
-            module: ":common-utils:file"
-            slug: "common-utils-file"
-
-          - name: "common-utils • html"
-            module: ":common-utils:html"
-            slug: "common-utils-html"
-
-          - name: "common-utils • jwt"
-            module: ":common-utils:jwt"
-            slug: "common-utils-jwt"
-
-          - name: "common-utils • config"
-            module: ":common-utils:config"
-            slug: "common-utils-config"
-
-          - name: "common-utils • signature"
-            module: ":common-utils:signature"
-            slug: "common-utils-signature"
-
-          - name: "common-utils • console"
-            module: ":common-utils:console"
-            slug: "common-utils-console"
+        include: ${{ fromJson(needs.module-matrices.outputs.common_modules) }}
 
     steps:
       - name: 🔨Checkout
@@ -132,7 +76,7 @@ jobs:
 
   build-data:
     name: "Build data • ${{ matrix.name }}"
-    needs: [detect-runner, build-common]
+    needs: [detect-runner, module-matrices, build-common]
     runs-on: ${{ fromJson(needs.detect-runner.outputs.runs_on) }}
     if: ${{ github.event_name != 'pull_request_target' }}
     permissions:
@@ -143,22 +87,7 @@ jobs:
       fail-fast: false
       max-parallel: 4
       matrix:
-        include:
-          - name: "data-utils • sql"
-            module: ":data-utils:sql"
-            slug: "data-utils-sql"
-
-          - name: "data-utils • nosql • parent"
-            module: ":data-utils:nosql"
-            slug: "data-utils-nosql"
-
-          - name: "data-utils • nosql • morphia"
-            module: ":data-utils:nosql:morphia"
-            slug: "data-utils-nosql-morphia"
-
-          - name: "data-utils • nosql • redis"
-            module: ":data-utils:nosql:redis"
-            slug: "data-utils-nosql-redis"
+        include: ${{ fromJson(needs.module-matrices.outputs.data_build_modules) }}
 
     steps:
       - name: 🔨Checkout
@@ -177,7 +106,7 @@ jobs:
 
   build-integrations:
     name: "Build integrations • ${{ matrix.name }}"
-    needs: [detect-runner, build-common]
+    needs: [detect-runner, module-matrices, build-common]
     runs-on: ${{ fromJson(needs.detect-runner.outputs.runs_on) }}
     if: ${{ github.event_name != 'pull_request_target' }}
     permissions:
@@ -188,50 +117,7 @@ jobs:
       fail-fast: false
       max-parallel: 4
       matrix:
-        include:
-          - name: "integrations • rest-assured"
-            module: ":integrations:rest-assured"
-            slug: "integrations-rest-assured"
-
-          - name: "integrations • selenide"
-            module: ":integrations:selenide"
-            slug: "integrations-selenide"
-
-          - name: "integrations • kafka"
-            module: ":integrations:kafka"
-            slug: "integrations-kafka"
-
-          - name: "integrations • rabbitmq"
-            module: ":integrations:rabbitmq"
-            slug: "integrations-rabbitmq"
-
-          - name: "integrations • jira • core"
-            module: ":integrations:jira:jira-core"
-            slug: "integrations-jira-core"
-
-          - name: "integrations • jira • testng"
-            module: ":integrations:jira:testng"
-            slug: "integrations-jira-testng"
-
-          - name: "integrations • jira • testrail"
-            module: ":integrations:jira:testrail"
-            slug: "integrations-jira-testrail"
-
-          - name: "integrations • testrail • core"
-            module: ":integrations:testrail:testrail-core"
-            slug: "integrations-testrail-core"
-
-          - name: "integrations • testrail • testng"
-            module: ":integrations:testrail:testng"
-            slug: "integrations-testrail-testng"
-
-          - name: "integrations • reportportal • core"
-            module: ":integrations:reportportal:reportportal-core"
-            slug: "integrations-reportportal-core"
-
-          - name: "integrations • reportportal • testng"
-            module: ":integrations:reportportal:testng"
-            slug: "integrations-reportportal-testng"
+        include: ${{ fromJson(needs.module-matrices.outputs.integrations_build_modules) }}
 
     steps:
       - name: 🔨Checkout
@@ -250,7 +136,7 @@ jobs:
 
   test-common:
     name: "Common • ${{ matrix.name }}"
-    needs: [detect-runner, build-common]
+    needs: [detect-runner, module-matrices, build-common]
     runs-on: ${{ fromJson(needs.detect-runner.outputs.runs_on) }}
     if: ${{ github.event_name != 'pull_request_target' }}
     permissions:
@@ -263,66 +149,7 @@ jobs:
       fail-fast: false
       max-parallel: 4
       matrix:
-        include:
-          - name: "testng-extensions"
-            module: ":testng-extensions"
-            slug: "testng-extensions"
-
-          - name: "common-utils • core"
-            module: ":common-utils:core"
-            slug: "common-utils-core"
-
-          - name: "common-utils • jackson • parent"
-            module: ":common-utils:jackson:parent"
-            slug: "common-utils-jackson-parent"
-
-          - name: "common-utils • jackson • csv"
-            module: ":common-utils:jackson:csv"
-            slug: "common-utils-jackson-csv"
-
-          - name: "common-utils • jackson • xml"
-            module: ":common-utils:jackson:xml"
-            slug: "common-utils-jackson-xml"
-
-          - name: "common-utils • jackson • json"
-            module: ":common-utils:jackson:json"
-            slug: "common-utils-jackson-json"
-
-          - name: "common-utils • jackson • yaml"
-            module: ":common-utils:jackson:yaml"
-            slug: "common-utils-jackson-yaml"
-
-          - name: "common-utils • introspection"
-            module: ":common-utils:introspection"
-            slug: "common-utils-introspection"
-
-          - name: "common-utils • awaitility"
-            module: ":common-utils:awaitility"
-            slug: "common-utils-awaitility"
-
-          - name: "common-utils • file"
-            module: ":common-utils:file"
-            slug: "common-utils-file"
-
-          - name: "common-utils • html"
-            module: ":common-utils:html"
-            slug: "common-utils-html"
-
-          - name: "common-utils • jwt"
-            module: ":common-utils:jwt"
-            slug: "common-utils-jwt"
-
-          - name: "common-utils • config"
-            module: ":common-utils:config"
-            slug: "common-utils-config"
-
-          - name: "common-utils • signature"
-            module: ":common-utils:signature"
-            slug: "common-utils-signature"
-
-          - name: "common-utils • console"
-            module: ":common-utils:console"
-            slug: "common-utils-console"
+        include: ${{ fromJson(needs.module-matrices.outputs.common_modules) }}
 
     steps:
       - name: 🔨Checkout
@@ -347,7 +174,7 @@ jobs:
 
   test-data:
     name: "Data • ${{ matrix.name }}"
-    needs: [detect-runner, build-data, test-common]
+    needs: [detect-runner, module-matrices, build-data, test-common]
     runs-on: ${{ fromJson(needs.detect-runner.outputs.runs_on) }}
     if: ${{ github.event_name != 'pull_request_target' }}
     permissions:
@@ -360,26 +187,7 @@ jobs:
       fail-fast: false
       max-parallel: 4
       matrix:
-        include:
-          - name: "data-utils • sql"
-            module: ":data-utils:sql"
-            slug: "data-utils-sql"
-            profile: "none"
-
-          - name: "data-utils • nosql • parent"
-            module: ":data-utils:nosql"
-            slug: "data-utils-nosql"
-            profile: "none"
-
-          - name: "data-utils • nosql • morphia"
-            module: ":data-utils:nosql:morphia"
-            slug: "data-utils-nosql-morphia"
-            profile: "storage"
-
-          - name: "data-utils • nosql • redis"
-            module: ":data-utils:nosql:redis"
-            slug: "data-utils-nosql-redis"
-            profile: "redis"
+        include: ${{ fromJson(needs.module-matrices.outputs.data_test_modules) }}
 
     steps:
       - name: 🔨Checkout
@@ -475,7 +283,7 @@ jobs:
 
   test-integrations:
     name: "Integrations • ${{ matrix.name }}"
-    needs: [detect-runner, build-integrations, test-common]
+    needs: [detect-runner, module-matrices, build-integrations, test-common]
     runs-on: ${{ fromJson(needs.detect-runner.outputs.runs_on) }}
     if: ${{ github.event_name != 'pull_request_target' }}
     permissions:
@@ -488,61 +296,7 @@ jobs:
       fail-fast: false
       max-parallel: 4
       matrix:
-        include:
-          - name: "integrations • rest-assured"
-            module: ":integrations:rest-assured"
-            slug: "integrations-rest-assured"
-            profile: "mock"
-
-          - name: "integrations • selenide"
-            module: ":integrations:selenide"
-            slug: "integrations-selenide"
-            profile: "web"
-
-          - name: "integrations • kafka"
-            module: ":integrations:kafka"
-            slug: "integrations-kafka"
-            profile: "messaging"
-
-          - name: "integrations • rabbitmq"
-            module: ":integrations:rabbitmq"
-            slug: "integrations-rabbitmq"
-            profile: "rabbitmq"
-
-          - name: "integrations • jira • core"
-            module: ":integrations:jira:jira-core"
-            slug: "integrations-jira-core"
-            profile: "none"
-
-          - name: "integrations • jira • testng"
-            module: ":integrations:jira:testng"
-            slug: "integrations-jira-testng"
-            profile: "none"
-
-          - name: "integrations • jira • testrail"
-            module: ":integrations:jira:testrail"
-            slug: "integrations-jira-testrail"
-            profile: "none"
-
-          - name: "integrations • testrail • core"
-            module: ":integrations:testrail:testrail-core"
-            slug: "integrations-testrail-core"
-            profile: "none"
-
-          - name: "integrations • testrail • testng"
-            module: ":integrations:testrail:testng"
-            slug: "integrations-testrail-testng"
-            profile: "none"
-
-          - name: "integrations • reportportal • core"
-            module: ":integrations:reportportal:reportportal-core"
-            slug: "integrations-reportportal-core"
-            profile: "none"
-
-          - name: "integrations • reportportal • testng"
-            module: ":integrations:reportportal:testng"
-            slug: "integrations-reportportal-testng"
-            profile: "reporting"
+        include: ${{ fromJson(needs.module-matrices.outputs.integrations_test_modules) }}
 
     steps:
       - name: 🔨Checkout

@@ -1,0 +1,105 @@
+name: Reusable module matrices
+
+on:
+  workflow_call:
+    outputs:
+      common_modules:
+        description: Common modules matrix include list
+        value: ${{ jobs.emit.outputs.common_modules }}
+      data_build_modules:
+        description: Data modules for build matrix include list
+        value: ${{ jobs.emit.outputs.data_build_modules }}
+      integrations_build_modules:
+        description: Integrations modules for build matrix include list
+        value: ${{ jobs.emit.outputs.integrations_build_modules }}
+      data_test_modules:
+        description: Data modules for test matrix include list
+        value: ${{ jobs.emit.outputs.data_test_modules }}
+      integrations_test_modules:
+        description: Integrations modules for test matrix include list
+        value: ${{ jobs.emit.outputs.integrations_test_modules }}
+
+permissions:
+  contents: read
+
+jobs:
+  emit:
+    name: Emit module matrices
+    runs-on: ubuntu-latest
+    outputs:
+      common_modules: ${{ steps.emit.outputs.common_modules }}
+      data_build_modules: ${{ steps.emit.outputs.data_build_modules }}
+      integrations_build_modules: ${{ steps.emit.outputs.integrations_build_modules }}
+      data_test_modules: ${{ steps.emit.outputs.data_test_modules }}
+      integrations_test_modules: ${{ steps.emit.outputs.integrations_test_modules }}
+    steps:
+      - name: Emit JSON outputs
+        id: emit
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
+        with:
+          script: |
+            const commonModules = [
+              { name: 'testng-extensions', module: ':testng-extensions', slug: 'testng-extensions' },
+              { name: 'common-utils • core', module: ':common-utils:core', slug: 'common-utils-core' },
+              { name: 'common-utils • jackson • parent', module: ':common-utils:jackson:parent', slug: 'common-utils-jackson-parent' },
+              { name: 'common-utils • jackson • csv', module: ':common-utils:jackson:csv', slug: 'common-utils-jackson-csv' },
+              { name: 'common-utils • jackson • xml', module: ':common-utils:jackson:xml', slug: 'common-utils-jackson-xml' },
+              { name: 'common-utils • jackson • json', module: ':common-utils:jackson:json', slug: 'common-utils-jackson-json' },
+              { name: 'common-utils • jackson • yaml', module: ':common-utils:jackson:yaml', slug: 'common-utils-jackson-yaml' },
+              { name: 'common-utils • introspection', module: ':common-utils:introspection', slug: 'common-utils-introspection' },
+              { name: 'common-utils • awaitility', module: ':common-utils:awaitility', slug: 'common-utils-awaitility' },
+              { name: 'common-utils • file', module: ':common-utils:file', slug: 'common-utils-file' },
+              { name: 'common-utils • html', module: ':common-utils:html', slug: 'common-utils-html' },
+              { name: 'common-utils • jwt', module: ':common-utils:jwt', slug: 'common-utils-jwt' },
+              { name: 'common-utils • config', module: ':common-utils:config', slug: 'common-utils-config' },
+              { name: 'common-utils • signature', module: ':common-utils:signature', slug: 'common-utils-signature' },
+              { name: 'common-utils • console', module: ':common-utils:console', slug: 'common-utils-console' },
+            ];
+
+            const dataBuildModules = [
+              { name: 'data-utils • sql', module: ':data-utils:sql', slug: 'data-utils-sql' },
+              { name: 'data-utils • nosql • parent', module: ':data-utils:nosql', slug: 'data-utils-nosql' },
+              { name: 'data-utils • nosql • morphia', module: ':data-utils:nosql:morphia', slug: 'data-utils-nosql-morphia' },
+              { name: 'data-utils • nosql • redis', module: ':data-utils:nosql:redis', slug: 'data-utils-nosql-redis' },
+            ];
+
+            const integrationsBuildModules = [
+              { name: 'integrations • rest-assured', module: ':integrations:rest-assured', slug: 'integrations-rest-assured' },
+              { name: 'integrations • selenide', module: ':integrations:selenide', slug: 'integrations-selenide' },
+              { name: 'integrations • kafka', module: ':integrations:kafka', slug: 'integrations-kafka' },
+              { name: 'integrations • rabbitmq', module: ':integrations:rabbitmq', slug: 'integrations-rabbitmq' },
+              { name: 'integrations • jira • core', module: ':integrations:jira:jira-core', slug: 'integrations-jira-core' },
+              { name: 'integrations • jira • testng', module: ':integrations:jira:testng', slug: 'integrations-jira-testng' },
+              { name: 'integrations • jira • testrail', module: ':integrations:jira:testrail', slug: 'integrations-jira-testrail' },
+              { name: 'integrations • testrail • core', module: ':integrations:testrail:testrail-core', slug: 'integrations-testrail-core' },
+              { name: 'integrations • testrail • testng', module: ':integrations:testrail:testng', slug: 'integrations-testrail-testng' },
+              { name: 'integrations • reportportal • core', module: ':integrations:reportportal:reportportal-core', slug: 'integrations-reportportal-core' },
+              { name: 'integrations • reportportal • testng', module: ':integrations:reportportal:testng', slug: 'integrations-reportportal-testng' },
+            ];
+
+            const dataTestModules = [
+              { name: 'data-utils • sql', module: ':data-utils:sql', slug: 'data-utils-sql', profile: 'none' },
+              { name: 'data-utils • nosql • parent', module: ':data-utils:nosql', slug: 'data-utils-nosql', profile: 'none' },
+              { name: 'data-utils • nosql • morphia', module: ':data-utils:nosql:morphia', slug: 'data-utils-nosql-morphia', profile: 'storage' },
+              { name: 'data-utils • nosql • redis', module: ':data-utils:nosql:redis', slug: 'data-utils-nosql-redis', profile: 'redis' },
+            ];
+
+            const integrationsTestModules = [
+              { name: 'integrations • rest-assured', module: ':integrations:rest-assured', slug: 'integrations-rest-assured', profile: 'mock' },
+              { name: 'integrations • selenide', module: ':integrations:selenide', slug: 'integrations-selenide', profile: 'web' },
+              { name: 'integrations • kafka', module: ':integrations:kafka', slug: 'integrations-kafka', profile: 'messaging' },
+              { name: 'integrations • rabbitmq', module: ':integrations:rabbitmq', slug: 'integrations-rabbitmq', profile: 'rabbitmq' },
+              { name: 'integrations • jira • core', module: ':integrations:jira:jira-core', slug: 'integrations-jira-core', profile: 'none' },
+              { name: 'integrations • jira • testng', module: ':integrations:jira:testng', slug: 'integrations-jira-testng', profile: 'none' },
+              { name: 'integrations • jira • testrail', module: ':integrations:jira:testrail', slug: 'integrations-jira-testrail', profile: 'none' },
+              { name: 'integrations • testrail • core', module: ':integrations:testrail:testrail-core', slug: 'integrations-testrail-core', profile: 'none' },
+              { name: 'integrations • testrail • testng', module: ':integrations:testrail:testng', slug: 'integrations-testrail-testng', profile: 'none' },
+              { name: 'integrations • reportportal • core', module: ':integrations:reportportal:reportportal-core', slug: 'integrations-reportportal-core', profile: 'none' },
+              { name: 'integrations • reportportal • testng', module: ':integrations:reportportal:testng', slug: 'integrations-reportportal-testng', profile: 'reporting' },
+            ];
+
+            core.setOutput('common_modules', JSON.stringify(commonModules));
+            core.setOutput('data_build_modules', JSON.stringify(dataBuildModules));
+            core.setOutput('integrations_build_modules', JSON.stringify(integrationsBuildModules));
+            core.setOutput('data_test_modules', JSON.stringify(dataTestModules));
+            core.setOutput('integrations_test_modules', JSON.stringify(integrationsTestModules));
