@@ -1,0 +1,135 @@
+name: "Build modules"
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  detect-runner:
+    uses: ./.github/workflows/reusable-detect-runner.yml
+    with:
+      strategy: push_any
+    secrets: inherit
+
+  module-matrices:
+    uses: ./.github/workflows/reusable-module-matrices.yml
+
+  build-common:
+    name: "Build common • ${{ matrix.name }}"
+    needs: [detect-runner, module-matrices]
+    runs-on: ${{ fromJson(needs.detect-runner.outputs.runs_on) }}
+    permissions:
+      contents: read
+    env:
+      CI: "true"
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        include: ${{ fromJson(needs.module-matrices.outputs.common_modules) }}
+
+    steps:
+      - name: 🔨Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - name: 🔨Prepare Java/Gradle
+        uses: ./.github/actions/setup-java-gradle
+        with:
+          is_self_hosted: ${{ needs.detect-runner.outputs.is_self_hosted }}
+
+      - name: 🧱 Build (check, no tests)
+        run: |
+          ./gradlew \
+            ${{ matrix.module }}:check \
+            -x ${{ matrix.module }}:test \
+            --no-daemon --console=plain --stacktrace
+        shell: bash
+
+      - name: 📦 Pack checkstyle reports as artifact
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        if: always()
+        with:
+          name: build-report-common-${{ matrix.slug }}
+          retention-days: 3
+          path: |
+            **/build/reports/checkstyle
+
+  build-data:
+    name: "Build data • ${{ matrix.name }}"
+    needs: [detect-runner, module-matrices, build-common]
+    runs-on: ${{ fromJson(needs.detect-runner.outputs.runs_on) }}
+    permissions:
+      contents: read
+    env:
+      CI: "true"
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        include: ${{ fromJson(needs.module-matrices.outputs.data_build_modules) }}
+
+    steps:
+      - name: 🔨Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - name: 🔨Prepare Java/Gradle
+        uses: ./.github/actions/setup-java-gradle
+        with:
+          is_self_hosted: ${{ needs.detect-runner.outputs.is_self_hosted }}
+
+      - name: 🧱 Build (check, no tests)
+        run: |
+          ./gradlew \
+            ${{ matrix.module }}:check \
+            -x ${{ matrix.module }}:test \
+            --no-daemon --console=plain --stacktrace
+        shell: bash
+
+      - name: 📦 Pack checkstyle reports as artifact
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        if: always()
+        with:
+          name: build-report-data-${{ matrix.slug }}
+          retention-days: 3
+          path: |
+            **/build/reports/checkstyle
+
+  build-integrations:
+    name: "Build integrations • ${{ matrix.name }}"
+    needs: [detect-runner, module-matrices, build-common]
+    runs-on: ${{ fromJson(needs.detect-runner.outputs.runs_on) }}
+    permissions:
+      contents: read
+    env:
+      CI: "true"
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        include: ${{ fromJson(needs.module-matrices.outputs.integrations_build_modules) }}
+
+    steps:
+      - name: 🔨Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - name: 🔨Prepare Java/Gradle
+        uses: ./.github/actions/setup-java-gradle
+        with:
+          is_self_hosted: ${{ needs.detect-runner.outputs.is_self_hosted }}
+
+      - name: 🧱 Build (check, no tests)
+        run: |
+          ./gradlew ${{ matrix.module }}:check -x ${{ matrix.module }}:test --no-daemon --console=plain --stacktrace
+        shell: bash
+
+      - name: 📦 Pack checkstyle reports as artifact
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        if: always()
+        with:
+          name: build-report-integrations-${{ matrix.slug }}
+          retention-days: 3
+          path: |
+            **/build/reports/checkstyle

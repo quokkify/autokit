@@ -27,7 +27,8 @@ init_compose_files
 
 echo "[infra] docker compose up: ${PROFILES_ARGS[*]}"
 if [[ "${CI:-}" == "true" ]]; then
-  ./tools/environment/scripts/infra/hooks/pre_up_ci.sh "${TOKENS[@]}"
+  # Run in current shell so exported dynamic ports are visible to docker compose interpolation.
+  source ./tools/environment/scripts/infra/hooks/pre_up_ci.sh "${TOKENS[@]}"
 fi
 
 compose_cmd "${PROFILES_ARGS[@]}" up -d
