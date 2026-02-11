@@ -2,7 +2,7 @@ services:
   nginx:
     image: ci-nginx
     build:
-      context: ../nginx
+      context: ../assets/nginx
       dockerfile: Dockerfile.ci
     volumes: []
     ports:

@@ -4,7 +4,7 @@ source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/../../compose_utils.sh"
 init_compose_files
 
 MOCKSERVER_URL=${1:-http://localhost:1080}
-DIR=${2:-tools/environment/mock/expectations}
+DIR=${2:-tools/environment/assets/mock/expectations}
 
 find "$DIR" -type f -name "*.json" | while read -r file; do
   printf "\n⏳ Uploading '%s'\n" "$file"

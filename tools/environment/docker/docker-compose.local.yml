@@ -3,8 +3,8 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ../nginx/conf.d:/etc/nginx/conf.d:ro
-      - ../nginx/html:/usr/share/nginx/html:ro
+      - ../assets/nginx/conf.d:/etc/nginx/conf.d:ro
+      - ../assets/nginx/html:/usr/share/nginx/html:ro
 
   selenium-hub:
     ports:

@@ -16,8 +16,8 @@ services:
       - selenium-hub
       - docker-socket-proxy
     volumes:
-      - ${SELENIUM_GRID_MOUNT:-../selenium-grid}:/opt/selenium/config.d:ro
-      - ../selenium-grid/assets:/opt/selenium/assets
+      - ${SELENIUM_GRID_MOUNT:-../assets/selenium-grid}:/opt/selenium/config.d:ro
+      - ../assets/selenium-grid/assets:/opt/selenium/assets
     environment:
       SE_EVENT_BUS_HOST: selenium-hub
       SE_EVENT_BUS_PUBLISH_PORT: "4442"
@@ -99,7 +99,7 @@ services:
       MOCKSERVER_WATCH_INITIALIZATION_JSON: true
       MOCKSERVER_INITIALIZATION_JSON_PATH: /config/expectation.json
     volumes:
-      - ./mock/expectation.json:/config/expectation.json
+      - ./assets/mock/expectation.json:/config/expectation.json
 
   centrifugo:
     profiles: [realtime]

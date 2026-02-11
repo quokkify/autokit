@@ -4,7 +4,7 @@ set -euo pipefail
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/../../compose_utils.sh"
 init_compose_files
 
-CONFIG_PATH="tools/environment/selenium-grid/config.toml"
+CONFIG_PATH="tools/environment/assets/selenium-grid/config.toml"
 if [[ -d "$CONFIG_PATH" ]]; then
   echo "[selenium-grid] config path is a directory: $CONFIG_PATH"
   if [[ "${CI:-}" == "true" ]]; then
@@ -39,7 +39,7 @@ if [[ "${CI:-}" == "true" ]]; then
   rm -f "$tmp_config"
   export SELENIUM_GRID_MOUNT
 else
-  export SELENIUM_GRID_MOUNT="$(pwd)/tools/environment/selenium-grid"
+  export SELENIUM_GRID_MOUNT="$(pwd)/tools/environment/assets/selenium-grid"
   render_config "$CONFIG_PATH" "${SELENIUM_GRID_MOUNT}/config.toml"
 fi
 
