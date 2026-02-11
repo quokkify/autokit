@@ -9,21 +9,6 @@ else
   export GRADLE_OPTS="-Dorg.gradle.console=rich"
 fi
 
-# Blue
-info() {
-  echo -e "\033[1;34mInfo: $1\033[0m"
-}
-
-# Yellow
-warning() {
-  echo -e "\033[1;33mWarning: $1\033[0m"
-}
-
-# Red
-error() {
-  echo -e "\033[1;31mError: $1\033[0m"
-}
-
 find_free_port() {
   local port
   for _ in {1..100}; do
@@ -144,15 +129,7 @@ for profile in "${TOKENS[@]}"; do
       ;;
     redis)
       info "[infra] redis hook: waiting for PING"
-      ready="false"
-      for _ in {1..30}; do
-        if compose_cmd exec -T redis redis-cli ping >/dev/null 2>&1; then
-          ready="true"
-          break
-        fi
-        sleep 1
-      done
-      if [[ "$ready" != "true" ]]; then
+      if ! wait_until 30 1 compose_cmd exec -T redis redis-cli ping >/dev/null 2>&1; then
         warning "[infra] redis hook: PING not ready after timeout"
       fi
       info "[infra] redis hook: set redis host and port"
@@ -174,16 +151,8 @@ for profile in "${TOKENS[@]}"; do
       ;;
     messaging)
       info "[infra] messaging hook: waiting for kafka readiness"
-      ready="false"
-      for _ in {1..90}; do
-        if compose_cmd exec -T kafka \
-          kafka-topics.sh --bootstrap-server kafka:9092 --list 2>/dev/null | grep -Fxq messages; then
-          ready="true"
-          break
-        fi
-        sleep 2
-      done
-      if [[ "$ready" != "true" ]]; then
+      if ! wait_until 90 2 compose_cmd exec -T kafka \
+        sh -lc "kafka-topics.sh --bootstrap-server kafka:9092 --list 2>/dev/null | grep -Fxq messages"; then
         error "[infra] messaging hook: kafka is not ready after timeout"
         compose_cmd logs --tail=200 kafka zookeeper || true
         exit 1

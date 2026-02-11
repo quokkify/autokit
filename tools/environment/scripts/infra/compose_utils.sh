@@ -1,5 +1,17 @@
 #!/bin/bash
 
+info() {
+  echo -e "\033[1;34mInfo: $1\033[0m"
+}
+
+warning() {
+  echo -e "\033[1;33mWarning: $1\033[0m"
+}
+
+error() {
+  echo -e "\033[1;31mError: $1\033[0m" >&2
+}
+
 init_compose_files() {
   COMPOSE_FILES=(-f tools/environment/docker/docker-compose.yml)
   if [[ "${CI:-}" == "true" ]]; then
@@ -42,6 +54,22 @@ resolve_published_port() {
     echo "$fallback_port"
     return 0
   fi
+
+  return 1
+}
+
+wait_until() {
+  local attempts="$1"
+  local interval_seconds="$2"
+  shift 2
+
+  local try
+  for ((try=1; try<=attempts; try++)); do
+    if "$@"; then
+      return 0
+    fi
+    sleep "$interval_seconds"
+  done
 
   return 1
 }

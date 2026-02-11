@@ -14,7 +14,7 @@ if [[ "${CI:-}" == "true" ]]; then
 fi
 port="$(resolve_published_port "${service_name}" 8080 8084 "${require_port}" || true)"
 if [[ -z "$port" ]]; then
-  echo "[reporting] cannot resolve exposed port for ${service_name}" >&2
+  error "[reporting] cannot resolve exposed port for ${service_name}"
   exit 1
 fi
 
@@ -22,18 +22,18 @@ host="$(resolve_runtime_host)"
 
 endpoint="http://${host}:${port}"
 
-ready="false"
-for _ in {1..90}; do
+is_reportportal_healthy() {
   if curl -sS -f "${endpoint}/ui/health" >/dev/null 2>&1 \
       && curl -sS -f "${endpoint}/uat/health" >/dev/null 2>&1 \
       && curl -sS -f "${endpoint}/api/health" >/dev/null 2>&1; then
-    ready="true"
-    break
+    return 0
   fi
-  sleep 2
-done
-if [[ "$ready" != "true" ]]; then
-  echo "[reporting] report portal services are not healthy on ${endpoint}" >&2
+  return 1
+}
+
+info "[reporting] waiting for health check on ${endpoint}"
+if ! wait_until 90 2 is_reportportal_healthy; then
+  error "[reporting] report portal services are not healthy on ${endpoint}"
   exit 1
 fi
 
@@ -63,9 +63,9 @@ for user in "${USERS[@]}"; do
 done
 
 if [[ -z "$token" ]]; then
-  echo "[reporting] access token is empty" >&2
+  error "[reporting] access token is empty"
   if [[ -n "$last_response" ]]; then
-    echo "[reporting] oauth response (truncated): ${last_response:0:500}" >&2
+    warning "[reporting] oauth response (truncated): ${last_response:0:500}"
   fi
   exit 1
 fi
@@ -91,7 +91,7 @@ REPORTPORTAL_ENDPOINT=${endpoint}
 REPORTPORTAL_API_KEY=${token}
 ENV
 
-echo "[reporting] endpoint: ${endpoint}"
-echo "[reporting] project: ${project_name}"
-echo "[reporting] env file written: tools/environment/.reportportal.env"
-echo "[reporting] owner config written: integrations/reportportal/testng/src/test/resources/local_resources/reportportal-test.properties"
+info "[reporting] endpoint: ${endpoint}"
+info "[reporting] project: ${project_name}"
+info "[reporting] env file written: tools/environment/.reportportal.env"
+info "[reporting] owner config written: integrations/reportportal/testng/src/test/resources/local_resources/reportportal-test.properties"

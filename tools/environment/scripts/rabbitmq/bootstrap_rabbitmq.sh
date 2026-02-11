@@ -8,17 +8,9 @@ rabbit_user="${RABBITMQ_USER:-guest}"
 rabbit_password="${RABBITMQ_PASSWORD:-guest}"
 rabbit_vhost="${RABBITMQ_VHOST:-/}"
 
-ready="false"
-for _ in {1..60}; do
-  if compose_cmd exec -T rabbitmq rabbitmq-diagnostics -q ping >/dev/null 2>&1; then
-    ready="true"
-    break
-  fi
-  sleep 2
-done
-
-if [[ "$ready" != "true" ]]; then
-  echo "[rabbitmq] rabbitmq is not ready after timeout" >&2
+info "[rabbitmq] waiting for health check"
+if ! wait_until 60 2 compose_cmd exec -T rabbitmq rabbitmq-diagnostics -q ping >/dev/null 2>&1; then
+  error "[rabbitmq] rabbitmq is not ready after timeout"
   compose_cmd logs --tail=200 rabbitmq || true
   exit 1
 fi
@@ -32,7 +24,7 @@ amqp_port="$(resolve_published_port rabbitmq 5672 5672 "${require_port}" || true
 management_port="$(resolve_published_port rabbitmq 15672 15672 "${require_port}" || true)"
 
 if [[ -z "$amqp_port" || -z "$management_port" ]]; then
-  echo "[rabbitmq] cannot resolve exposed ports for rabbitmq" >&2
+  error "[rabbitmq] cannot resolve exposed ports for rabbitmq"
   exit 1
 fi
 
@@ -65,7 +57,7 @@ RABBIT_PASSWORD=${rabbit_password}
 RABBIT_VIRTUAL_HOST=${rabbit_vhost}
 ENV
 
-echo "[rabbitmq] endpoint: ${host}:${amqp_port}"
-echo "[rabbitmq] management url: ${rabbit_management_url}"
-echo "[rabbitmq] env file written: tools/environment/.rabbitmq.env"
-echo "[rabbitmq] owner config written: integrations/rabbitmq/src/test/resources/local_resources/rabbit.properties"
+info "[rabbitmq] endpoint: ${host}:${amqp_port}"
+info "[rabbitmq] management url: ${rabbit_management_url}"
+info "[rabbitmq] env file written: tools/environment/.rabbitmq.env"
+info "[rabbitmq] owner config written: integrations/rabbitmq/src/test/resources/local_resources/rabbit.properties"
