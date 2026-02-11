@@ -51,6 +51,7 @@ ext {
     reportportal = "5.4.3"
     java_websocket = "1.6.0"
     kafka = "4.0.0"
+    rabbitmq = "5.28.0"
     h2 = "2.4.240"
     classgraph = "4.8.184"
 }

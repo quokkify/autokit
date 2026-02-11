@@ -86,6 +86,27 @@ services:
     ports:
       - "2181:2181"
 
+  rabbitmq:
+    profiles: [rabbitmq]
+    image: bitnamilegacy/rabbitmq:4.1.2-debian-12-r1
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-guest}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-guest}
+      RABBITMQ_MANAGEMENT_ALLOW_WEB_ACCESS: "true"
+      RABBITMQ_DISK_FREE_ABSOLUTE_LIMIT: 50MB
+      RABBITMQ_PLUGINS: >
+        rabbitmq_management
+    ports:
+      - "${RABBITMQ_PUBLISHED_PORT:-5672}:5672"
+      - "${RABBITMQ_MANAGEMENT_PUBLISHED_PORT:-15672}:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 30s
+      timeout: 30s
+      retries: 5
+      start_period: 60s
+    restart: always
+
   mock-server:
     profiles: [mock]
     image: mockserver/mockserver:5.15.0@sha256:0f9ef78c94894ac3e70135d156193b25e23872575d58e2228344964273b4af6b
