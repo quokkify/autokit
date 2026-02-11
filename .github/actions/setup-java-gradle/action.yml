@@ -1,0 +1,31 @@
+name: Setup Java and Gradle
+
+description: Setup Java 21 and Gradle with cache strategy based on runner type.
+
+inputs:
+  is_self_hosted:
+    description: Whether selected runner is self-hosted.
+    required: true
+
+author: quokkify
+
+runs:
+  using: composite
+  steps:
+    - name: 🔨Set up JDK (self-hosted, no cache)
+      if: ${{ inputs.is_self_hosted == 'true' }}
+      uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5
+      with:
+        distribution: temurin
+        java-version: '21'
+
+    - name: 🔨Set up JDK (github-hosted, cache gradle)
+      if: ${{ inputs.is_self_hosted != 'true' }}
+      uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5
+      with:
+        distribution: temurin
+        cache: gradle
+        java-version: '21'
+
+    - name: 🔨Build with Gradle
+      uses: gradle/actions/setup-gradle@f29f5a9d7b09a7c6b29859002d29d24e1674c884 # v5

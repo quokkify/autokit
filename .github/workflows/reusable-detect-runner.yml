@@ -1,0 +1,101 @@
+name: Reusable runner detection
+
+on:
+  workflow_call:
+    inputs:
+      strategy:
+        description: One of pr_trusted, push_any, workflow_run_pr_trusted
+        required: true
+        type: string
+    outputs:
+      runs_on:
+        description: Runner labels as JSON array
+        value: ${{ jobs.detect-runner.outputs.runs_on }}
+      is_self_hosted:
+        description: Whether self-hosted runner is selected
+        value: ${{ jobs.detect-runner.outputs.is_self_hosted }}
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  detect-runner:
+    name: Select runner
+    runs-on: ubuntu-latest
+    outputs:
+      runs_on: ${{ steps.select.outputs.runs_on }}
+      is_self_hosted: ${{ steps.select.outputs.is_self_hosted }}
+    steps:
+      - name: Choose runner
+        id: select
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
+        with:
+          github-token: ${{ secrets.RUNNER_DISCOVERY_TOKEN || github.token }}
+          script: |
+            const labels = ['self-hosted', 'compose', 'internal'];
+            const trusted = new Set(['OWNER', 'MEMBER', 'COLLABORATOR']);
+            const strategy = '${{ inputs.strategy }}';
+
+            const setHosted = () => {
+              core.setOutput('runs_on', JSON.stringify(['ubuntu-latest']));
+              core.setOutput('is_self_hosted', 'false');
+            };
+
+            const setSelfHostedIfOnline = async () => {
+              try {
+                const { data } = await github.rest.actions.listSelfHostedRunnersForRepo({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                });
+                const hasLabels = (runner) =>
+                  labels.every((label) =>
+                    runner.labels.some((item) => item.name.toLowerCase() === label)
+                  );
+                const online = data.runners.find(
+                  (runner) => runner.status === 'online' && hasLabels(runner)
+                );
+                const runsOn = online ? labels : ['ubuntu-latest'];
+                core.setOutput('runs_on', JSON.stringify(runsOn));
+                core.setOutput('is_self_hosted', String(Boolean(online)));
+              } catch (error) {
+                core.warning(`Runner discovery failed, falling back to github-hosted: ${error}`);
+                setHosted();
+              }
+            };
+
+            let allowSelfHosted = false;
+
+            if (strategy === 'push_any') {
+              allowSelfHosted = true;
+            } else if (strategy === 'pr_trusted') {
+              const pr = context.payload.pull_request;
+              const sameRepo = pr?.head?.repo?.full_name && pr?.base?.repo?.full_name
+                ? pr.head.repo.full_name === pr.base.repo.full_name
+                : false;
+              const association = pr?.author_association || 'NONE';
+              const authorLogin = (pr?.user?.login || '').toLowerCase();
+              const isRenovateBot = authorLogin === 'renovate[bot]';
+              allowSelfHosted = sameRepo && (trusted.has(association) || isRenovateBot);
+            } else if (strategy === 'workflow_run_pr_trusted') {
+              const run = context.payload.workflow_run || {};
+              const runEvent = run.event || 'unknown';
+              if (runEvent === 'pull_request') {
+                const headRepo = run.head_repository?.full_name;
+                const baseRepo = run.repository?.full_name;
+                const sameRepo = headRepo && baseRepo ? headRepo === baseRepo : false;
+                const association = run.actor?.association || 'NONE';
+                const actorLogin = (run.actor?.login || '').toLowerCase();
+                const isRenovateBot = actorLogin === 'renovate[bot]';
+                allowSelfHosted = sameRepo && (trusted.has(association) || isRenovateBot);
+              }
+            } else {
+              core.warning(`Unknown strategy '${strategy}', using github-hosted runner.`);
+            }
+
+            if (!allowSelfHosted) {
+              setHosted();
+              return;
+            }
+
+            await setSelfHostedIfOnline();
