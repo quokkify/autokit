@@ -89,25 +89,28 @@ select_runtime_host_for_port() {
   local preferred_host="$1"
   local port="$2"
   local fallback_host="${3:-localhost}"
+  local max_attempts="${4:-30}"
+  local sleep_seconds="${5:-1}"
 
-  # Prefer localhost when it is reachable: it is generally more stable for test JVM networking.
-  if [[ "$preferred_host" != "$fallback_host" ]] && wait_until 3 1 is_tcp_reachable "$fallback_host" "$port"; then
-    warning "[infra] selecting ${fallback_host}:${port} over ${preferred_host}:${port}"
-    echo "$fallback_host"
-    return 0
-  fi
+  # Poll connectivity because published ports in CI/DIND can appear with delay.
+  local attempt
+  for ((attempt=1; attempt<=max_attempts; attempt++)); do
+    # Prefer localhost (fallback) when it becomes reachable.
+    if [[ "$preferred_host" != "$fallback_host" ]] && is_tcp_reachable "$fallback_host" "$port"; then
+      warning "[infra] selecting ${fallback_host}:${port} over ${preferred_host}:${port}"
+      echo "$fallback_host"
+      return 0
+    fi
 
-  if wait_until 3 1 is_tcp_reachable "$preferred_host" "$port"; then
-    echo "$preferred_host"
-    return 0
-  fi
+    if is_tcp_reachable "$preferred_host" "$port"; then
+      echo "$preferred_host"
+      return 0
+    fi
 
-  if [[ "$preferred_host" != "$fallback_host" ]] && wait_until 3 1 is_tcp_reachable "$fallback_host" "$port"; then
-    warning "[infra] host ${preferred_host}:${port} is not reachable, fallback to ${fallback_host}:${port}"
-    echo "$fallback_host"
-    return 0
-  fi
+    sleep "$sleep_seconds"
+  done
 
+  warning "[infra] no reachable host found for port ${port} after ${max_attempts}s, using ${preferred_host}"
   echo "$preferred_host"
   return 0
 }

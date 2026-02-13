@@ -1,10 +1,14 @@
 package io.automation.websockets.services.centrifugo;
 
 import java.net.Proxy;
+import java.net.URI;
 import java.util.List;
+import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import io.automation.constant.PollingInterval;
+import io.automation.constant.Timeout;
 import io.automation.util.Waiter;
 import io.automation.websockets.entities.WebSocketMessage;
 import io.github.centrifugal.centrifuge.Client;
@@ -29,16 +33,30 @@ public class CentrifugoService {
   }
 
   public CentrifugoService connectToCentrifugo(String host, String endpoint, String token) {
-    Options opts = new Options();
-    opts.setToken(token);
-    opts.setProxy(Proxy.NO_PROXY);
-    client = new Client("%s%s".formatted(host, endpoint), opts, eventListener);
-    client.connect();
-    waitUntilConnected(host, endpoint);
-    return this;
+    RuntimeException lastError = null;
+    List<String> hosts = resolveConnectionHosts(host);
+    for (String candidateHost : hosts) {
+      eventListener.resetConnectionState();
+      try {
+        connect(candidateHost, endpoint, token);
+        waitUntilConnected(candidateHost, endpoint);
+        return this;
+      } catch (RuntimeException e) {
+        lastError = e;
+        disconnectQuietly();
+      }
+    }
+
+    throw new RuntimeException(
+        "Unable to connect to Centrifugo. Tried hosts: %s".formatted(String.join(", ", hosts)),
+        lastError
+    );
   }
 
   public void disconnectFromCentrifugo() {
+    if (client == null) {
+      return;
+    }
     try {
       client.disconnect();
       client.close(CLOSE_CONNECTION_TIMEOUT_MILLIS);
@@ -120,6 +138,59 @@ public class CentrifugoService {
       Assertions.assertThat(eventListener.isConnected())
           .as("Centrifugo client is not connected at '%s%s'", host, endpoint)
           .isTrue();
-    });
+    }, Timeout.SECONDS_10, PollingInterval.MILLIS_1000);
+  }
+
+  private void connect(String host, String endpoint, String token) {
+    Options opts = new Options();
+    opts.setToken(token);
+    opts.setProxy(Proxy.NO_PROXY);
+    client = new Client("%s%s".formatted(host, endpoint), opts, eventListener);
+    client.connect();
+  }
+
+  private List<String> resolveConnectionHosts(String host) {
+    LinkedHashSet<String> candidates = new LinkedHashSet<>();
+    candidates.add(host);
+
+    URI uri;
+    try {
+      uri = URI.create(host);
+    } catch (IllegalArgumentException e) {
+      return List.copyOf(candidates);
+    }
+
+    String scheme = uri.getScheme();
+    String currentHost = uri.getHost();
+    int port = uri.getPort();
+    if (scheme == null || currentHost == null || port <= 0) {
+      return List.copyOf(candidates);
+    }
+
+    addCandidate(candidates, scheme, currentHost, port, "localhost");
+    addCandidate(candidates, scheme, currentHost, port, "127.0.0.1");
+    addCandidate(candidates, scheme, currentHost, port, "dind");
+    return List.copyOf(candidates);
+  }
+
+  private void addCandidate(LinkedHashSet<String> candidates, String scheme, String currentHost,
+                            int port, String candidateHost) {
+    if (!currentHost.equalsIgnoreCase(candidateHost)) {
+      candidates.add("%s://%s:%d".formatted(scheme, candidateHost, port));
+    }
+  }
+
+  private void disconnectQuietly() {
+    if (client == null) {
+      return;
+    }
+    try {
+      client.disconnect();
+      client.close(CLOSE_CONNECTION_TIMEOUT_MILLIS);
+    } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+    } catch (RuntimeException ignored) {
+      // best effort
+    }
   }
 }

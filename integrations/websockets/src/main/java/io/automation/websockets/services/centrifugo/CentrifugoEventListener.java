@@ -20,6 +20,11 @@ public class CentrifugoEventListener extends EventListener {
   private final AtomicBoolean connected = new AtomicBoolean(false);
   private final AtomicReference<String> connectionError = new AtomicReference<>();
 
+  public void resetConnectionState() {
+    connected.set(false);
+    connectionError.set(null);
+  }
+
   public boolean isConnected() {
     return connected.get();
   }
