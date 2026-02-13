@@ -213,46 +213,7 @@ jobs:
 
       - name: 🚀 Run tests
         run: |
-          if [[ -f tools/environment/.selenium-grid.env ]]; then
-            set -a
-            source tools/environment/.selenium-grid.env
-            set +a
-          fi
-          if [[ -f tools/environment/.mock-server.env ]]; then
-            set -a
-            source tools/environment/.mock-server.env
-            set +a
-          fi
-          if [[ -f tools/environment/.mongo.env ]]; then
-            set -a
-            source tools/environment/.mongo.env
-            set +a
-          fi
-          if [[ -f tools/environment/.redis.env ]]; then
-            set -a
-            source tools/environment/.redis.env
-            set +a
-          fi
-          if [[ -f tools/environment/.nginx.env ]]; then
-            set -a
-            source tools/environment/.nginx.env
-            set +a
-          fi
-          if [[ -f tools/environment/.reportportal.env ]]; then
-            set -a
-            source tools/environment/.reportportal.env
-            set +a
-          fi
-          if [[ -f tools/environment/.kafka.env ]]; then
-            set -a
-            source tools/environment/.kafka.env
-            set +a
-          fi
-          if [[ -f tools/environment/.rabbitmq.env ]]; then
-            set -a
-            source tools/environment/.rabbitmq.env
-            set +a
-          fi
+          source ./tools/environment/scripts/infra/load_bootstrap_env.sh
           if [[ -n "${KAFKA_BOOTSTRAP_SERVERS:-}" ]]; then
             export KAFKA_SERVER_ADDRESS="${KAFKA_BOOTSTRAP_SERVERS}"
           fi
@@ -324,46 +285,7 @@ jobs:
 
       - name: 🚀 Run tests
         run: |
-          if [[ -f tools/environment/.selenium-grid.env ]]; then
-            set -a
-            source tools/environment/.selenium-grid.env
-            set +a
-          fi
-          if [[ -f tools/environment/.mock-server.env ]]; then
-            set -a
-            source tools/environment/.mock-server.env
-            set +a
-          fi
-          if [[ -f tools/environment/.mongo.env ]]; then
-            set -a
-            source tools/environment/.mongo.env
-            set +a
-          fi
-          if [[ -f tools/environment/.redis.env ]]; then
-            set -a
-            source tools/environment/.redis.env
-            set +a
-          fi
-          if [[ -f tools/environment/.nginx.env ]]; then
-            set -a
-            source tools/environment/.nginx.env
-            set +a
-          fi
-          if [[ -f tools/environment/.reportportal.env ]]; then
-            set -a
-            source tools/environment/.reportportal.env
-            set +a
-          fi
-          if [[ -f tools/environment/.kafka.env ]]; then
-            set -a
-            source tools/environment/.kafka.env
-            set +a
-          fi
-          if [[ -f tools/environment/.rabbitmq.env ]]; then
-            set -a
-            source tools/environment/.rabbitmq.env
-            set +a
-          fi
+          source ./tools/environment/scripts/infra/load_bootstrap_env.sh
           if [[ -n "${KAFKA_BOOTSTRAP_SERVERS:-}" ]]; then
             export KAFKA_SERVER_ADDRESS="${KAFKA_BOOTSTRAP_SERVERS}"
           fi

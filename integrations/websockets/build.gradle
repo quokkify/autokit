@@ -1,0 +1,27 @@
+description = "WebSockets integration"
+
+ext {
+    artifactId = "websockets"
+}
+
+dependencies {
+    implementation project(":common-utils:config")
+    implementation project(":common-utils:core")
+    implementation project(":common-utils:awaitility")
+    implementation project(":common-utils:jackson:json")
+    implementation project(":common-utils:signature")
+    implementation project(":common-utils:jwt")
+    implementation project(":integrations:rest-assured")
+    implementation project(":testng-extensions")
+
+    implementation "org.java-websocket:Java-WebSocket:${java_websocket}"
+    implementation "io.github.centrifugal:centrifuge-java:${centrifuge_java}"
+    implementation "io.rest-assured:rest-assured:${rest_assured}"
+
+    compileOnly "org.projectlombok:lombok:${lombok}"
+    annotationProcessor "org.projectlombok:lombok:${lombok}"
+    testCompileOnly "org.projectlombok:lombok:${lombok}"
+    testAnnotationProcessor "org.projectlombok:lombok:${lombok}"
+
+    api "org.apache.commons:commons-lang3"
+}

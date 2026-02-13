@@ -57,6 +57,9 @@ for profile in "${TOKENS[@]}"; do
     rabbitmq)
       ./tools/environment/scripts/infra/hooks/rabbitmq.sh
       ;;
+    websockets|realtime)
+      ./tools/environment/scripts/infra/hooks/websockets.sh
+      ;;
     *)
       warning "[infra] unknown profile hook skipped: ${profile}"
       ;;

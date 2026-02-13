@@ -1,0 +1,25 @@
+{
+  "allowed_origins": [
+    "*"
+  ],
+  "allow_anonymous_connect_without_token": false,
+  "client_insecure": false,
+  "client_insecure_skip_token_signature_verify": false,
+  "channel_max_length": 255,
+  "token_rsa_public_key": "-----BEGIN PUBLIC KEY-----\nMIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAuNbudAHpg1Lx1A0+DDWM\nYPcJa7xm+Ia2yhLeRmHgbCw5dAiZccOoIlUq/WFi7VCkP55jd4DU+N41ZmcFuK4v\nga6R1yhNi+ONvP9FMPfH5VWqMKxt2PVLHH+DZn+/RcynOL+4NknZ01y5l1Hjnvqz\nrrTgn3YK9G3MTJAg/grji1ncg+9FtIT/DPHcLEUiyheAN1b5xDUKS5ng9pUrDcz9\nXjk2KfmEx9lcZjdUwjM2vg//GjWES7vTpLFz1BehlKI4muIINfzqUfRrpk6fjz5X\nlOGob9FNF1ymBwFbzChLYK95linSYOiUZ9R+N0X3dEqNPbNlThCvqvNucYRVUQfq\nq/wOHchLQKWedMxTjBH56dg1nzflKnorNK3tzM8pIkjSSfso1YQ94JY4fPkNV/LC\nByhMhqnMnKNK+QKVyX9r9Qs3fHc/E/E0PpDeuIn4+3nL9NrG1042HSWNYIph2yop\nrJurs3ws+AyifHHVKCYJwI4oO31cnayHZCFhEVsump5UO8p2IwNZFzHbvU28Ta09\nUZAckf1l07YNYl6YnRrSZ4OZ28LfRVs1CjBdzHVfCv6rZ+PcQFiXMSlNau7u/22z\n6J1ubjr6wTbiPjkHlo+iwmB0HZjn6H/TI7CG1gv9HdK0Y+ChBiFPFbNy5fyHK1ls\n6Zwe/QT7umU5w8evwJ1bUj0CAwEAAQ==\n-----END PUBLIC KEY-----\n",
+  "api_key": "api_key",
+  "admin_password": "admin_password",
+  "admin_secret": "admin_secret",
+  "admin": true,
+  "admin_insecure": true,
+  "debug": true,
+  "log_level": "debug",
+  "port": 8000,
+  "namespaces": [
+    {
+      "name": "ws",
+      "allow_subscribe_for_client": true,
+      "allow_user_limited_channels": true
+    }
+  ]
+}

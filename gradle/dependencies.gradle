@@ -50,6 +50,8 @@ ext {
     mongodb_driver = "5.6.3"
     reportportal = "5.4.3"
     java_websocket = "1.6.0"
+    centrifuge_java = "0.5.0"
+    lombok = "1.18.38"
     kafka = "4.0.0"
     rabbitmq = "5.28.0"
     h2 = "2.4.240"
