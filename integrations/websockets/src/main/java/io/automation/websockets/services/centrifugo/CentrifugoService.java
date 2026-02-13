@@ -1,9 +1,9 @@
 package io.automation.websockets.services.centrifugo;
 
+import java.net.Proxy;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import java.net.Proxy;
 
 import io.automation.util.Waiter;
 import io.automation.websockets.entities.WebSocketMessage;
