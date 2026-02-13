@@ -112,6 +112,37 @@ select_runtime_host_for_port() {
   return 0
 }
 
+normalize_runtime_host() {
+  local host="$1"
+
+  if [[ -z "$host" ]]; then
+    echo "$host"
+    return 0
+  fi
+
+  if [[ "$host" == "localhost" || "$host" == "127.0.0.1" ]]; then
+    echo "$host"
+    return 0
+  fi
+
+  if [[ "$host" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+    echo "$host"
+    return 0
+  fi
+
+  if command -v getent >/dev/null 2>&1; then
+    local ipv4
+    ipv4="$(getent ahostsv4 "$host" | awk 'NR==1 { print $1 }')"
+    if [[ -n "$ipv4" ]]; then
+      echo "$ipv4"
+      return 0
+    fi
+  fi
+
+  echo "$host"
+  return 0
+}
+
 find_free_port() {
   local port
   for _ in {1..100}; do

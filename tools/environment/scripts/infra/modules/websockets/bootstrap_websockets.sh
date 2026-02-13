@@ -18,7 +18,7 @@ if [[ -z "${centrifugo_port}" ]]; then
   exit 1
 fi
 
-centrifugo_host="$(select_runtime_host_for_port "$(resolve_runtime_host)" "${centrifugo_port}")"
+centrifugo_host="$(normalize_runtime_host "$(select_runtime_host_for_port "$(resolve_runtime_host)" "${centrifugo_port}")")"
 
 if ! wait_until 30 1 is_tcp_reachable "${centrifugo_host}" "${centrifugo_port}"; then
   error "[websockets] centrifugo endpoint is not reachable on ${centrifugo_host}:${centrifugo_port}"
