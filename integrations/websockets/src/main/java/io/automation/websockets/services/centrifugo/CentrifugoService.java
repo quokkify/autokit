@@ -32,6 +32,7 @@ public class CentrifugoService {
     opts.setToken(token);
     client = new Client("%s%s".formatted(host, endpoint), opts, eventListener);
     client.connect();
+    waitUntilConnected(host, endpoint);
     return this;
   }
 
@@ -92,13 +93,31 @@ public class CentrifugoService {
   }
 
   public void waitUntilSubscribed(String channelName) {
-    Waiter.awaitAssertion(() -> Assertions.assertThat(subscriptionEventListener.isSubscribed(channelName))
-        .as("Channel '%s' is not subscribed", channelName)
-        .isTrue());
+    Waiter.awaitAssertion(() -> {
+      String subscriptionError = subscriptionEventListener.getSubscriptionError(channelName);
+      Assertions.assertThat(subscriptionError)
+          .as("Subscription error for channel '%s'", channelName)
+          .isNull();
+      Assertions.assertThat(subscriptionEventListener.isSubscribed(channelName))
+          .as("Channel '%s' is not subscribed", channelName)
+          .isTrue();
+    });
   }
 
   public void subscribeWithWait(Subscription subscription) {
     subscription.subscribe();
     waitUntilSubscribed(subscription.getChannel());
+  }
+
+  private void waitUntilConnected(String host, String endpoint) {
+    Waiter.awaitAssertion(() -> {
+      String connectionError = eventListener.getConnectionError();
+      Assertions.assertThat(connectionError)
+          .as("Unable to connect to Centrifugo at '%s%s'", host, endpoint)
+          .isNull();
+      Assertions.assertThat(eventListener.isConnected())
+          .as("Centrifugo client is not connected at '%s%s'", host, endpoint)
+          .isTrue();
+    });
   }
 }

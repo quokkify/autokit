@@ -1,6 +1,8 @@
 package io.automation.websockets.services.centrifugo;
 
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 import io.github.centrifugal.centrifuge.Client;
 import io.github.centrifugal.centrifuge.ConnectedEvent;
@@ -15,12 +17,24 @@ import org.apache.logging.log4j.Logger;
 public class CentrifugoEventListener extends EventListener {
 
   private static final Logger LOG = LogManager.getLogger(CentrifugoEventListener.class);
+  private final AtomicBoolean connected = new AtomicBoolean(false);
+  private final AtomicReference<String> connectionError = new AtomicReference<>();
+
+  public boolean isConnected() {
+    return connected.get();
+  }
+
+  public String getConnectionError() {
+    return connectionError.get();
+  }
 
   /**
    * Called when Centrifugo has successfully connected with a client.
    */
   @Override
   public void onConnected(Client client, ConnectedEvent event) {
+    connected.set(true);
+    connectionError.set(null);
     LOG.info("Centrifugo connected with client id {}", event.getClient());
   }
 
@@ -37,6 +51,7 @@ public class CentrifugoEventListener extends EventListener {
    */
   @Override
   public void onDisconnected(Client client, DisconnectedEvent event) {
+    connected.set(false);
     LOG.info("Centrifugo disconnected code: '{}' reason: '{}'", event.getCode(), event.getReason());
   }
 
@@ -45,6 +60,8 @@ public class CentrifugoEventListener extends EventListener {
    */
   @Override
   public void onError(Client client, ErrorEvent event) {
+    connected.set(false);
+    connectionError.set(event.getError().toString());
     LOG.error("Centrifugo connection error: {}", event.getError().toString());
   }
 

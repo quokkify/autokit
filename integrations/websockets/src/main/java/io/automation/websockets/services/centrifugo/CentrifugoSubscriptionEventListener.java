@@ -1,10 +1,10 @@
 package io.automation.websockets.services.centrifugo;
 
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import io.automation.generator.LocalDateTimeGenerator;
 import io.automation.websockets.entities.WebSocketMessage;
@@ -24,8 +24,9 @@ public class CentrifugoSubscriptionEventListener extends SubscriptionEventListen
 
   private static final Logger LOG = LogManager.getLogger(CentrifugoSubscriptionEventListener.class);
 
-  private final List<WebSocketMessage> webSocketMessages = new ArrayList<>();
-  private final Map<String, Boolean> subscribedChannels = new HashMap<>();
+  private final List<WebSocketMessage> webSocketMessages = new CopyOnWriteArrayList<>();
+  private final Map<String, Boolean> subscribedChannels = new ConcurrentHashMap<>();
+  private final Map<String, String> subscriptionErrors = new ConcurrentHashMap<>();
 
   public List<WebSocketMessage> getWebSocketMessages() {
     return webSocketMessages;
@@ -35,9 +36,14 @@ public class CentrifugoSubscriptionEventListener extends SubscriptionEventListen
     return subscribedChannels;
   }
 
+  public Map<String, String> getSubscriptionErrors() {
+    return subscriptionErrors;
+  }
+
   @Override
   public void onSubscribed(Subscription sub, SubscribedEvent event) {
     subscribedChannels.put(sub.getChannel(), true);
+    subscriptionErrors.remove(sub.getChannel());
     LOG.info("Centrifugo subscribed channel '{}', recovered '{}'", sub.getChannel(), event.getRecovered());
   }
 
@@ -54,6 +60,7 @@ public class CentrifugoSubscriptionEventListener extends SubscriptionEventListen
 
   @Override
   public void onError(Subscription sub, SubscriptionErrorEvent event) {
+    subscriptionErrors.put(sub.getChannel(), event.getError().toString());
     LOG.error("Centrifugo error subscription channel '{}' with error {}", sub.getChannel(),
         event.getError().toString());
   }
@@ -77,5 +84,9 @@ public class CentrifugoSubscriptionEventListener extends SubscriptionEventListen
 
   public boolean isSubscribed(String channelName) {
     return subscribedChannels.containsKey(channelName) && subscribedChannels.get(channelName);
+  }
+
+  public String getSubscriptionError(String channelName) {
+    return subscriptionErrors.get(channelName);
   }
 }
