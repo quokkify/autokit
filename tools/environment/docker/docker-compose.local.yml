@@ -34,10 +34,6 @@ services:
     ports:
       - "1080:1080"
 
-  centrifugo-legacy:
-    ports:
-      - "${WEBSOCKETS_PUBLISHED_PORT:-8001}:8001"
-
   centrifugo:
     ports:
       - "${CENTRIFUGO_PUBLISHED_PORT:-8005}:8000"

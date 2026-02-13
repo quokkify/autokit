@@ -29,9 +29,6 @@ services:
   selenium-hub:
     ports:
       - "${SELENIUM_HUB_PUBLISHED_PORT:-0}:4444"
-  centrifugo-legacy:
-    ports:
-      - "${WEBSOCKETS_PUBLISHED_PORT:-0}:8001"
   centrifugo:
     ports:
       - "${CENTRIFUGO_PUBLISHED_PORT:-0}:8000"

@@ -11,30 +11,6 @@ import org.aeonbits.owner.Config;
 })
 public interface WebSocketsConfiguration extends Config {
 
-  @Key("WEBSOCKETS_HOST")
-  @DefaultValue("localhost")
-  String webSocketsHost();
-
-  @Key("WEBSOCKETS_PORT")
-  @DefaultValue("8001")
-  int webSocketsPort();
-
-  @Key("WEBSOCKETS_SERVER_SECRET")
-  @DefaultValue("6eca2493-8f27-4940-aa9e-df7a87b053c9")
-  String webSocketsServerSecret();
-
-  @Key("WEBSOCKETS_CHANNEL_NAME")
-  @DefaultValue("test_channel")
-  String webSocketsChannelName();
-
-  @Key("WEBSOCKETS_USER_ID")
-  @DefaultValue("1234")
-  long webSocketsUserId();
-
-  @Key("WEBSOCKETS_MESSAGE")
-  @DefaultValue("success")
-  String webSocketsMessage();
-
   @Key("CENTRIFUGO_HOST")
   @DefaultValue("localhost")
   String centrifugoHost();

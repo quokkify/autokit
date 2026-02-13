@@ -101,15 +101,8 @@ services:
     volumes:
       - ./assets/mock/expectation.json:/config/expectation.json
 
-  centrifugo-legacy:
-    profiles: [websockets, realtime]
-    image: centrifugo/centrifugo:1.8.0
-    command: centrifugo --config=/centrifugo/centrifugo_config.json --web=true --debug=true
-    volumes:
-      - ../assets/centrifugo/centrifugo_config.json:/centrifugo/centrifugo_config.json:ro
-
   centrifugo:
-    profiles: [websockets, realtime]
+    profiles: [websockets]
     image: centrifugo/centrifugo:v5.4.9
     command: centrifugo -c centrifugo_new_config.json
     volumes:

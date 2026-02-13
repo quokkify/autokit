@@ -12,11 +12,8 @@ import io.github.centrifugal.centrifuge.Options;
 import io.github.centrifugal.centrifuge.StreamPosition;
 import io.github.centrifugal.centrifuge.Subscription;
 import io.github.centrifugal.centrifuge.SubscriptionOptions;
-import lombok.SneakyThrows;
-import lombok.extern.log4j.Log4j2;
 import org.assertj.core.api.Assertions;
 
-@Log4j2
 public class CentrifugoService {
 
   private static final String DEFAULT_CENTRUFUGO_ENDPOINT = "/connection/websocket";
@@ -26,25 +23,10 @@ public class CentrifugoService {
       new CentrifugoSubscriptionEventListener();
   private Client client;
 
-  /**
-   * Establishes a connection to Centrifugo using the provided host and token with default endpoint.
-   *
-   * @param host  the host URL of the Centrifugo server
-   * @param token the authentication token for the connection
-   * @return the CentrifugoService object after establishing the connection
-   */
   public CentrifugoService connectToCentrifugo(String host, String token) {
     return connectToCentrifugo(host, DEFAULT_CENTRUFUGO_ENDPOINT, token);
   }
 
-  /**
-   * Establishes a connection to Centrifugo using the provided host, endpoint, and token.
-   *
-   * @param host     the host URL of the Centrifugo server
-   * @param endpoint the endpoint URL to connect to on the Centrifugo server
-   * @param token    the authentication token for the connection
-   * @return the CentrifugoService object after establishing the connection
-   */
   public CentrifugoService connectToCentrifugo(String host, String endpoint, String token) {
     Options opts = new Options();
     opts.setToken(token);
@@ -53,20 +35,16 @@ public class CentrifugoService {
     return this;
   }
 
-  /**
-   * Disconnects from the Centrifugo server.
-   */
-  @SneakyThrows(InterruptedException.class)
   public void disconnectFromCentrifugo() {
-    client.disconnect();
-    client.close(CLOSE_CONNECTION_TIMEOUT_MILLIS);
+    try {
+      client.disconnect();
+      client.close(CLOSE_CONNECTION_TIMEOUT_MILLIS);
+    } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+      throw new RuntimeException("Unable to disconnect from centrifugo", e);
+    }
   }
 
-  /**
-   * Subscribe to a specified channel in Centrifugo for receiving real-time messages.
-   *
-   * @param channelName the name of the channel to subscribe
-   */
   public void subscribe(String channelName) {
     Subscription subscription;
     try {
@@ -77,11 +55,6 @@ public class CentrifugoService {
     subscribeWithWait(subscription);
   }
 
-  /**
-   * Unsubscribe from a specified channel in Centrifugo and remove it from the client registry.
-   *
-   * @param channelName the name of the channel to unsubscribe from
-   */
   public void unsubscribe(String channelName) {
     Subscription subscription = client.getSubscription(channelName);
     if (Objects.isNull(subscription)) {
@@ -91,13 +64,6 @@ public class CentrifugoService {
     client.removeSubscription(subscription);
   }
 
-  /**
-   * Subscribe to a specified historical channel in Centrifugo for receiving real-time messages.
-   *
-   * @param channelName the name of the channel to subscribe to
-   * @param offset      require message start position in history channel
-   * @param epoch       the identifier of current history
-   */
   public void subscribeHistorical(String channelName, long offset, String epoch) {
     Subscription subscription;
     try {
@@ -111,41 +77,20 @@ public class CentrifugoService {
     subscribeWithWait(subscription);
   }
 
-  /**
-   * Get messages as String collection.
-   *
-   * @return copy of the list of messages created at the moment of calling this method
-   */
   public List<String> getCopiedMessages() {
     return subscriptionEventListener.getWebSocketMessages().stream()
         .map(WebSocketMessage::getMessage)
         .collect(Collectors.toList());
   }
 
-  /**
-   * Clear all previously received messages.
-   */
   public void clearMessages() {
     subscriptionEventListener.getWebSocketMessages().clear();
   }
 
-  /**
-   * Get messages as WebSocketMessage with Timestamp field.
-   * It is recommended to use this method because the collection is modified asynchronously and
-   * {@link java.util.ConcurrentModificationException} exception may be thrown if the collection
-   * is modified (element is added or deleted) during the collection foreach process.
-   *
-   * @return copy of the list of WebSocket messages with Timestamp created at the moment of calling this method
-   */
   public List<WebSocketMessage> getCopiedWebSocketMessages() {
     return List.copyOf(subscriptionEventListener.getWebSocketMessages());
   }
 
-  /**
-   * Waits until the provided channel is subscribed.
-   *
-   * @param channelName the name of the channel to wait for subscription
-   */
   public void waitUntilSubscribed(String channelName) {
     Waiter.awaitAssertion(() -> Assertions.assertThat(subscriptionEventListener.isSubscribed(channelName))
         .as("Channel '%s' is not subscribed", channelName)

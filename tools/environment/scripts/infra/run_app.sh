@@ -57,7 +57,7 @@ for profile in "${TOKENS[@]}"; do
     rabbitmq)
       ./tools/environment/scripts/infra/hooks/rabbitmq.sh
       ;;
-    websockets|realtime)
+    websockets)
       ./tools/environment/scripts/infra/hooks/websockets.sh
       ;;
     *)

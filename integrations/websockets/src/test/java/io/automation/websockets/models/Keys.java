@@ -1,19 +1,16 @@
 package io.automation.websockets.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
+public record Keys(String algorithm, String publicKey, String privateKey) {
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-@Accessors(chain = true)
-public class Keys {
+  public String getAlgorithm() {
+    return algorithm;
+  }
 
-  private String algorithm;
-  private String publicKey;
-  private String privateKey;
+  public String getPublicKey() {
+    return publicKey;
+  }
+
+  public String getPrivateKey() {
+    return privateKey;
+  }
 }

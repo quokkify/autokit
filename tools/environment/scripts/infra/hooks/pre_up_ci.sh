@@ -48,8 +48,7 @@ for profile in "$@"; do
       ensure_dynamic_port RABBITMQ_PUBLISHED_PORT "rabbitmq hook: rabbitmq amqp"
       ensure_dynamic_port RABBITMQ_MANAGEMENT_PUBLISHED_PORT "rabbitmq hook: rabbitmq management"
       ;;
-    websockets|realtime)
-      ensure_dynamic_port WEBSOCKETS_PUBLISHED_PORT "websockets hook: legacy websocket"
+    websockets)
       ensure_dynamic_port CENTRIFUGO_PUBLISHED_PORT "websockets hook: centrifugo"
       ;;
     *)

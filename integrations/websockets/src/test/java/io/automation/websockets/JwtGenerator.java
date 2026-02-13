@@ -20,28 +20,31 @@ import io.automation.model.Header;
 import io.automation.model.JwtKeyPair;
 import io.automation.util.JsonConverter;
 import io.automation.websockets.models.Keys;
-import lombok.SneakyThrows;
-import lombok.experimental.UtilityClass;
 import org.apache.commons.lang3.StringUtils;
 
-@UtilityClass
-public class JwtGenerator {
+public final class JwtGenerator {
 
-  @SneakyThrows({URISyntaxException.class, IOException.class})
+  private JwtGenerator() {
+  }
+
   public static String getJwtToken(String keyPath, String channelName, long userId) {
-    List<Keys> keys = JsonConverter.fromString(Files.readString(
-        Paths.get(Objects.requireNonNull(CentrifugoTest.class.getClassLoader().getResource(keyPath))
-            .toURI())), new TypeReference<>() { });
-    Keys keyConfig = keys.getFirst();
-    JwtKeyPair jwtKeyPair =
-        JwtKeyPairGenerator.generateRs512(formatKey(keyConfig.getPrivateKey()), formatKey(keyConfig.getPublicKey()));
-    Header header = JwtHeaderGenerator.generateRs512(StringUtils.EMPTY);
-    LocalDateTime localDateTime = LocalDateTimeGenerator.generateNow();
-    Map<String, Object> payload = new LinkedHashMap<>();
-    payload.put("sub", "%s_%s".formatted(channelName, userId));
-    payload.put("iat", localDateTime.toEpochSecond(ZoneOffset.UTC));
-    payload.put("exp", localDateTime.plusDays(1).toEpochSecond(ZoneOffset.UTC));
-    return JwtTokenGenerator.generateAsString(jwtKeyPair, header, JsonConverter.toJson(payload));
+    try {
+      List<Keys> keys = JsonConverter.fromString(Files.readString(
+          Paths.get(Objects.requireNonNull(CentrifugoTest.class.getClassLoader().getResource(keyPath))
+              .toURI())), new TypeReference<>() { });
+      Keys keyConfig = keys.getFirst();
+      JwtKeyPair jwtKeyPair =
+          JwtKeyPairGenerator.generateRs512(formatKey(keyConfig.getPrivateKey()), formatKey(keyConfig.getPublicKey()));
+      Header header = JwtHeaderGenerator.generateRs512(StringUtils.EMPTY);
+      LocalDateTime localDateTime = LocalDateTimeGenerator.generateNow();
+      Map<String, Object> payload = new LinkedHashMap<>();
+      payload.put("sub", "%s_%s".formatted(channelName, userId));
+      payload.put("iat", localDateTime.toEpochSecond(ZoneOffset.UTC));
+      payload.put("exp", localDateTime.plusDays(1).toEpochSecond(ZoneOffset.UTC));
+      return JwtTokenGenerator.generateAsString(jwtKeyPair, header, JsonConverter.toJson(payload));
+    } catch (URISyntaxException | IOException e) {
+      throw new RuntimeException("Unable to build JWT token", e);
+    }
   }
 
   private static String formatKey(String publicKey) {
