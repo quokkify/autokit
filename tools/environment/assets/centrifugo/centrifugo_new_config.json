@@ -1,7 +1,5 @@
 {
-  "allowed_origins": [
-    "*"
-  ],
+  "allowed_origins": ["*"],
   "allow_anonymous_connect_without_token": false,
   "client_insecure": false,
   "client_insecure_skip_token_signature_verify": false,
