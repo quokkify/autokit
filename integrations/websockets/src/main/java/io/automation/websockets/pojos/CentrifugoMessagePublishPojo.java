@@ -9,18 +9,7 @@ import io.automation.model.Pojo;
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CentrifugoMessagePublishPojo implements Pojo {
-
-  private String channel;
-  private Pojo data;
-
-  public CentrifugoMessagePublishPojo() {
-  }
-
-  public CentrifugoMessagePublishPojo(String channel, Pojo data) {
-    this.channel = channel;
-    this.data = data;
-  }
+public record CentrifugoMessagePublishPojo(String channel, Pojo data) implements Pojo {
 
   public static Builder builder() {
     return new Builder();
@@ -30,16 +19,8 @@ public class CentrifugoMessagePublishPojo implements Pojo {
     return channel;
   }
 
-  public void setChannel(String channel) {
-    this.channel = channel;
-  }
-
   public Pojo getData() {
     return data;
-  }
-
-  public void setData(Pojo data) {
-    this.data = data;
   }
 
   public static final class Builder {

@@ -61,8 +61,7 @@ public class CentrifugoSubscriptionEventListener extends SubscriptionEventListen
   @Override
   public void onPublication(Subscription sub, PublicationEvent event) {
     String data = new String(event.getData(), StandardCharsets.UTF_8);
-    webSocketMessages.add(new WebSocketMessage().setTimestamp(LocalDateTimeGenerator.generateNow())
-        .setMessage(data));
+    webSocketMessages.add(new WebSocketMessage(LocalDateTimeGenerator.generateNow(), data));
     LOG.info("Centrifugo message from channel '{}', data: {}", sub.getChannel(), data);
   }
 
