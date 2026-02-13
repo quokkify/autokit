@@ -211,6 +211,52 @@ jobs:
         run: ./tools/environment/scripts/infra/run_app.sh "${{ matrix.profile }}"
         shell: bash
 
+      - name: 🔎 Debug Infra Connectivity
+        if: ${{ matrix.profile == 'websockets' || matrix.profile == 'rabbitmq' }}
+        run: |
+          set -x
+          source ./tools/environment/scripts/infra/load_bootstrap_env.sh
+
+          compose_cmd() {
+            docker compose \
+              -f tools/environment/docker/docker-compose.yml \
+              -f tools/environment/docker/docker-compose.ci.yml \
+              "$@"
+          }
+
+          echo "CI=${CI:-} EXECUTION_MODE=${EXECUTION_MODE:-} COMPOSE_PROJECT_NAME=${COMPOSE_PROJECT_NAME:-}"
+
+          if [[ "${{ matrix.profile }}" == "websockets" ]]; then
+            echo "CENTRIFUGO_HOST=${CENTRIFUGO_HOST:-} CENTRIFUGO_PORT=${CENTRIFUGO_PORT:-}"
+            cat tools/environment/.websockets.env || true
+
+            compose_cmd --profile websockets ps || true
+            compose_cmd --profile websockets port centrifugo 8000 || true
+            compose_cmd --profile websockets logs --tail=200 centrifugo || true
+
+            for host in "${CENTRIFUGO_HOST:-}" localhost 127.0.0.1 dind; do
+              [[ -z "$host" ]] && continue
+              echo "probe ${host}:${CENTRIFUGO_PORT:-}"
+              (echo >/dev/tcp/"$host"/"${CENTRIFUGO_PORT:-0}") >/dev/null 2>&1 && echo "TCP OK" || echo "TCP FAIL"
+            done
+          fi
+
+          if [[ "${{ matrix.profile }}" == "rabbitmq" ]]; then
+            echo "RABBIT_HOST=${RABBIT_HOST:-} RABBIT_PORT=${RABBIT_PORT:-}"
+            cat tools/environment/.rabbitmq.env || true
+
+            compose_cmd --profile rabbitmq ps || true
+            compose_cmd --profile rabbitmq port rabbitmq 5672 || true
+            compose_cmd --profile rabbitmq logs --tail=200 rabbitmq || true
+
+            for host in "${RABBIT_HOST:-}" localhost 127.0.0.1 dind; do
+              [[ -z "$host" ]] && continue
+              echo "probe ${host}:${RABBIT_PORT:-}"
+              (echo >/dev/tcp/"$host"/"${RABBIT_PORT:-0}") >/dev/null 2>&1 && echo "TCP OK" || echo "TCP FAIL"
+            done
+          fi
+        shell: bash
+
       - name: 🚀 Run tests
         run: |
           source ./tools/environment/scripts/infra/load_bootstrap_env.sh
@@ -281,6 +327,52 @@ jobs:
       - name: 🟢 Start Infra
         if: ${{ matrix.profile != 'none' }}
         run: ./tools/environment/scripts/infra/run_app.sh "${{ matrix.profile }}"
+        shell: bash
+
+      - name: 🔎 Debug Infra Connectivity
+        if: ${{ matrix.profile == 'websockets' || matrix.profile == 'rabbitmq' }}
+        run: |
+          set -x
+          source ./tools/environment/scripts/infra/load_bootstrap_env.sh
+
+          compose_cmd() {
+            docker compose \
+              -f tools/environment/docker/docker-compose.yml \
+              -f tools/environment/docker/docker-compose.ci.yml \
+              "$@"
+          }
+
+          echo "CI=${CI:-} EXECUTION_MODE=${EXECUTION_MODE:-} COMPOSE_PROJECT_NAME=${COMPOSE_PROJECT_NAME:-}"
+
+          if [[ "${{ matrix.profile }}" == "websockets" ]]; then
+            echo "CENTRIFUGO_HOST=${CENTRIFUGO_HOST:-} CENTRIFUGO_PORT=${CENTRIFUGO_PORT:-}"
+            cat tools/environment/.websockets.env || true
+
+            compose_cmd --profile websockets ps || true
+            compose_cmd --profile websockets port centrifugo 8000 || true
+            compose_cmd --profile websockets logs --tail=200 centrifugo || true
+
+            for host in "${CENTRIFUGO_HOST:-}" localhost 127.0.0.1 dind; do
+              [[ -z "$host" ]] && continue
+              echo "probe ${host}:${CENTRIFUGO_PORT:-}"
+              (echo >/dev/tcp/"$host"/"${CENTRIFUGO_PORT:-0}") >/dev/null 2>&1 && echo "TCP OK" || echo "TCP FAIL"
+            done
+          fi
+
+          if [[ "${{ matrix.profile }}" == "rabbitmq" ]]; then
+            echo "RABBIT_HOST=${RABBIT_HOST:-} RABBIT_PORT=${RABBIT_PORT:-}"
+            cat tools/environment/.rabbitmq.env || true
+
+            compose_cmd --profile rabbitmq ps || true
+            compose_cmd --profile rabbitmq port rabbitmq 5672 || true
+            compose_cmd --profile rabbitmq logs --tail=200 rabbitmq || true
+
+            for host in "${RABBIT_HOST:-}" localhost 127.0.0.1 dind; do
+              [[ -z "$host" ]] && continue
+              echo "probe ${host}:${RABBIT_PORT:-}"
+              (echo >/dev/tcp/"$host"/"${RABBIT_PORT:-0}") >/dev/null 2>&1 && echo "TCP OK" || echo "TCP FAIL"
+            done
+          fi
         shell: bash
 
       - name: 🚀 Run tests
