@@ -60,9 +60,9 @@ public class CentrifugoSubscriptionEventListener extends SubscriptionEventListen
 
   @Override
   public void onError(Subscription sub, SubscriptionErrorEvent event) {
-    subscriptionErrors.put(sub.getChannel(), event.getError().toString());
-    LOG.error("Centrifugo error subscription channel '{}' with error {}", sub.getChannel(),
-        event.getError().toString());
+    String error = formatError(event.getError());
+    subscriptionErrors.put(sub.getChannel(), error);
+    LOG.error("Centrifugo error subscription channel '{}' with error {}", sub.getChannel(), error, event.getError());
   }
 
   @Override
@@ -88,5 +88,23 @@ public class CentrifugoSubscriptionEventListener extends SubscriptionEventListen
 
   public String getSubscriptionError(String channelName) {
     return subscriptionErrors.get(channelName);
+  }
+
+  private static String formatError(Throwable throwable) {
+    StringBuilder details = new StringBuilder();
+    Throwable cursor = throwable;
+    int depth = 0;
+    while (cursor != null && depth < 5) {
+      if (depth > 0) {
+        details.append(" <- ");
+      }
+      details.append(cursor.getClass().getSimpleName());
+      if (cursor.getMessage() != null && !cursor.getMessage().isBlank()) {
+        details.append(": ").append(cursor.getMessage());
+      }
+      cursor = cursor.getCause();
+      depth++;
+    }
+    return details.toString();
   }
 }

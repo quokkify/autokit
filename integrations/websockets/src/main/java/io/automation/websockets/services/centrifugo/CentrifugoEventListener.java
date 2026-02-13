@@ -61,8 +61,9 @@ public class CentrifugoEventListener extends EventListener {
   @Override
   public void onError(Client client, ErrorEvent event) {
     connected.set(false);
-    connectionError.set(event.getError().toString());
-    LOG.error("Centrifugo connection error: {}", event.getError().toString());
+    String error = formatError(event.getError());
+    connectionError.set(error);
+    LOG.error("Centrifugo connection error: {}", error, event.getError());
   }
 
   /**
@@ -72,5 +73,23 @@ public class CentrifugoEventListener extends EventListener {
   public void onMessage(Client client, MessageEvent event) {
     String data = new String(event.getData(), StandardCharsets.UTF_8);
     LOG.debug("Centrifugo message received: {}", data);
+  }
+
+  private static String formatError(Throwable throwable) {
+    StringBuilder details = new StringBuilder();
+    Throwable cursor = throwable;
+    int depth = 0;
+    while (cursor != null && depth < 5) {
+      if (depth > 0) {
+        details.append(" <- ");
+      }
+      details.append(cursor.getClass().getSimpleName());
+      if (cursor.getMessage() != null && !cursor.getMessage().isBlank()) {
+        details.append(": ").append(cursor.getMessage());
+      }
+      cursor = cursor.getCause();
+      depth++;
+    }
+    return details.toString();
   }
 }
