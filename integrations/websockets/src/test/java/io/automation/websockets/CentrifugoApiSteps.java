@@ -16,12 +16,8 @@ public class CentrifugoApiSteps {
   }
 
   public void sendMessage(String channelName, String message) {
-    CentrifugoMessagePublishPojo centrifugoMessagePublishPojo = CentrifugoMessagePublishPojo.builder()
-        .channel(channelName)
-        .data(TestMessage.builder()
-            .test(message)
-            .build())
-        .build();
+    CentrifugoMessagePublishPojo centrifugoMessagePublishPojo =
+        new CentrifugoMessagePublishPojo(channelName, new TestMessage(message));
     given()
         .header("Content-Type", "application/json")
         .header("X-API-Key", apiKey)

@@ -11,37 +11,11 @@ import io.automation.model.Pojo;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record CentrifugoMessagePublishPojo(String channel, Pojo data) implements Pojo {
 
-  public static Builder builder() {
-    return new Builder();
-  }
-
   public String getChannel() {
     return channel;
   }
 
   public Pojo getData() {
     return data;
-  }
-
-  public static final class Builder {
-    private String channel;
-    private Pojo data;
-
-    private Builder() {
-    }
-
-    public Builder channel(String channel) {
-      this.channel = channel;
-      return this;
-    }
-
-    public Builder data(Pojo data) {
-      this.data = data;
-      return this;
-    }
-
-    public CentrifugoMessagePublishPojo build() {
-      return new CentrifugoMessagePublishPojo(channel, data);
-    }
   }
 }
