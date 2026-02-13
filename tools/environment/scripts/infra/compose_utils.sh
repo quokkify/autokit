@@ -26,6 +26,11 @@ compose_cmd() {
 }
 
 resolve_runtime_host() {
+  if [[ -n "${INFRA_RUNTIME_HOST:-}" ]]; then
+    echo "${INFRA_RUNTIME_HOST}"
+    return 0
+  fi
+
   if [[ "${CI:-}" == "true" && "${EXECUTION_MODE:-}" == "DIND" ]]; then
     echo "dind"
   else
@@ -84,6 +89,13 @@ select_runtime_host_for_port() {
   local preferred_host="$1"
   local port="$2"
   local fallback_host="${3:-localhost}"
+
+  # Prefer localhost when it is reachable: it is generally more stable for test JVM networking.
+  if [[ "$preferred_host" != "$fallback_host" ]] && wait_until 3 1 is_tcp_reachable "$fallback_host" "$port"; then
+    warning "[infra] selecting ${fallback_host}:${port} over ${preferred_host}:${port}"
+    echo "$fallback_host"
+    return 0
+  fi
 
   if wait_until 3 1 is_tcp_reachable "$preferred_host" "$port"; then
     echo "$preferred_host"
