@@ -92,11 +92,11 @@ io.automation.listener.extension.SingleGroupListener
 
 ### SPI vs `@Listeners`
 
-| | SPI file | `@Listeners` |
-| --- | --- | --- |
-| Scope | all tests in the module | only the annotated class and subclasses |
-| Config location | `src/test/resources` | source code |
-| Use when | activating suite-wide infrastructure listeners | attaching listeners to a specific test hierarchy |
+|                 | SPI file                                       | `@Listeners`                                     |
+| --------------- | ---------------------------------------------- | ------------------------------------------------ |
+| Scope           | all tests in the module                        | only the annotated class and subclasses          |
+| Config location | `src/test/resources`                           | source code                                      |
+| Use when        | activating suite-wide infrastructure listeners | attaching listeners to a specific test hierarchy |
 
 ## Usage in tests
 

@@ -58,17 +58,17 @@ Waiter.assertAlwaysTrue(
 
 ## Key API
 
-| Method                                                          | Timeout | Poll    | Notes                         |
-| --------------------------------------------------------------- | ------- | ------- | ----------------------------- |
-| `awaitAssertion(assertion)`                                     | 60s     | 5s      | AssertJ / TestNG assertion    |
-| `awaitQuickAssertion(assertion)`                                | 5s      | 500ms   | fast path, no overrides       |
-| `awaitQuickAssertion(assertion, timeout)`                       | custom  | 500ms   | custom `Timeout` constant     |
-| `awaitCondition(callable, message, timeout, interval)`          | custom  | custom  | boolean `Callable`            |
-| `awaitCondition(supplier, matcher, message, timeout, interval)` | custom  | custom  | Hamcrest `Matcher`            |
-| `awaitConditionWithAction(condition, action, message)`          | default | default | runs `action` each tick       |
-| `threadSleep(millis)`                                           | —       | —       | safe sleep, handles interrupt |
-| `waitForNextSecond()`                                           | —       | —       | waits until clock ticks       |
-| `assertNeverTrue(condition, timeout, interval, message)`        | custom  | custom  | fails if condition ever becomes `true`  |
-| `assertNeverTrue(condition, message)`                           | 60s     | 1s      | short form with defaults                |
+| Method                                                          | Timeout | Poll    | Notes                                    |
+| --------------------------------------------------------------- | ------- | ------- | ---------------------------------------- |
+| `awaitAssertion(assertion)`                                     | 60s     | 5s      | AssertJ / TestNG assertion               |
+| `awaitQuickAssertion(assertion)`                                | 5s      | 500ms   | fast path, no overrides                  |
+| `awaitQuickAssertion(assertion, timeout)`                       | custom  | 500ms   | custom `Timeout` constant                |
+| `awaitCondition(callable, message, timeout, interval)`          | custom  | custom  | boolean `Callable`                       |
+| `awaitCondition(supplier, matcher, message, timeout, interval)` | custom  | custom  | Hamcrest `Matcher`                       |
+| `awaitConditionWithAction(condition, action, message)`          | default | default | runs `action` each tick                  |
+| `threadSleep(millis)`                                           | —       | —       | safe sleep, handles interrupt            |
+| `waitForNextSecond()`                                           | —       | —       | waits until clock ticks                  |
+| `assertNeverTrue(condition, timeout, interval, message)`        | custom  | custom  | fails if condition ever becomes `true`   |
+| `assertNeverTrue(condition, message)`                           | 60s     | 1s      | short form with defaults                 |
 | `assertAlwaysTrue(condition, timeout, interval, message)`       | custom  | custom  | fails if condition ever drops to `false` |
-| `assertAlwaysTrue(condition, message)`                          | 60s     | 1s      | short form with defaults                |
+| `assertAlwaysTrue(condition, message)`                          | 60s     | 1s      | short form with defaults                 |
