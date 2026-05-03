@@ -14,4 +14,5 @@ dependencies {
     implementation "org.glassfish.tyrus.bundles:tyrus-standalone-client:${tyrus}"
 
     testImplementation "org.glassfish.tyrus:tyrus-server:${tyrus}"
+    testImplementation "org.java-websocket:Java-WebSocket:${java_websocket}"
 }

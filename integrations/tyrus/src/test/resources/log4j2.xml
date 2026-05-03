@@ -32,8 +32,9 @@
             <AppenderRef ref="ConsoleAppender"/>
         </Root>
 
-        <Logger name="io.automation" level="debug" additivity="true">
-            <AppenderRef ref="RoutingFileAppender" level="debug"/>
+        <Logger name="io.automation" level="debug" additivity="false">
+            <AppenderRef ref="ConsoleAppender"/>
+            <AppenderRef ref="RoutingFileAppender"/>
         </Logger>
 
         <Logger name="io.qameta.allure.AllureLifecycle" level="off" additivity="false"/>
