@@ -78,14 +78,14 @@ orderWsSteps.connect()
 
 ## Verification methods
 
-| Method | Description |
-|--------|-------------|
-| `containsMessage(String)` | Waits until any message payload contains the substring |
-| `containsMessage(Predicate<WsMessage>)` | Waits until any message matches the predicate |
-| `doesNotContainMessage(String)` | Asserts the substring never appears (within 3 seconds) |
-| `hasJsonField(String, String)` | Waits until any message has the JSON field with the expected value |
-| `hasMessageCount(int)` | Waits until at least N messages have been received |
-| `messagesInOrder(String...)` | Waits until substrings appear across messages in the given order |
+| Method                                  | Description                                                        |
+| --------------------------------------- | ------------------------------------------------------------------ |
+| `containsMessage(String)`               | Waits until any message payload contains the substring             |
+| `containsMessage(Predicate<WsMessage>)` | Waits until any message matches the predicate                      |
+| `doesNotContainMessage(String)`         | Asserts the substring never appears (within 3 seconds)             |
+| `hasJsonField(String, String)`          | Waits until any message has the JSON field with the expected value |
+| `hasMessageCount(int)`                  | Waits until at least N messages have been received                 |
+| `messagesInOrder(String...)`            | Waits until substrings appear across messages in the given order   |
 
 ### Timeout configuration
 
@@ -102,9 +102,9 @@ wsSteps.verify()
 
 ## Configuration
 
-| Property | Environment variable | Default |
-|----------|----------------------|---------|
-| `WS_URL` | `WS_URL` | `ws://localhost:8787/ws` |
+| Property | Environment variable | Default                  |
+| -------- | -------------------- | ------------------------ |
+| `WS_URL` | `WS_URL`             | `ws://localhost:8787/ws` |
 
 Override via system property, environment variable, or:
 
