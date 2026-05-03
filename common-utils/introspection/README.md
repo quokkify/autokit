@@ -33,7 +33,7 @@ assertThat(docIndex.getRegisteredSteps()).containsAll(stepNames);
 
 ## Key API
 
-| Method | Returns | Notes |
-|---|---|---|
-| `ClasspathScanner.getMethodsWithAnnotationFromPackage(pkg, annotation)` | `Set<Method>` | recursive package scan |
-| `ReflectionUtils` | — | general reflection helpers (field access, private method invocation) |
+| Method                                                                  | Returns       | Notes                                                                |
+| ----------------------------------------------------------------------- | ------------- | -------------------------------------------------------------------- |
+| `ClasspathScanner.getMethodsWithAnnotationFromPackage(pkg, annotation)` | `Set<Method>` | recursive package scan                                               |
+| `ReflectionUtils`                                                       | —             | general reflection helpers (field access, private method invocation) |

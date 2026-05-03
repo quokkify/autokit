@@ -51,9 +51,9 @@ public class OrderApiTest extends BaseTest {
 
 ## Key API
 
-| Method | Description |
-|---|---|
-| `ConfigRegistry.get(MyConfig.class)` | Cached read-only config singleton |
-| `ConfigRegistry.getMutable(MyConfig.class)` | Cached mutable config singleton |
+| Method                                         | Description                           |
+| ---------------------------------------------- | ------------------------------------- |
+| `ConfigRegistry.get(MyConfig.class)`           | Cached read-only config singleton     |
+| `ConfigRegistry.getMutable(MyConfig.class)`    | Cached mutable config singleton       |
 | `ConfigRegistry.getReloadable(MyConfig.class)` | Cached mutable + reloadable singleton |
-| `ConfigRegistry.overlay(cfg, Map.of("K","v"))` | Apply runtime overrides and reload |
+| `ConfigRegistry.overlay(cfg, Map.of("K","v"))` | Apply runtime overrides and reload    |

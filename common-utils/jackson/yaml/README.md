@@ -33,10 +33,10 @@ List<User> values       = YamlParser.loadValuesFromMapFromResources("data/users.
 
 ## Key API
 
-| Method | Description |
-|---|---|
-| `loadAsObjectFromResources(path, Class<T>)` | Load YAML document as typed object |
-| `loadListFromResources(path, Class<T>)` | Load YAML sequence as `List<T>` |
-| `loadAsMapFromResources(path, Class<T>)` | Load YAML mapping as `Map<String, T>` (key order preserved) |
-| `loadValuesFromMapFromResources(path, Class<T>)` | Load values of a YAML mapping as `List<T>` |
-| `load(file)` | Load YAML file as raw object |
+| Method                                           | Description                                                 |
+| ------------------------------------------------ | ----------------------------------------------------------- |
+| `loadAsObjectFromResources(path, Class<T>)`      | Load YAML document as typed object                          |
+| `loadListFromResources(path, Class<T>)`          | Load YAML sequence as `List<T>`                             |
+| `loadAsMapFromResources(path, Class<T>)`         | Load YAML mapping as `Map<String, T>` (key order preserved) |
+| `loadValuesFromMapFromResources(path, Class<T>)` | Load values of a YAML mapping as `List<T>`                  |
+| `load(file)`                                     | Load YAML file as raw object                                |

@@ -35,12 +35,12 @@ List<Product> catalog =
 
 ## Key API
 
-| Method | Description |
-|---|---|
-| `fromString(json, Class<T>)` | Deserialize JSON string to type |
-| `fromString(json, TypeReference<T>)` | Deserialize to generic / collection type |
-| `fromObject(obj, Class<T>)` | Convert object via JSON round-trip |
+| Method                                        | Description                               |
+| --------------------------------------------- | ----------------------------------------- |
+| `fromString(json, Class<T>)`                  | Deserialize JSON string to type           |
+| `fromString(json, TypeReference<T>)`          | Deserialize to generic / collection type  |
+| `fromObject(obj, Class<T>)`                   | Convert object via JSON round-trip        |
 | `fromStringParametric(json, Class, Class...)` | Deserialize parameterized generic wrapper |
-| `toJson(object)` | Serialize to JSON, nulls included |
-| `toJsonIgnoreNulls(object)` | Serialize to JSON, null fields omitted |
-| `fromFile(file, Class<T>)` | Deserialize JSON file to type |
+| `toJson(object)`                              | Serialize to JSON, nulls included         |
+| `toJsonIgnoreNulls(object)`                   | Serialize to JSON, null fields omitted    |
+| `fromFile(file, Class<T>)`                    | Deserialize JSON file to type             |

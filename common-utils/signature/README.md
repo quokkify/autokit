@@ -8,12 +8,12 @@ testImplementation project(":common-utils:signature")
 
 ## Environment variables
 
-| Variable           | Description                                          |
-|--------------------|------------------------------------------------------|
-| `PRIVATE_KEY`      | Base64 or PEM PKCS#8 RSA private key (for RSA tests) |
-| `AES_SECRET_KEY`   | AES secret key (read by `AesEncryption.fromConfig()`) |
-| `AES_ALGORITHM_MODE` | AES mode, e.g. `AES/CBC/PKCS5Padding`             |
-| `AES_IV`           | Base64-encoded initialization vector                  |
+| Variable             | Description                                           |
+| -------------------- | ----------------------------------------------------- |
+| `PRIVATE_KEY`        | Base64 or PEM PKCS#8 RSA private key (for RSA tests)  |
+| `AES_SECRET_KEY`     | AES secret key (read by `AesEncryption.fromConfig()`) |
+| `AES_ALGORITHM_MODE` | AES mode, e.g. `AES/CBC/PKCS5Padding`                 |
+| `AES_IV`             | Base64-encoded initialization vector                  |
 
 ## Initialization in BaseTest
 
@@ -71,11 +71,11 @@ public void decryptConfigValue() {
 
 ## Key API
 
-| Method                                                                 | Returns   | Notes                              |
-|------------------------------------------------------------------------|-----------|------------------------------------|
-| `SignatureGenerator.generateRsaSignature(privateKey, data, algorithm)` | `String`  | Base64-encoded; key is Base64/PEM  |
-| `SignatureGenerator.generateHmacSignature(data, key)`                  | `String`  | Lowercase hex                      |
-| `AesEncryption.fromConfig()`                                           | `AesEncryption` | Reads env vars via Owner     |
-| `aesEncryption.decrypt(encryptedValue)`                                | `String`  | Returns plain text                 |
-| `EncryptionUtils.encodeBytes(bytes)`                                   | `String`  | Base64 encode                      |
-| `EncryptionUtils.decodeString(str)`                                    | `byte[]`  | Base64 decode                      |
+| Method                                                                 | Returns         | Notes                             |
+| ---------------------------------------------------------------------- | --------------- | --------------------------------- |
+| `SignatureGenerator.generateRsaSignature(privateKey, data, algorithm)` | `String`        | Base64-encoded; key is Base64/PEM |
+| `SignatureGenerator.generateHmacSignature(data, key)`                  | `String`        | Lowercase hex                     |
+| `AesEncryption.fromConfig()`                                           | `AesEncryption` | Reads env vars via Owner          |
+| `aesEncryption.decrypt(encryptedValue)`                                | `String`        | Returns plain text                |
+| `EncryptionUtils.encodeBytes(bytes)`                                   | `String`        | Base64 encode                     |
+| `EncryptionUtils.decodeString(str)`                                    | `byte[]`        | Base64 decode                     |

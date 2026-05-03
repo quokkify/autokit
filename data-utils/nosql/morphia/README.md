@@ -10,11 +10,11 @@ testImplementation project(":data-utils:nosql:morphia")
 
 ## Environment variables
 
-| Variable           | Default | Description            |
-|--------------------|---------|------------------------|
-| `MONGO_HOST`       | —       | MongoDB host           |
-| `MONGO_PORT`       | —       | MongoDB port           |
-| `MONGO_DATABASE`   | —       | MongoDB database name  |
+| Variable         | Default | Description           |
+| ---------------- | ------- | --------------------- |
+| `MONGO_HOST`     | —       | MongoDB host          |
+| `MONGO_PORT`     | —       | MongoDB port          |
+| `MONGO_DATABASE` | —       | MongoDB database name |
 
 ## Initialization in BaseTest
 
@@ -49,7 +49,8 @@ public abstract class BaseTest {
 ```
 
 > **Alternative** (without Owner): read values directly via `System.getenv("MONGO_HOST")`, `System.getenv("MONGO_PORT")`, `System.getenv("MONGO_DATABASE")`.
-```
+
+````
 
 ## Usage in tests
 
@@ -81,16 +82,16 @@ public class UserTest extends BaseTest {
         Assertions.assertThat(adults).hasSizeGreaterThanOrEqualTo(2);
     }
 }
-```
+````
 
 ## Key API
 
-| Method | Description |
-|--------|-------------|
-| `new NoSqlFactory(mongoClient, dbName)` | Wrap MongoClient with thread-safe datastore |
-| `noSqlFactory.getThreadLocalDatastore()` | Return thread-local Morphia `Datastore` |
-| `mongoSteps.save(entity)` | Insert one entity |
-| `mongoSteps.save(List<T> entities)` | Insert a list of entities |
-| `mongoSteps.update(entity, operators)` | Apply update operators, return `UpdateResult` |
-| `mongoSteps.delete(entity)` | Remove entity, return `DeleteResult` |
-| `mongoSteps.selectDsl(Entity.class)` | Start a Morphia `Query` for the given entity type |
+| Method                                   | Description                                       |
+| ---------------------------------------- | ------------------------------------------------- |
+| `new NoSqlFactory(mongoClient, dbName)`  | Wrap MongoClient with thread-safe datastore       |
+| `noSqlFactory.getThreadLocalDatastore()` | Return thread-local Morphia `Datastore`           |
+| `mongoSteps.save(entity)`                | Insert one entity                                 |
+| `mongoSteps.save(List<T> entities)`      | Insert a list of entities                         |
+| `mongoSteps.update(entity, operators)`   | Apply update operators, return `UpdateResult`     |
+| `mongoSteps.delete(entity)`              | Remove entity, return `DeleteResult`              |
+| `mongoSteps.selectDsl(Entity.class)`     | Start a Morphia `Query` for the given entity type |

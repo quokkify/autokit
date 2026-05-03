@@ -8,15 +8,15 @@ testImplementation project(":common-utils:console")
 
 ## Environment variables
 
-| Variable              | Description                              |
-|-----------------------|------------------------------------------|
-| `SSH_HOST_IP`         | Remote host IP address                   |
-| `SSH_USER`            | SSH username                             |
-| `SSH_PRIVATE_KEY_PATH`| Path to the private key file             |
-| `SSH_PASSPHRASE`      | Private key passphrase (may be empty)    |
-| `SSH_HOST_PORT`       | Remote SSH port (default 22)             |
-| `SSH_LOCAL_PORT`      | Local forwarded port                     |
-| `SSH_REMOTE_PORT`     | Remote service port to forward to        |
+| Variable               | Description                           |
+| ---------------------- | ------------------------------------- |
+| `SSH_HOST_IP`          | Remote host IP address                |
+| `SSH_USER`             | SSH username                          |
+| `SSH_PRIVATE_KEY_PATH` | Path to the private key file          |
+| `SSH_PASSPHRASE`       | Private key passphrase (may be empty) |
+| `SSH_HOST_PORT`        | Remote SSH port (default 22)          |
+| `SSH_LOCAL_PORT`       | Local forwarded port                  |
+| `SSH_REMOTE_PORT`      | Remote service port to forward to     |
 
 ## Initialization in BaseTest
 
@@ -64,7 +64,8 @@ public static void closeTunnel() {
 ```
 
 > **Alternative** (without Owner): pass values directly via `System.getenv("SSH_HOST_IP")`, `Integer.parseInt(System.getenv("SSH_LOCAL_PORT"))`, etc.
-```
+
+````
 
 ## Usage in tests
 
@@ -86,17 +87,17 @@ public void inspectRecentLogLines() throws Exception {
     String tail = SshUtils.getLastRowsFromFile(shell, "/var/log/app.log", 100);
     assertThat(tail).doesNotContain("FATAL");
 }
-```
+````
 
 ## Key API
 
-| Method                                               | Returns   | Notes                                  |
-|------------------------------------------------------|-----------|----------------------------------------|
-| `SshUtils.createSession(config)`                     | `Session` | Opens JSch session                     |
-| `SshUtils.setPortForwarding(session, config)`        | `void`    | Binds local port to remote port        |
-| `SshUtils.deletePortForwarding(session, port)`       | `void`    | Releases local port binding            |
-| `SshUtils.closeSession(session)`                     | `void`    | Disconnects and frees resources        |
-| `SshUtils.executeCommand(shell, command)`            | `String`  | Returns stdout of the command          |
-| `SshUtils.getTextMatchesInFile(shell, path, text)`   | `String`  | grep result for `text` in remote file  |
-| `SshUtils.getLastRowsFromFile(shell, path, n)`       | `String`  | tail -n result from remote file        |
-| `SshUtils.executeRubyCommand(shell, command)`        | `String`  | Runs command via ruby interpreter      |
+| Method                                             | Returns   | Notes                                 |
+| -------------------------------------------------- | --------- | ------------------------------------- |
+| `SshUtils.createSession(config)`                   | `Session` | Opens JSch session                    |
+| `SshUtils.setPortForwarding(session, config)`      | `void`    | Binds local port to remote port       |
+| `SshUtils.deletePortForwarding(session, port)`     | `void`    | Releases local port binding           |
+| `SshUtils.closeSession(session)`                   | `void`    | Disconnects and frees resources       |
+| `SshUtils.executeCommand(shell, command)`          | `String`  | Returns stdout of the command         |
+| `SshUtils.getTextMatchesInFile(shell, path, text)` | `String`  | grep result for `text` in remote file |
+| `SshUtils.getLastRowsFromFile(shell, path, n)`     | `String`  | tail -n result from remote file       |
+| `SshUtils.executeRubyCommand(shell, command)`      | `String`  | Runs command via ruby interpreter     |

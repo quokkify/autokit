@@ -35,8 +35,8 @@ try (InputStream is = getClass().getResourceAsStream("/fixtures/catalog.xml")) {
 
 ## Key API
 
-| Method | Description |
-|---|---|
-| `XmlParser.parse(resourcePath, Class<T>)` | Parse XML classpath resource to type |
-| `XmlParser.parse(inputStream, Class<T>)` | Parse XML from stream (stream not closed) |
-| `XmlConverter.fromString(xmlString, Class<T>)` | Deserialize XML string to type |
+| Method                                         | Description                               |
+| ---------------------------------------------- | ----------------------------------------- |
+| `XmlParser.parse(resourcePath, Class<T>)`      | Parse XML classpath resource to type      |
+| `XmlParser.parse(inputStream, Class<T>)`       | Parse XML from stream (stream not closed) |
+| `XmlConverter.fromString(xmlString, Class<T>)` | Deserialize XML string to type            |

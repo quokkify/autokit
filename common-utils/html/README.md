@@ -28,8 +28,8 @@ String restored = HtmlParser.unescapeHtml(escaped);
 
 ## Key API
 
-| Method | Returns | Notes |
-|---|---|---|
-| `getHtmlNode(outerHtml, xpath)` | `Node` | `null` if XPath yields no match |
-| `escapeHtml(text)` | `String` | encodes `<`, `>`, `&`, `"` |
-| `unescapeHtml(text)` | `String` | decodes HTML entities |
+| Method                          | Returns  | Notes                           |
+| ------------------------------- | -------- | ------------------------------- |
+| `getHtmlNode(outerHtml, xpath)` | `Node`   | `null` if XPath yields no match |
+| `escapeHtml(text)`              | `String` | encodes `<`, `>`, `&`, `"`      |
+| `unescapeHtml(text)`            | `String` | decodes HTML entities           |
