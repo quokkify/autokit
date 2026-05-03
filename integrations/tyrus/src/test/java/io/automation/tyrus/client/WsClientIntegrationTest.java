@@ -1,37 +1,39 @@
 package io.automation.tyrus.client;
 
+import io.automation.annotation.SingleThread;
 import io.automation.constant.PollingInterval;
 import io.automation.constant.Timeout;
-import io.automation.tyrus.server.EchoWebSocketServer;
+import io.automation.tyrus.server.EchoServerEndpoint;
 import io.automation.tyrus.steps.WsSteps;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
+import org.glassfish.tyrus.server.Server;
+import org.testng.annotations.AfterSuite;
+import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
 public class WsClientIntegrationTest {
 
   private static final String URL = "ws://localhost:8787";
 
-  private EchoWebSocketServer server;
-  private WsSteps wsSteps;
+  private static Server server;
+  protected static WsSteps wsSteps;
 
-  @BeforeClass
-  public void startServer() throws InterruptedException {
-    server = new EchoWebSocketServer(8787);
+  @BeforeSuite
+  public void startServer() throws Exception {
+    server = new Server("localhost", 8787, "/", null, EchoServerEndpoint.class);
     server.start();
-    Thread.sleep(300);
     wsSteps = new WsSteps();
     wsSteps.connect(URL);
   }
 
-  @AfterClass
-  public void stopServer() throws InterruptedException {
+  @AfterSuite
+  public void stopServer() {
     wsSteps.disconnect();
     if (server != null) {
       server.stop();
     }
   }
 
+  @SingleThread
   @Test
   public void connect_receivesEchoedMessage() {
     wsSteps.clearMessages()
@@ -42,6 +44,7 @@ public class WsClientIntegrationTest {
         .containsMessage("hello");
   }
 
+  @SingleThread
   @Test
   public void sendJson_verifyJsonField() {
     wsSteps.clearMessages()
@@ -51,6 +54,7 @@ public class WsClientIntegrationTest {
         .hasJsonField("orderId", "42");
   }
 
+  @SingleThread
   @Test
   public void multipleMessages_verifiedInOrder() {
     wsSteps.clearMessages()
@@ -61,6 +65,7 @@ public class WsClientIntegrationTest {
         .messagesInOrder("step one", "step two", "step three");
   }
 
+  @SingleThread
   @Test
   public void absence_assertedCorrectly() {
     wsSteps.clearMessages()

@@ -66,6 +66,7 @@ jobs:
             const integrationsBuildModules = [
               { name: 'rest-assured', module: ':integrations:rest-assured', slug: 'integrations-rest-assured' },
               { name: 'selenide', module: ':integrations:selenide', slug: 'integrations-selenide' },
+              { name: 'tyrus', module: ':integrations:tyrus', slug: 'integrations-tyrus' },
               { name: 'kafka', module: ':integrations:kafka', slug: 'integrations-kafka' },
               { name: 'rabbitmq', module: ':integrations:rabbitmq', slug: 'integrations-rabbitmq' },
               { name: 'jira • core', module: ':integrations:jira:jira-core', slug: 'integrations-jira-core' },
@@ -87,6 +88,7 @@ jobs:
             const integrationsTestModules = [
               { name: 'rest-assured', module: ':integrations:rest-assured', slug: 'integrations-rest-assured', profile: 'mock' },
               { name: 'selenide', module: ':integrations:selenide', slug: 'integrations-selenide', profile: 'web' },
+              { name: 'tyrus', module: ':integrations:tyrus', slug: 'integrations-tyrus', profile: 'none' },
               { name: 'kafka', module: ':integrations:kafka', slug: 'integrations-kafka', profile: 'messaging' },
               { name: 'rabbitmq', module: ':integrations:rabbitmq', slug: 'integrations-rabbitmq', profile: 'rabbitmq' },
               { name: 'jira • core', module: ':integrations:jira:jira-core', slug: 'integrations-jira-core', profile: 'none' },
