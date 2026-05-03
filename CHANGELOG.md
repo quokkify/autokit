@@ -1,6 +1,9 @@
 # Changelog
 
 ## 2026-05-03
+- `docs` — rewrote all module READMEs with BaseTest initialization and usage patterns
+- `docs` — added README for data-utils/nosql/redis
+- `docs` — fixed data-utils/sql README with correct initialization chain and QueryDSL examples
 - `docs` — added README for all previously undocumented modules (awaitility, config, console, file, html, introspection, jackson, jwt, signature, morphia, sql, testng-extensions)
 - `ci` — added fallback to public GitHub runner when self-hosted runner is offline
 
