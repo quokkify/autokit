@@ -5,6 +5,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
+import java.util.function.BooleanSupplier;
 
 import io.automation.constant.PollingInterval;
 import io.automation.constant.Timeout;
@@ -198,6 +199,94 @@ public final class Waiter {
       return condition.call();
     };
     awaitCondition(conditionWithAction, errorMessage, timeout, pollingInterval);
+  }
+
+  /**
+   * Asserts that the condition never becomes {@code true} during the entire timeout window.
+   * Polls at the given interval; fails immediately if the condition flips to {@code true}.
+   *
+   * <pre>
+   * Timeline (timeout = 5s, poll = 1s):
+   *
+   *  t=0s  t=1s  t=2s  t=3s  t=4s  t=5s
+   *   |-----|-----|-----|-----|-----|
+   *   F     F     F     F     F     F   -> PASS (condition stayed false the whole time)
+   *   F     F     T                     -> FAIL at t=2s (condition became true)
+   * </pre>
+   *
+   * @param condition       checked at every polling interval
+   * @param timeout         how long to observe
+   * @param pollingInterval how often to check
+   * @param failMessage     message for the {@link AssertionError} if condition becomes {@code true}
+   */
+  public static void assertNeverTrue(BooleanSupplier condition,
+                                     Timeout timeout,
+                                     PollingInterval pollingInterval,
+                                     String failMessage) {
+    assertNeverTrue(condition, timeout.duration(), pollingInterval.duration(), failMessage);
+  }
+
+  /**
+   * Asserts that the condition never becomes {@code true} during the entire timeout window.
+   * Uses default timeout (60s) and polling interval (1000ms).
+   *
+   * @param condition   checked at every polling interval
+   * @param failMessage message for the {@link AssertionError} if condition becomes {@code true}
+   */
+  public static void assertNeverTrue(BooleanSupplier condition, String failMessage) {
+    assertNeverTrue(condition, Timeout.SECONDS_60, PollingInterval.MILLIS_1000, failMessage);
+  }
+
+  private static void assertNeverTrue(BooleanSupplier condition,
+                                      Duration timeout,
+                                      Duration pollInterval,
+                                      String failMessage) {
+    try {
+      Awaitility.await()
+          .atMost(timeout)
+          .pollInterval(pollInterval)
+          .pollDelay(Duration.ZERO)
+          .pollInSameThread()
+          .until(condition::getAsBoolean);
+      throw new AssertionError(failMessage);
+    } catch (ConditionTimeoutException ignored) {
+    }
+  }
+
+  /**
+   * Asserts that the condition stays {@code true} during the entire timeout window.
+   * Polls at the given interval; fails immediately if the condition drops to {@code false}.
+   *
+   * <pre>
+   * Timeline (timeout = 5s, poll = 1s):
+   *
+   *  t=0s  t=1s  t=2s  t=3s  t=4s  t=5s
+   *   |-----|-----|-----|-----|-----|
+   *   T     T     T     T     T     T   -> PASS (condition stayed true the whole time)
+   *   T     T     F                     -> FAIL at t=2s (condition dropped to false)
+   * </pre>
+   *
+   * @param condition       checked at every polling interval
+   * @param timeout         how long to observe
+   * @param pollingInterval how often to check
+   * @param failMessage     message for the {@link AssertionError} if condition drops to {@code false}
+   */
+  public static void assertAlwaysTrue(BooleanSupplier condition,
+                                      Timeout timeout,
+                                      PollingInterval pollingInterval,
+                                      String failMessage) {
+    assertNeverTrue(() -> !condition.getAsBoolean(), timeout, pollingInterval, failMessage);
+  }
+
+  /**
+   * Asserts that the condition stays {@code true} during the entire timeout window.
+   * Uses default timeout (60s) and polling interval (1000ms).
+   *
+   * @param condition   checked at every polling interval
+   * @param failMessage message for the {@link AssertionError} if condition drops to {@code false}
+   */
+  public static void assertAlwaysTrue(BooleanSupplier condition, String failMessage) {
+    assertAlwaysTrue(condition, Timeout.SECONDS_60, PollingInterval.MILLIS_1000, failMessage);
   }
 
   /**

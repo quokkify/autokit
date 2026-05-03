@@ -29,16 +29,30 @@ FileUtils.addTextToFile(results.getName(), "id,status");
 FileUtils.addTextsToFile(results.getName(), List.of("1,PASS", "2,FAIL"));
 ```
 
+Read a classpath resource as a string directly:
+
+```java
+String schema = FileUtils.getResourceAsString("schemas/user.json");
+
+List<String> paths = FileUtils.getResourcePath("config/defaults.properties", "api");
+
+String content = FileUtils.readAsString(Path.of("/tmp/report.csv"));
+```
+
 ## Key API
 
-| Method                             | Returns       | Notes                          |
-| ---------------------------------- | ------------- | ------------------------------ |
-| `getResourceAsStream(path)`        | `InputStream` | `null` if resource missing     |
-| `getNonNullResourceAsStream(path)` | `InputStream` | throws if missing              |
-| `getResourcePath(path)`            | `String`      | absolute filesystem path       |
-| `isResourceExist(path)`            | `boolean`     | —                              |
-| `addTextToFile(fileName, text)`    | `void`        | appends line, thread-safe      |
-| `addTextsToFile(fileName, list)`   | `void`        | appends as `[a,b]`             |
-| `createTempFile(extension)`        | `File`        | uses `FileExtension` enum      |
-| `isFilesContentEquals(f1, f2)`     | `boolean`     | byte-level comparison          |
-| `ZipUtils`                         | —             | zip / unzip archive operations |
+| Method                                                           | Returns        | Notes                                |
+| ---------------------------------------------------------------- | -------------- | ------------------------------------ |
+| `getResourceAsStream(path)`                                      | `InputStream`  | `null` if resource missing           |
+| `getNonNullResourceAsStream(path)`                               | `InputStream`  | throws if missing                    |
+| `getResourcePath(path)`                                          | `String`       | absolute filesystem path             |
+| `readAsString(path)`                                             | `String`       | reads file from `java.nio.file.Path` |
+| `getResourceAsString(path)`                                      | `String`       | reads classpath resource as string   |
+| `getResourcePath(path, module)`                                  | `List<String>` | paths filtered by module name        |
+| `getDirectoriesAsEnumValuesFromConfiguration(configPath, clazz)` | `List<T>`      | maps sub-dirs to enum values         |
+| `isResourceExist(path)`                                          | `boolean`      | —                                    |
+| `addTextToFile(fileName, text)`                                  | `void`         | appends line, thread-safe            |
+| `addTextsToFile(fileName, list)`                                 | `void`         | appends as `[a,b]`                   |
+| `createTempFile(extension)`                                      | `File`         | uses `FileExtension` enum            |
+| `isFilesContentEquals(f1, f2)`                                   | `boolean`      | byte-level comparison                |
+| `ZipUtils`                                                       | —              | zip / unzip archive operations       |
