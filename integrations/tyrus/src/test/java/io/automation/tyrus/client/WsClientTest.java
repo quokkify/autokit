@@ -1,9 +1,5 @@
 package io.automation.tyrus.client;
 
-import java.time.Instant;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
-
 import io.automation.constant.PollingInterval;
 import io.automation.constant.Timeout;
 import io.automation.tyrus.steps.WsVerifier;
@@ -15,14 +11,14 @@ import org.testng.annotations.Test;
 
 public class WsClientTest {
 
-  private Queue<WsMessage> queue;
+  private WsSimulator simulator;
   private WsClient client;
   private WsVerifier verifier;
 
   @BeforeMethod
   public void setUp() {
-    queue = new ConcurrentLinkedQueue<>();
-    client = new WsClient(queue);
+    simulator = WsSimulator.create();
+    client = simulator.asClient();
     verifier = WsVerifierFactory.create(client)
         .withTimeout(Timeout.SECONDS_5)
         .withPolling(PollingInterval.MILLIS_100);
@@ -30,13 +26,12 @@ public class WsClientTest {
 
   @AfterMethod
   public void tearDown() {
-    queue.clear();
+    simulator.clear();
   }
 
   @Test
   public void messageCollector_storesMessages() {
-    queue.add(new WsMessage("hello world", Instant.now()));
-    queue.add(new WsMessage("second message", Instant.now()));
+    simulator.send("hello world").send("second message");
 
     Assert.assertEquals(client.getMessages().size(), 2);
     Assert.assertEquals(client.getMessages().get(0).payload(), "hello world");
@@ -45,7 +40,7 @@ public class WsClientTest {
 
   @Test
   public void clearMessages_emptiesQueue() {
-    queue.add(new WsMessage("to be cleared", Instant.now()));
+    simulator.send("to be cleared");
 
     client.clearMessages();
 
@@ -54,21 +49,21 @@ public class WsClientTest {
 
   @Test
   public void verifier_containsMessage_passes() {
-    queue.add(new WsMessage("order status updated", Instant.now()));
+    simulator.send("order status updated");
 
     verifier.containsMessage("order status");
   }
 
   @Test
   public void verifier_containsMessage_byPredicate_passes() {
-    queue.add(new WsMessage("payment confirmed", Instant.now()));
+    simulator.send("payment confirmed");
 
     verifier.containsMessage(msg -> msg.payload().startsWith("payment"));
   }
 
   @Test
   public void verifier_doesNotContainMessage_passes() {
-    queue.add(new WsMessage("expected message", Instant.now()));
+    simulator.send("expected message");
 
     WsVerifierFactory.create(client)
         .withTimeout(Timeout.SECONDS_3)
@@ -78,42 +73,30 @@ public class WsClientTest {
 
   @Test
   public void verifier_hasJsonField_passes() {
-    queue.add(new WsMessage("{\"status\":\"active\",\"userId\":\"42\"}", Instant.now()));
+    simulator.send("{\"status\":\"active\",\"userId\":\"42\"}");
 
     verifier.hasJsonField("status", "active");
   }
 
   @Test
   public void verifier_hasMessageCount_passes() {
-    queue.add(new WsMessage("first", Instant.now()));
-    queue.add(new WsMessage("second", Instant.now()));
-    queue.add(new WsMessage("third", Instant.now()));
+    simulator.send("first").send("second").send("third");
 
     verifier.hasMessageCount(3);
   }
 
   @Test
   public void verifier_messagesInOrder_passes() {
-    queue.add(new WsMessage("step one complete", Instant.now()));
-    queue.add(new WsMessage("step two complete", Instant.now()));
-    queue.add(new WsMessage("step three complete", Instant.now()));
+    simulator.send("step one complete")
+        .send("step two complete")
+        .send("step three complete");
 
     verifier.messagesInOrder("step one", "step two", "step three");
   }
 
   @Test
   public void verifier_containsMessage_withDelay_passes() {
-    Thread producer = new Thread(() -> {
-      try {
-        Thread.sleep(200);
-      } catch (InterruptedException e) {
-        Thread.currentThread().interrupt();
-        return;
-      }
-      queue.add(new WsMessage("delayed arrival", Instant.now()));
-    });
-    producer.setDaemon(true);
-    producer.start();
+    simulator.sendAfterDelay("delayed arrival", 200);
 
     verifier.containsMessage("delayed arrival");
   }

@@ -12,8 +12,12 @@ import io.automation.tyrus.client.WsMessage;
 import io.automation.util.JsonConverter;
 import io.automation.util.Waiter;
 import io.qameta.allure.Step;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public abstract class BaseWsVerification<T extends BaseWsVerification<T>> implements WsVerification {
+
+  private static final Logger LOG = LogManager.getLogger(BaseWsVerification.class);
 
   protected final WsClient client;
   private Timeout timeout;
@@ -43,6 +47,7 @@ public abstract class BaseWsVerification<T extends BaseWsVerification<T>> implem
 
   @Step("WebSocket: contains message '{substring}'")
   public T containsMessage(String substring) {
+    LOG.debug("WS verify: contains message '{}'", substring);
     Waiter.awaitCondition(
         () -> client.getMessages().stream().anyMatch(m -> m.payload().contains(substring)),
         "Expected WS message containing: " + substring,
@@ -53,6 +58,7 @@ public abstract class BaseWsVerification<T extends BaseWsVerification<T>> implem
 
   @Step("WebSocket: contains message matching predicate")
   public T containsMessage(Predicate<WsMessage> predicate) {
+    LOG.debug("WS verify: contains message matching predicate");
     Waiter.awaitCondition(
         () -> client.getMessages().stream().anyMatch(predicate),
         "Expected WS message matching predicate",
@@ -63,6 +69,7 @@ public abstract class BaseWsVerification<T extends BaseWsVerification<T>> implem
 
   @Step("WebSocket: does not contain message '{substring}'")
   public T doesNotContainMessage(String substring) {
+    LOG.debug("WS verify: does not contain message '{}'", substring);
     Waiter.assertNeverTrue(
         () -> client.getMessages().stream().anyMatch(m -> m.payload().contains(substring)),
         Timeout.SECONDS_3, PollingInterval.MILLIS_500,
@@ -73,6 +80,7 @@ public abstract class BaseWsVerification<T extends BaseWsVerification<T>> implem
 
   @Step("WebSocket: has JSON field '{field}' = '{expectedValue}'")
   public T hasJsonField(String field, String expectedValue) {
+    LOG.debug("WS verify: has JSON field '{}' = '{}'", field, expectedValue);
     Waiter.awaitCondition(
         () -> client.getMessages().stream().anyMatch(m -> {
           try {
@@ -91,6 +99,7 @@ public abstract class BaseWsVerification<T extends BaseWsVerification<T>> implem
 
   @Step("WebSocket: has at least {expected} messages")
   public T hasMessageCount(int expected) {
+    LOG.debug("WS verify: has at least {} messages", expected);
     Waiter.awaitCondition(
         () -> client.getMessages().size() >= expected,
         "Expected at least " + expected + " WS messages",
@@ -101,6 +110,7 @@ public abstract class BaseWsVerification<T extends BaseWsVerification<T>> implem
 
   @Step("WebSocket: messages in order")
   public T messagesInOrder(String... substrings) {
+    LOG.debug("WS verify: messages in order {}", Arrays.toString(substrings));
     Waiter.awaitCondition(
         () -> {
           List<WsMessage> messages = client.getMessages();

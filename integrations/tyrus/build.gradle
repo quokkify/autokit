@@ -14,5 +14,4 @@ dependencies {
     implementation "org.glassfish.tyrus.bundles:tyrus-standalone-client:${tyrus}"
 
     testImplementation "org.glassfish.tyrus:tyrus-server:${tyrus}"
-    testImplementation "org.glassfish.tyrus:tyrus-container-grizzly-client:${tyrus}"
 }
