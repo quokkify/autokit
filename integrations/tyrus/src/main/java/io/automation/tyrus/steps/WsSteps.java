@@ -1,24 +1,26 @@
-package io.automation.websockets.steps;
+package io.automation.tyrus.steps;
 
 import java.util.List;
 
-import io.automation.websockets.client.WsClient;
-import io.automation.websockets.client.WsMessage;
+import io.automation.tyrus.client.WsClient;
+import io.automation.tyrus.client.WsMessage;
 import io.qameta.allure.Step;
 
-public final class WsSteps {
+public final class WsSteps extends AbstractWsSteps<WsVerifier> {
 
   private WsClient client;
 
   @Step("Connect to WebSocket: {url}")
   public WsSteps connect(String url) {
     client = WsClient.connect(url);
+    this.verification = new WsVerifier(client);
     return this;
   }
 
   @Step("Connect to WebSocket")
   public WsSteps connect() {
     client = WsClient.connect();
+    this.verification = new WsVerifier(client);
     return this;
   }
 
@@ -38,10 +40,6 @@ public final class WsSteps {
   public WsSteps disconnect() {
     client.close();
     return this;
-  }
-
-  public WsVerifier verify() {
-    return new WsVerifier(client);
   }
 
   public List<WsMessage> getMessages() {

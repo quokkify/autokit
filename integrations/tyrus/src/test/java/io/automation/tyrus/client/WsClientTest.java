@@ -1,4 +1,4 @@
-package io.automation.websockets.client;
+package io.automation.tyrus.client;
 
 import java.time.Instant;
 import java.util.Queue;
@@ -6,8 +6,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import io.automation.constant.PollingInterval;
 import io.automation.constant.Timeout;
-import io.automation.websockets.steps.WsVerifier;
-import io.automation.websockets.steps.WsVerifierFactory;
+import io.automation.tyrus.steps.WsVerifier;
+import io.automation.tyrus.steps.WsVerifierFactory;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;

@@ -1,7 +1,7 @@
-description = "WebSocket client wrapper for test automation"
+description = "Tyrus WebSocket client wrapper for test automation"
 
 ext {
-    artifactId = "websockets"
+    artifactId = "tyrus"
 }
 
 dependencies {

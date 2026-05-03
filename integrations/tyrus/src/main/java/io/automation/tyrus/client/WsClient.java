@@ -1,4 +1,4 @@
-package io.automation.websockets.client;
+package io.automation.tyrus.client;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -10,7 +10,7 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import io.automation.config.ConfigRegistry;
-import io.automation.websockets.config.WsConfiguration;
+import io.automation.tyrus.config.WsConfiguration;
 import jakarta.websocket.ClientEndpoint;
 import jakarta.websocket.CloseReason;
 import jakarta.websocket.ContainerProvider;

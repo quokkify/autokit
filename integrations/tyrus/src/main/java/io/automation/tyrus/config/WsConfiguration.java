@@ -1,13 +1,13 @@
-package io.automation.websockets.config;
+package io.automation.tyrus.config;
 
 import org.aeonbits.owner.Config;
 
 @Config.LoadPolicy(Config.LoadType.MERGE)
 @Config.Sources({
-    "system:properties",
-    "system:env",
-    "classpath:local_resources/websockets.properties",
-    "classpath:websockets.properties"
+  "system:properties",
+  "system:env",
+  "classpath:local_resources/websockets.properties",
+  "classpath:websockets.properties"
 })
 public interface WsConfiguration extends Config {
 

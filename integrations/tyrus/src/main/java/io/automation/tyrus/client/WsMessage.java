@@ -1,4 +1,4 @@
-package io.automation.websockets.client;
+package io.automation.tyrus.client;
 
 import java.time.Instant;
 

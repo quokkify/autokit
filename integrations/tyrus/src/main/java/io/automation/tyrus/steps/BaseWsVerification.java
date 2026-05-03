@@ -1,4 +1,4 @@
-package io.automation.websockets.steps;
+package io.automation.tyrus.steps;
 
 import java.util.Arrays;
 import java.util.List;
@@ -7,63 +7,72 @@ import java.util.function.Predicate;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.automation.constant.PollingInterval;
 import io.automation.constant.Timeout;
+import io.automation.tyrus.client.WsClient;
+import io.automation.tyrus.client.WsMessage;
 import io.automation.util.JsonConverter;
 import io.automation.util.Waiter;
-import io.automation.websockets.client.WsClient;
-import io.automation.websockets.client.WsMessage;
+import io.qameta.allure.Step;
 
-public final class WsVerifier {
+public abstract class BaseWsVerification<T extends BaseWsVerification<T>> implements WsVerification {
 
-  private final WsClient client;
-  private final Timeout timeout;
-  private final PollingInterval pollingInterval;
+  protected final WsClient client;
+  private Timeout timeout;
+  private PollingInterval pollingInterval;
 
-  WsVerifier(WsClient client) {
+  protected BaseWsVerification(WsClient client) {
     this(client, Timeout.SECONDS_10, PollingInterval.MILLIS_500);
   }
 
-  private WsVerifier(WsClient client, Timeout timeout, PollingInterval pollingInterval) {
+  protected BaseWsVerification(WsClient client, Timeout timeout, PollingInterval pollingInterval) {
     this.client = client;
     this.timeout = timeout;
     this.pollingInterval = pollingInterval;
   }
 
-  public WsVerifier withTimeout(Timeout timeout) {
-    return new WsVerifier(client, timeout, pollingInterval);
+  protected abstract T self();
+
+  public T withTimeout(Timeout timeout) {
+    this.timeout = timeout;
+    return self();
   }
 
-  public WsVerifier withPolling(PollingInterval pollingInterval) {
-    return new WsVerifier(client, timeout, pollingInterval);
+  public T withPolling(PollingInterval pollingInterval) {
+    this.pollingInterval = pollingInterval;
+    return self();
   }
 
-  public WsVerifier containsMessage(String substring) {
+  @Step("WebSocket: contains message '{substring}'")
+  public T containsMessage(String substring) {
     Waiter.awaitCondition(
         () -> client.getMessages().stream().anyMatch(m -> m.payload().contains(substring)),
         "Expected WS message containing: " + substring,
         timeout, pollingInterval
     );
-    return this;
+    return self();
   }
 
-  public WsVerifier containsMessage(Predicate<WsMessage> predicate) {
+  @Step("WebSocket: contains message matching predicate")
+  public T containsMessage(Predicate<WsMessage> predicate) {
     Waiter.awaitCondition(
         () -> client.getMessages().stream().anyMatch(predicate),
         "Expected WS message matching predicate",
         timeout, pollingInterval
     );
-    return this;
+    return self();
   }
 
-  public WsVerifier doesNotContainMessage(String substring) {
+  @Step("WebSocket: does not contain message '{substring}'")
+  public T doesNotContainMessage(String substring) {
     Waiter.assertNeverTrue(
         () -> client.getMessages().stream().anyMatch(m -> m.payload().contains(substring)),
         Timeout.SECONDS_3, PollingInterval.MILLIS_500,
         "Unexpected WS message containing: " + substring
     );
-    return this;
+    return self();
   }
 
-  public WsVerifier hasJsonField(String field, String expectedValue) {
+  @Step("WebSocket: has JSON field '{field}' = '{expectedValue}'")
+  public T hasJsonField(String field, String expectedValue) {
     Waiter.awaitCondition(
         () -> client.getMessages().stream().anyMatch(m -> {
           try {
@@ -77,19 +86,21 @@ public final class WsVerifier {
         "Expected WS message with JSON field '" + field + "' = '" + expectedValue + "'",
         timeout, pollingInterval
     );
-    return this;
+    return self();
   }
 
-  public WsVerifier hasMessageCount(int expected) {
+  @Step("WebSocket: has at least {expected} messages")
+  public T hasMessageCount(int expected) {
     Waiter.awaitCondition(
         () -> client.getMessages().size() >= expected,
         "Expected at least " + expected + " WS messages",
         timeout, pollingInterval
     );
-    return this;
+    return self();
   }
 
-  public WsVerifier messagesInOrder(String... substrings) {
+  @Step("WebSocket: messages in order")
+  public T messagesInOrder(String... substrings) {
     Waiter.awaitCondition(
         () -> {
           List<WsMessage> messages = client.getMessages();
@@ -104,6 +115,6 @@ public final class WsVerifier {
         "Expected WS messages in order: " + Arrays.toString(substrings),
         timeout, pollingInterval
     );
-    return this;
+    return self();
   }
 }
