@@ -6,8 +6,10 @@ import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -24,6 +26,21 @@ public final class FileUtils {
   private static final Logger LOG = LogManager.getLogger(FileUtils.class);
 
   private FileUtils() {
+  }
+
+  /**
+   * Read the full content of the file located at the given path.
+   *
+   * @param path path to the file to read; must point to an existing readable file
+   * @return the file content as a {@link String}
+   * @throws RuntimeException if an {@link IOException} occurs
+   */
+  public static String readAsString(Path path) {
+    try {
+      return Files.readString(path);
+    } catch (IOException e) {
+      throw new RuntimeException("Failed to read file: " + path, e);
+    }
   }
 
   /**
@@ -45,6 +62,21 @@ public final class FileUtils {
    */
   public static String getResourceAsFilePath(String path) {
     return Objects.requireNonNull(getResourceUrl(path), "Resource not found: " + path).getFile();
+  }
+
+  /**
+   * Returns the content of a classpath resource as a {@link String}.
+   *
+   * @param path the resource path
+   * @return the resource content as a string
+   * @throws RuntimeException if the resource cannot be read
+   */
+  public static String getResourceAsString(String path) {
+    try {
+      return Files.readString(Paths.get(getResourcePath(path)));
+    } catch (IOException e) {
+      throw new RuntimeException("Failed to read resource as string: " + path, e);
+    }
   }
 
   /**
@@ -74,6 +106,26 @@ public final class FileUtils {
       }
     }
     throw new IllegalArgumentException("Cannot load '%s' file".formatted(path));
+  }
+
+  /**
+   * Returns a list of paths for resources that match the given path and contain the specified module name.
+   *
+   * @param path   the path to the resource
+   * @param module the module name to filter by
+   * @return a list of resource paths
+   * @throws RuntimeException if resources cannot be enumerated
+   */
+  public static List<String> getResourcePath(String path, String module) {
+    try {
+      return Collections.list(FileUtils.class.getClassLoader().getResources(path))
+          .stream()
+          .map(URL::getPath)
+          .filter(resourcePath -> resourcePath.contains(module))
+          .toList();
+    } catch (IOException e) {
+      throw new RuntimeException("Failed to get resource paths for: " + path, e);
+    }
   }
 
   /**
@@ -193,6 +245,40 @@ public final class FileUtils {
     } catch (IOException e) {
       throw new RuntimeException("Failed to compare files: %s and %s"
           .formatted(firstFile, secondFile), e);
+    }
+  }
+
+  /**
+   * Returns enum values corresponding to sub-directories found at the given configuration path.
+   *
+   * @param configurationPath path to the configuration directory
+   * @param clazz             enum class to map directory names to
+   * @param <T>               enum type
+   * @return list of matched enum values; empty if the path does not exist
+   * @throws RuntimeException if directory listing fails
+   */
+  public static <T extends Enum<T>> List<T> getDirectoriesAsEnumValuesFromConfiguration(
+      String configurationPath, Class<T> clazz) {
+    Path pathOfConfig = Path.of(configurationPath);
+    if (Files.notExists(pathOfConfig)) {
+      return Collections.emptyList();
+    }
+    try (var stream = Files.list(pathOfConfig)) {
+      return stream
+          .filter(Files::isDirectory)
+          .map(p -> p.getFileName().toString())
+          .map(name -> {
+            try {
+              return Enum.valueOf(clazz,
+                  name.replace(StringConstant.DASH, StringConstant.UNDERSCORE).toUpperCase());
+            } catch (IllegalArgumentException e) {
+              return null;
+            }
+          })
+          .filter(Objects::nonNull)
+          .toList();
+    } catch (IOException e) {
+      throw new RuntimeException("Failed to list directories at: " + configurationPath, e);
     }
   }
 
