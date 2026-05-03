@@ -1,0 +1,18 @@
+description = "WebSocket client wrapper for test automation"
+
+ext {
+    artifactId = "websockets"
+}
+
+dependencies {
+    implementation project(":common-utils:config")
+    implementation project(":common-utils:core")
+    implementation project(":common-utils:awaitility")
+    implementation project(":common-utils:jackson:json")
+    implementation project(":testng-extensions")
+
+    implementation "org.glassfish.tyrus.bundles:tyrus-standalone-client:${tyrus}"
+
+    testImplementation "org.glassfish.tyrus:tyrus-server:${tyrus}"
+    testImplementation "org.glassfish.tyrus:tyrus-container-grizzly-client:${tyrus}"
+}
