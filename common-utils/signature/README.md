@@ -1,6 +1,4 @@
-# Signature
-
-Generates RSA and HMAC cryptographic signatures and provides AES encryption utilities for test data and config decryption.
+Provides RSA and HMAC signature generation plus AES encryption utilities for test data handling.
 
 ## Dependency
 
@@ -8,23 +6,62 @@ Generates RSA and HMAC cryptographic signatures and provides AES encryption util
 testImplementation project(":common-utils:signature")
 ```
 
-## Usage
+## Environment variables
 
-Generate an RSA signature from a private key and raw data:
+| Variable           | Description                                          |
+|--------------------|------------------------------------------------------|
+| `PRIVATE_KEY`      | Base64 or PEM PKCS#8 RSA private key (for RSA tests) |
+| `AES_SECRET_KEY`   | AES secret key (read by `AesEncryption.fromConfig()`) |
+| `AES_ALGORITHM_MODE` | AES mode, e.g. `AES/CBC/PKCS5Padding`             |
+| `AES_IV`           | Base64-encoded initialization vector                  |
 
-```java
-String base64Signature = SignatureGenerator.generateRsaSignature(privateKey, data, "SHA256withRSA");
-```
-
-Generate an HMAC signature (returned as lowercase hex):
-
-```java
-String hexSignature = SignatureGenerator.generateHmacSignature(data, secretKey);
-```
-
-Encode or decode values with the Base64 helpers:
+## Initialization in BaseTest
 
 ```java
-String encoded = EncryptionUtils.encodeBytes(rawBytes);
-byte[] decoded = EncryptionUtils.decodeString(encoded);
+private static String    privateKey;
+private static AesEncryption aesEncryption;
+
+@BeforeClass
+public static void initCrypto() {
+    privateKey    = System.getenv("PRIVATE_KEY");
+    aesEncryption = AesEncryption.fromConfig();
+}
 ```
+
+## Usage in tests
+
+```java
+@Test
+public void signRequestPayload() {
+    String body      = "{\"amount\":100}";
+    String signature = SignatureGenerator.generateRsaSignature(
+        privateKey, body, SignatureAlgorithm.SHA256_WITH_RSA
+    );
+    given().header("X-Signature", signature)
+           .body(body)
+           .post("/api/payment");
+}
+
+@Test
+public void verifyHmacChecksum() {
+    String hex = SignatureGenerator.generateHmacSignature("payload-data", "secret-key");
+    assertThat(hex).matches("[0-9a-f]+");
+}
+
+@Test
+public void decryptConfigValue() {
+    String plain = aesEncryption.decrypt(System.getenv("ENCRYPTED_TOKEN"));
+    assertThat(plain).isNotBlank();
+}
+```
+
+## Key API
+
+| Method                                                                 | Returns   | Notes                              |
+|------------------------------------------------------------------------|-----------|------------------------------------|
+| `SignatureGenerator.generateRsaSignature(privateKey, data, algorithm)` | `String`  | Base64-encoded; key is Base64/PEM  |
+| `SignatureGenerator.generateHmacSignature(data, key)`                  | `String`  | Lowercase hex                      |
+| `AesEncryption.fromConfig()`                                           | `AesEncryption` | Reads env vars via Owner     |
+| `aesEncryption.decrypt(encryptedValue)`                                | `String`  | Returns plain text                 |
+| `EncryptionUtils.encodeBytes(bytes)`                                   | `String`  | Base64 encode                      |
+| `EncryptionUtils.decodeString(str)`                                    | `byte[]`  | Base64 decode                      |

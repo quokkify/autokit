@@ -1,6 +1,6 @@
 # common-utils/jackson/xml
 
-Parse XML streams and classpath resources into typed Java objects using Jackson XmlMapper.
+Parse XML classpath resources, input streams, and strings into typed Java objects using Jackson XmlMapper.
 
 ## Dependency
 
@@ -10,18 +10,33 @@ testImplementation project(":common-utils:jackson:xml")
 
 ## Usage
 
-Parse an XML classpath resource or an `InputStream`:
+No initialization required — all methods are static.
+
+## Usage in tests
 
 ```java
-Catalog catalog = XmlParser.parse("data/catalog.xml", Catalog.class);
+// Parse an XML test fixture from the classpath
+Order order = XmlParser.parse("responses/order.xml", Order.class);
 
-try (InputStream is = Files.newInputStream(path)) {
+assertThat(order.getId()).isEqualTo("ORD-001");
+assertThat(order.getStatus()).isEqualTo("CONFIRMED");
+
+// Parse an XML response body received as a string
+Order parsed = XmlConverter.fromString(httpResponseBody, Order.class);
+
+assertThat(parsed.getTotalAmount()).isGreaterThan(BigDecimal.ZERO);
+
+// Parse from an InputStream (caller is responsible for closing the stream)
+try (InputStream is = getClass().getResourceAsStream("/fixtures/catalog.xml")) {
     Catalog catalog = XmlParser.parse(is, Catalog.class);
+    assertThat(catalog.getItems()).isNotEmpty();
 }
 ```
 
-Deserialize an XML string directly:
+## Key API
 
-```java
-Order order = XmlConverter.fromString(xmlString, Order.class);
-```
+| Method | Description |
+|---|---|
+| `XmlParser.parse(resourcePath, Class<T>)` | Parse XML classpath resource to type |
+| `XmlParser.parse(inputStream, Class<T>)` | Parse XML from stream (stream not closed) |
+| `XmlConverter.fromString(xmlString, Class<T>)` | Deserialize XML string to type |

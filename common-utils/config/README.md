@@ -1,6 +1,6 @@
 # common-utils/config
 
-Centralized, type-safe access to Owner configuration interfaces backed by env vars and classpath properties.
+Type-safe Owner configuration backed by environment variables and classpath properties, with singleton caching and runtime overlay support.
 
 ## Dependency
 
@@ -8,23 +8,52 @@ Centralized, type-safe access to Owner configuration interfaces backed by env va
 testImplementation project(":common-utils:config")
 ```
 
-## Usage
-
-Define a typed config interface, then retrieve it via `ConfigRegistry`:
+## Initialization in BaseTest
 
 ```java
 @Config.Sources({"system:env", "classpath:app.properties"})
 interface AppConfig extends Config {
-    @Key("API_URL") String apiUrl();
+    @Key("API_URL")   String apiUrl();
+    @Key("API_TOKEN") String apiToken();
 }
 
-AppConfig cfg = ConfigRegistry.get(AppConfig.class);
+public abstract class BaseTest {
+    protected static AppConfig config;
+
+    @BeforeClass
+    public static void initConfig() {
+        config = ConfigRegistry.get(AppConfig.class);
+    }
+}
 ```
 
-Apply runtime overrides and reload:
+## Usage in tests
 
 ```java
-ConfigRegistry.overlay(cfg, Map.of("API_URL", "https://staging.example.com"));
+public class OrderApiTest extends BaseTest {
+
+    @Test
+    public void createsOrderWithStagingOverride() {
+        ConfigRegistry.overlay(config, Map.of("API_URL", "https://staging.example.com"));
+
+        var client = new OrderClient(config.apiUrl(), config.apiToken());
+        var order  = client.create(OrderRequest.defaultPayload());
+
+        assertThat(order.getId()).isNotNull();
+    }
+
+    @Test
+    public void readsBaseUrlFromConfig() {
+        assertThat(config.apiUrl()).startsWith("https://");
+    }
+}
 ```
 
-Use `getMutable` for writable access or `getReloadable` when the config must reload after overrides.
+## Key API
+
+| Method | Description |
+|---|---|
+| `ConfigRegistry.get(MyConfig.class)` | Cached read-only config singleton |
+| `ConfigRegistry.getMutable(MyConfig.class)` | Cached mutable config singleton |
+| `ConfigRegistry.getReloadable(MyConfig.class)` | Cached mutable + reloadable singleton |
+| `ConfigRegistry.overlay(cfg, Map.of("K","v"))` | Apply runtime overrides and reload |

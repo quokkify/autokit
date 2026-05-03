@@ -1,6 +1,6 @@
 # common-utils/file
 
-Classpath resource loading and basic file I/O utilities for tests.
+Classpath resource loading, file I/O utilities, and zip archive support for tests.
 
 ## Dependency
 
@@ -10,22 +10,35 @@ testImplementation project(":common-utils:file")
 
 ## Usage
 
-Load a classpath resource or compare file contents:
+Load test data from the classpath and compare actual output against an expected file:
 
 ```java
-InputStream stream = FileUtils.getNonNullResourceAsStream("data/payload.json");
-boolean equal = FileUtils.isFilesContentEquals(expectedFile, actualFile);
+InputStream payload = FileUtils.getNonNullResourceAsStream("data/users.json");
+String path = FileUtils.getResourcePath("data/expected-report.csv");
+
+File expected = new File(path);
+File actual = generateReport();
+assertThat(FileUtils.isFilesContentEquals(expected, actual)).isTrue();
 ```
 
-Create a temp file and append text:
+Write results incrementally to a temp file during a test run:
 
 ```java
-File tmp = FileUtils.createTempFile(FileExtension.JSON);
-FileUtils.addTextToFile(tmp.getName(), "{\"key\":\"value\"}");
+File results = FileUtils.createTempFile(FileUtils.FileExtension.CSV);
+FileUtils.addTextToFile(results.getName(), "id,status");
+FileUtils.addTextsToFile(results.getName(), List.of("1,PASS", "2,FAIL"));
 ```
 
-Unpack a zip archive with `ZipUtils`:
+## Key API
 
-```java
-ZipUtils.unzip(zipFile, outputDir);
-```
+| Method | Returns | Notes |
+|---|---|---|
+| `getResourceAsStream(path)` | `InputStream` | `null` if resource missing |
+| `getNonNullResourceAsStream(path)` | `InputStream` | throws if missing |
+| `getResourcePath(path)` | `String` | absolute filesystem path |
+| `isResourceExist(path)` | `boolean` | — |
+| `addTextToFile(fileName, text)` | `void` | appends line, thread-safe |
+| `addTextsToFile(fileName, list)` | `void` | appends as `[a,b]` |
+| `createTempFile(extension)` | `File` | uses `FileExtension` enum |
+| `isFilesContentEquals(f1, f2)` | `boolean` | byte-level comparison |
+| `ZipUtils` | — | zip / unzip archive operations |
