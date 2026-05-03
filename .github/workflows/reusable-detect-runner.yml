@@ -32,7 +32,7 @@ on:
 
 permissions:
   contents: read
-  actions: read
+  actions: none
 
 jobs:
   detect-runner:
