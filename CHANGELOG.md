@@ -9,7 +9,6 @@
 - `ci` — added fallback to public GitHub runner when self-hosted runner is offline
 - `common-utils/awaitility` — added `assertNeverTrue` and `assertAlwaysTrue` methods to `Waiter`, ported from ptaf-core
 - `common-utils/file` — added `readAsString(Path)`, `getResourceAsString(String)`, `getResourcePath(String, String)`, and `getDirectoriesAsEnumValuesFromConfiguration` methods, ported from ptaf-core
-
 - `integrations/selenide` — added `sendKeys(Double)`, `sendKeys(LocalDate, DateType)`, and `sendKeys(LocalDateTime, DateType)` overloads to `Input`, ported from ptaf-core
 - `docs` — added SPI-based listener loading section to `testng-extensions` README
 
