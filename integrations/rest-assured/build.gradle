@@ -13,7 +13,6 @@ dependencies {
     implementation "io.rest-assured:rest-assured:${rest_assured}"
     implementation "io.rest-assured:json-schema-validator:${rest_assured}"
     implementation "io.qameta.allure:allure-rest-assured:${allure}"
-    implementation "com.epam.reportportal:logger-java-rest-assured:${report_portal_rest_assured}"
 
     testImplementation"io.qameta.allure:allure-testng:${allure}"
 
