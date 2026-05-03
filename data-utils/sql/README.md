@@ -19,6 +19,49 @@ testImplementation project(":data-utils:sql")
 
 ## Initialization in BaseTest
 
+There are 3 ways to create a `SqlFactory`. Pick one depending on where your DB config lives.
+
+### Variant 1 — persistence.xml
+
+Connection is defined in `META-INF/persistence.xml` under a named persistence unit.
+
+```java
+SqlFactory sqlFactory = DatabaseService.getInstance().createSqlQuery("my-persistence-unit");
+```
+
+### Variant 2 — properties file via DatabaseStage
+
+Connection is read from a `.properties` file on the classpath (e.g. `db.properties` with `SQL_DATABASE_URL`, `SQL_DATABASE_USER`, etc.). Implement `DatabaseStage` to point to that file:
+
+```java
+DatabaseStage stage = new DatabaseStage() {
+    public String getProjectName()          { return "my-project"; }
+    public String getPersistenceName()      { return "local"; }
+    public String getPersistencePropertyPath() { return "db.properties"; }
+};
+
+PersistenceItem persistenceItem = PersistenceItemProvider.getPersistenceItem(stage);
+SqlFactory sqlFactory = DatabaseService.getInstance().createSqlQuery(persistenceItem);
+```
+
+### Variant 3 — manual properties map
+
+Connection is passed directly as a `Map` — useful when values come from env vars or test config:
+
+```java
+PersistenceItem persistenceItem = new PersistenceItem(
+    "my-persistence-unit",
+    Map.of(
+        AvailableSettings.JAKARTA_JDBC_URL,      System.getenv("SQL_DATABASE_URL"),
+        AvailableSettings.JAKARTA_JDBC_USER,     System.getenv("SQL_DATABASE_USER"),
+        AvailableSettings.JAKARTA_JDBC_PASSWORD, System.getenv("SQL_DATABASE_PASSWORD")
+    )
+);
+SqlFactory sqlFactory = DatabaseService.getInstance().createSqlQuery(persistenceItem);
+```
+
+### BaseTest wiring
+
 ```java
 public abstract class BaseTest {
 
@@ -26,15 +69,7 @@ public abstract class BaseTest {
 
     @BeforeClass(alwaysRun = true)
     public void initDatabase() {
-        PersistenceItem persistenceItem = new PersistenceItem(
-            "my-persistence-unit",          // matches persistence.xml unit name
-            Map.of(
-                AvailableSettings.JAKARTA_JDBC_URL,      System.getenv("SQL_DATABASE_URL"),
-                AvailableSettings.JAKARTA_JDBC_USER,     System.getenv("SQL_DATABASE_USER"),
-                AvailableSettings.JAKARTA_JDBC_PASSWORD, System.getenv("SQL_DATABASE_PASSWORD")
-            )
-        );
-        SqlFactory sqlFactory = DatabaseService.getInstance().createSqlQuery(persistenceItem);
+        // use any variant above to get sqlFactory
         databaseSteps = new SqlDatabaseSteps(sqlFactory);
     }
 
