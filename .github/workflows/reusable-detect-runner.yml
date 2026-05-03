@@ -32,7 +32,7 @@ on:
 
 permissions:
   contents: read
-  actions: none
+  actions: read
 
 jobs:
   detect-runner:
@@ -80,6 +80,28 @@ jobs:
             }
 
             if (!allowSelfHosted) {
+              setHosted();
+              return;
+            }
+
+            try {
+              const { data } = await github.rest.actions.listSelfHostedRunnersForRepo({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                per_page: 100
+              });
+              const requiredLabels = new Set(labels);
+              const available = data.runners.some(runner =>
+                runner.status === 'online' &&
+                runner.labels.filter(l => requiredLabels.has(l.name)).length === requiredLabels.size
+              );
+              if (!available) {
+                core.warning('No self-hosted runner with required labels online. Falling back to github-hosted.');
+                setHosted();
+                return;
+              }
+            } catch (e) {
+              core.warning(`Runner availability check failed: ${e.message}. Falling back to github-hosted.`);
               setHosted();
               return;
             }
