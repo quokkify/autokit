@@ -1,5 +1,8 @@
 package io.automation.elements.single;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.SetValueOptions;
 import io.automation.constant.DateType;
@@ -8,8 +11,6 @@ import io.automation.formatter.LocalDateFormatter;
 import io.automation.formatter.LocalDateTimeFormatter;
 import io.automation.html.model.HtmlAttribute;
 import io.automation.html.model.HtmlTag;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import org.openqa.selenium.By;
 
 /**
