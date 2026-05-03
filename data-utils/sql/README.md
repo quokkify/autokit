@@ -10,12 +10,12 @@ testImplementation project(":data-utils:sql")
 
 ## Environment variables
 
-| Variable              | Default                  | Description        |
-|-----------------------|--------------------------|--------------------|
-| `SQL_DATABASE_URL`    | —                        | JDBC URL           |
-| `SQL_DATABASE_USER`   | —                        | DB username        |
-| `SQL_DATABASE_PASSWORD` | —                      | DB password        |
-| `SQL_DATABASE_DRIVER` | `org.postgresql.Driver`  | JDBC driver class  |
+| Variable                | Default                 | Description       |
+| ----------------------- | ----------------------- | ----------------- |
+| `SQL_DATABASE_URL`      | —                       | JDBC URL          |
+| `SQL_DATABASE_USER`     | —                       | DB username       |
+| `SQL_DATABASE_PASSWORD` | —                       | DB password       |
+| `SQL_DATABASE_DRIVER`   | `org.postgresql.Driver` | JDBC driver class |
 
 ## Initialization in BaseTest
 
@@ -149,13 +149,13 @@ public class UserTest extends BaseTest {
 
 ## Key API
 
-| Method | Description |
-|--------|-------------|
-| `databaseSteps.save(entity)` | Insert one or a list of entities |
-| `databaseSteps.update(entity)` | Merge entity changes |
-| `databaseSteps.delete(entity)` | Remove entity |
-| `databaseSteps.selectDsl(QEntity)` | Start a QueryDSL select query |
-| `fetchOne(fn)` | Execute query, throw if null |
-| `fetchFirst(fn)` | First result or throw |
-| `fetch(fn)` | Fetch list or throw |
-| `waitUntilAppear(fn)` | Poll until result appears (60s / 5s) |
+| Method                             | Description                          |
+| ---------------------------------- | ------------------------------------ |
+| `databaseSteps.save(entity)`       | Insert one or a list of entities     |
+| `databaseSteps.update(entity)`     | Merge entity changes                 |
+| `databaseSteps.delete(entity)`     | Remove entity                        |
+| `databaseSteps.selectDsl(QEntity)` | Start a QueryDSL select query        |
+| `fetchOne(fn)`                     | Execute query, throw if null         |
+| `fetchFirst(fn)`                   | First result or throw                |
+| `fetch(fn)`                        | Fetch list or throw                  |
+| `waitUntilAppear(fn)`              | Poll until result appears (60s / 5s) |

@@ -31,14 +31,14 @@ FileUtils.addTextsToFile(results.getName(), List.of("1,PASS", "2,FAIL"));
 
 ## Key API
 
-| Method | Returns | Notes |
-|---|---|---|
-| `getResourceAsStream(path)` | `InputStream` | `null` if resource missing |
-| `getNonNullResourceAsStream(path)` | `InputStream` | throws if missing |
-| `getResourcePath(path)` | `String` | absolute filesystem path |
-| `isResourceExist(path)` | `boolean` | — |
-| `addTextToFile(fileName, text)` | `void` | appends line, thread-safe |
-| `addTextsToFile(fileName, list)` | `void` | appends as `[a,b]` |
-| `createTempFile(extension)` | `File` | uses `FileExtension` enum |
-| `isFilesContentEquals(f1, f2)` | `boolean` | byte-level comparison |
-| `ZipUtils` | — | zip / unzip archive operations |
+| Method                             | Returns       | Notes                          |
+| ---------------------------------- | ------------- | ------------------------------ |
+| `getResourceAsStream(path)`        | `InputStream` | `null` if resource missing     |
+| `getNonNullResourceAsStream(path)` | `InputStream` | throws if missing              |
+| `getResourcePath(path)`            | `String`      | absolute filesystem path       |
+| `isResourceExist(path)`            | `boolean`     | —                              |
+| `addTextToFile(fileName, text)`    | `void`        | appends line, thread-safe      |
+| `addTextsToFile(fileName, list)`   | `void`        | appends as `[a,b]`             |
+| `createTempFile(extension)`        | `File`        | uses `FileExtension` enum      |
+| `isFilesContentEquals(f1, f2)`     | `boolean`     | byte-level comparison          |
+| `ZipUtils`                         | —             | zip / unzip archive operations |

@@ -36,13 +36,13 @@ Waiter.awaitCondition(
 
 ## Key API
 
-| Method | Timeout | Poll | Notes |
-|---|---|---|---|
-| `awaitAssertion(assertion)` | 60s | 5s | AssertJ / TestNG assertion |
-| `awaitQuickAssertion(assertion)` | 5s | 500ms | fast path, no overrides |
-| `awaitQuickAssertion(assertion, timeout)` | custom | 500ms | custom `Timeout` constant |
-| `awaitCondition(callable, message, timeout, interval)` | custom | custom | boolean `Callable` |
-| `awaitCondition(supplier, matcher, message, timeout, interval)` | custom | custom | Hamcrest `Matcher` |
-| `awaitConditionWithAction(condition, action, message)` | default | default | runs `action` each tick |
-| `threadSleep(millis)` | — | — | safe sleep, handles interrupt |
-| `waitForNextSecond()` | — | — | waits until clock ticks |
+| Method                                                          | Timeout | Poll    | Notes                         |
+| --------------------------------------------------------------- | ------- | ------- | ----------------------------- |
+| `awaitAssertion(assertion)`                                     | 60s     | 5s      | AssertJ / TestNG assertion    |
+| `awaitQuickAssertion(assertion)`                                | 5s      | 500ms   | fast path, no overrides       |
+| `awaitQuickAssertion(assertion, timeout)`                       | custom  | 500ms   | custom `Timeout` constant     |
+| `awaitCondition(callable, message, timeout, interval)`          | custom  | custom  | boolean `Callable`            |
+| `awaitCondition(supplier, matcher, message, timeout, interval)` | custom  | custom  | Hamcrest `Matcher`            |
+| `awaitConditionWithAction(condition, action, message)`          | default | default | runs `action` each tick       |
+| `threadSleep(millis)`                                           | —       | —       | safe sleep, handles interrupt |
+| `waitForNextSecond()`                                           | —       | —       | waits until clock ticks       |

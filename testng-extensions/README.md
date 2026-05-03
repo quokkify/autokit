@@ -10,13 +10,13 @@ testImplementation project(":testng-extensions")
 
 ## Environment variables
 
-| Variable             | Default          | Description                              |
-|----------------------|------------------|------------------------------------------|
-| `RETRY_COUNT`        | `2`              | Number of retries for failed tests       |
-| `TEST_THREAD_COUNT`  | `5`              | Parallel thread count                    |
-| `TEST_GROUP`         | —                | Group name filter (used by `SingleGroupListener`) |
-| `SUITE_NAME`         | `Default suite`  | TestNG suite name                        |
-| `EXECUTION_MODE`     | `LOCAL`          | Execution environment: `LOCAL`/`CI`/`DIND` |
+| Variable            | Default         | Description                                       |
+| ------------------- | --------------- | ------------------------------------------------- |
+| `RETRY_COUNT`       | `2`             | Number of retries for failed tests                |
+| `TEST_THREAD_COUNT` | `5`             | Parallel thread count                             |
+| `TEST_GROUP`        | —               | Group name filter (used by `SingleGroupListener`) |
+| `SUITE_NAME`        | `Default suite` | TestNG suite name                                 |
+| `EXECUTION_MODE`    | `LOCAL`         | Execution environment: `LOCAL`/`CI`/`DIND`        |
 
 Config is read from environment variables or `testng.properties`:
 
@@ -80,13 +80,13 @@ public class UserTest extends BaseTest {
 
 ## Key API
 
-| Class / Annotation | Description |
-|--------------------|-------------|
-| `TestNGExtension` | Owner config interface; read via `ConfigRegistry.getReloadable(TestNGExtension.class)` |
-| `AbstractSteps<V>` | Base step class with `verify()` and `verifySoftly(consumers...)` for soft assertions |
-| `RetryListener` + `CustomRetryAnalyzer` | Re-run failed tests up to `RETRY_COUNT` times |
-| `SingleGroupListener` | Run only tests tagged with `TEST_GROUP` |
-| `SuiteListener` / `TestListener` / `StepTestListener` | Lifecycle hooks for suite/test/step events |
-| `CustomCasesInterceptor` | Filter test cases before execution |
-| `@TestGroup("name")` | Tag a test method with a group name |
-| `@SingleThread` | Force single-thread execution for annotated test |
+| Class / Annotation                                    | Description                                                                            |
+| ----------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| `TestNGExtension`                                     | Owner config interface; read via `ConfigRegistry.getReloadable(TestNGExtension.class)` |
+| `AbstractSteps<V>`                                    | Base step class with `verify()` and `verifySoftly(consumers...)` for soft assertions   |
+| `RetryListener` + `CustomRetryAnalyzer`               | Re-run failed tests up to `RETRY_COUNT` times                                          |
+| `SingleGroupListener`                                 | Run only tests tagged with `TEST_GROUP`                                                |
+| `SuiteListener` / `TestListener` / `StepTestListener` | Lifecycle hooks for suite/test/step events                                             |
+| `CustomCasesInterceptor`                              | Filter test cases before execution                                                     |
+| `@TestGroup("name")`                                  | Tag a test method with a group name                                                    |
+| `@SingleThread`                                       | Force single-thread execution for annotated test                                       |

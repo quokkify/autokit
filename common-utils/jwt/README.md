@@ -9,7 +9,7 @@ testImplementation project(":common-utils:jwt")
 ## Environment variables
 
 | Variable          | Description                          |
-|-------------------|--------------------------------------|
+| ----------------- | ------------------------------------ |
 | `JWT_PRIVATE_KEY` | Base64-encoded RSA private key (PEM) |
 | `JWT_PUBLIC_KEY`  | Base64-encoded RSA public key (PEM)  |
 
@@ -65,12 +65,12 @@ String     raw        = jwtToken.token();
 
 ## Key API
 
-| Method                                                       | Returns    | Notes                              |
-|--------------------------------------------------------------|------------|------------------------------------|
-| `JwtKeyPairGenerator.generateRs512(privateKey, publicKey)`   | `JwtKeyPair` | Keys are Base64-encoded strings  |
-| `JwtKeyPairGenerator.generateRs512()`                        | `JwtKeyPair` | Random pair, for isolated tests  |
-| `JwtHeaderGenerator.generateRs512(keyId)`                    | `Header`     | Reuse across tests                |
-| `JwtPayloadGenerator.generate(session, userId, ip)`          | `Payload`    | Sets `iat=now`, `exp=tomorrow`   |
-| `JwtPayloadGenerator.generate(userId, ip)`                   | `Payload`    | Minimal payload, no session      |
-| `JwtTokenGenerator.generate(keyPair, header, payload)`       | `JwtToken`   | Use `.token()` for raw string    |
-| `JwtTokenGenerator.generateAsString(keyPair, header, payload)` | `String`   | Convenience shorthand            |
+| Method                                                         | Returns      | Notes                           |
+| -------------------------------------------------------------- | ------------ | ------------------------------- |
+| `JwtKeyPairGenerator.generateRs512(privateKey, publicKey)`     | `JwtKeyPair` | Keys are Base64-encoded strings |
+| `JwtKeyPairGenerator.generateRs512()`                          | `JwtKeyPair` | Random pair, for isolated tests |
+| `JwtHeaderGenerator.generateRs512(keyId)`                      | `Header`     | Reuse across tests              |
+| `JwtPayloadGenerator.generate(session, userId, ip)`            | `Payload`    | Sets `iat=now`, `exp=tomorrow`  |
+| `JwtPayloadGenerator.generate(userId, ip)`                     | `Payload`    | Minimal payload, no session     |
+| `JwtTokenGenerator.generate(keyPair, header, payload)`         | `JwtToken`   | Use `.token()` for raw string   |
+| `JwtTokenGenerator.generateAsString(keyPair, header, payload)` | `String`     | Convenience shorthand           |
