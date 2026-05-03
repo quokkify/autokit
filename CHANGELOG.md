@@ -7,6 +7,11 @@
 - `docs` — fixed data-utils/sql README with correct initialization chain and QueryDSL examples
 - `docs` — added README for all previously undocumented modules (awaitility, config, console, file, html, introspection, jackson, jwt, signature, morphia, sql, testng-extensions)
 - `ci` — added fallback to public GitHub runner when self-hosted runner is offline
+- `common-utils/awaitility` — added `assertNeverTrue` and `assertAlwaysTrue` methods to `Waiter`, ported from ptaf-core
+- `common-utils/file` — added `readAsString(Path)`, `getResourceAsString(String)`, `getResourcePath(String, String)`, and `getDirectoriesAsEnumValuesFromConfiguration` methods, ported from ptaf-core
+- `integrations/rest-assured` — added ReportPortal rest-assured logger dependency (`logger-java-rest-assured:5.3.4`)
+- `integrations/selenide` — added `sendKeys(Double)`, `sendKeys(LocalDate, DateType)`, and `sendKeys(LocalDateTime, DateType)` overloads to `Input`, ported from ptaf-core
+- `docs` — added SPI-based listener loading section to `testng-extensions` README
 
 ## 2026-02-11
 

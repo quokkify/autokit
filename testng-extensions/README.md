@@ -37,6 +37,67 @@ public abstract class BaseTest {
 }
 ```
 
+## SPI-based listener loading
+
+TestNG supports Java's [Service Provider Interface (SPI)](https://docs.oracle.com/javase/tutorial/ext/basics/spi.html)
+to auto-discover and register listeners without `@Listeners` annotation.
+
+### How it works
+
+Create a plain text file at:
+
+```
+src/test/resources/META-INF/services/org.testng.ITestNGListener
+```
+
+List one listener class per line:
+
+```
+io.automation.listener.lifecycle.SuiteListener
+io.automation.listener.retry.RetryListener
+```
+
+TestNG reads this file at runtime and automatically activates every listener in the list — no
+`@Listeners` annotation or `testng.xml` configuration needed.
+
+### What `testng-extensions` registers
+
+The module itself ships with:
+
+```
+src/test/resources/META-INF/services/org.testng.ITestNGListener
+```
+
+containing:
+
+```
+io.automation.listener.lifecycle.SuiteListener
+```
+
+Because `testng-extensions` is added as `testImplementation` to every module via
+`gradle/dependencies.gradle`, `SuiteListener` is active in all modules automatically — no extra
+setup required.
+
+### Adding listeners in your module
+
+To register additional listeners in a specific module, create your own SPI file under
+`src/test/resources/META-INF/services/org.testng.ITestNGListener` and list the
+listeners you need:
+
+```
+io.automation.listener.lifecycle.SuiteListener
+io.automation.listener.retry.RetryListener
+io.automation.listener.extension.SingleGroupListener
+```
+
+### SPI vs `@Listeners`
+
+| | SPI file | `@Listeners` |
+| --- | --- | --- |
+| Scope | all tests in the module | only the annotated class and subclasses |
+| Config location | `src/test/resources` | source code |
+| Use when | activating suite-wide infrastructure listeners | attaching listeners to a specific test hierarchy |
+
 ## Usage in tests
 
 Define a step class with soft-assertion verification:
