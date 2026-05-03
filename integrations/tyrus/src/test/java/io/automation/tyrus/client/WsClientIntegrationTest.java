@@ -15,7 +15,7 @@ public class WsClientIntegrationTest {
   private static final String URL = "ws://localhost:8787";
 
   private static Server server;
-  protected static WsSteps wsSteps;
+  static WsSteps wsSteps;
 
   @BeforeSuite
   public void startServer() throws Exception {
