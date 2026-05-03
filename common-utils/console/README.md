@@ -20,33 +20,50 @@ testImplementation project(":common-utils:console")
 
 ## Initialization in BaseTest
 
+Define an Owner config interface to read env vars in a type-safe way (requires `common-utils/config`):
+
+```java
+@Config.Sources({"system:env"})
+interface SshConfig extends Config {
+    @Key("SSH_HOST_IP")          String hostIp();
+    @Key("SSH_USER")             String user();
+    @Key("SSH_PRIVATE_KEY_PATH") String privateKeyPath();
+    @Key("SSH_PASSPHRASE")       @DefaultValue("") String passphrase();
+    @Key("SSH_HOST_PORT")        @DefaultValue("22") int hostPort();
+    @Key("SSH_LOCAL_PORT")       int localPort();
+    @Key("SSH_REMOTE_PORT")      int remotePort();
+}
+```
+
+Then initialize in `@BeforeClass`:
+
 ```java
 private static Session session;
 private static Shell   shell;
 
 @BeforeClass
 public static void openTunnel() throws Exception {
+    SshConfig cfg = ConfigRegistry.get(SshConfig.class);
     SshPortForwardConfig config = new SshPortForwardConfig(
-        System.getenv("SSH_HOST_IP"),
-        "127.0.0.1",
-        System.getenv("SSH_USER"),
-        System.getenv("SSH_PRIVATE_KEY_PATH"),
-        System.getenv("SSH_PASSPHRASE"),
-        Integer.parseInt(System.getenv("SSH_HOST_PORT")),
-        Integer.parseInt(System.getenv("SSH_LOCAL_PORT")),
-        Integer.parseInt(System.getenv("SSH_REMOTE_PORT"))
+        cfg.hostIp(), "127.0.0.1", cfg.user(),
+        cfg.privateKeyPath(), cfg.passphrase(),
+        cfg.hostPort(), cfg.localPort(), cfg.remotePort()
     );
     session = SshUtils.createSession(config);
     SshUtils.setPortForwarding(session, config);
-    shell = new Shell.Plain(new SSH(config.hostIp(), config.hostPort(),
-                                   config.userName(), config.privateKeyPath()));
+    shell = new Shell.Plain(new SSH(cfg.hostIp(), cfg.hostPort(),
+                                   cfg.user(), cfg.privateKeyPath()));
 }
 
 @AfterClass
 public static void closeTunnel() {
-    SshUtils.deletePortForwarding(session, Integer.parseInt(System.getenv("SSH_LOCAL_PORT")));
+    SshConfig cfg = ConfigRegistry.get(SshConfig.class);
+    SshUtils.deletePortForwarding(session, cfg.localPort());
     SshUtils.closeSession(session);
 }
+```
+
+> **Alternative** (without Owner): pass values directly via `System.getenv("SSH_HOST_IP")`, `Integer.parseInt(System.getenv("SSH_LOCAL_PORT"))`, etc.
 ```
 
 ## Usage in tests

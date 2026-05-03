@@ -46,19 +46,23 @@ SqlFactory sqlFactory = DatabaseService.getInstance().createSqlQuery(persistence
 
 ### Variant 3 — manual properties map
 
-Connection is passed directly as a `Map` — useful when values come from env vars or test config:
+Use the built-in `DatabaseConfig` (Owner interface, reads `SQL_DATABASE_*` env vars) to populate the map:
 
 ```java
+DatabaseConfig dbConfig = ConfigRegistry.get(DatabaseConfig.class);
+
 PersistenceItem persistenceItem = new PersistenceItem(
     "my-persistence-unit",
     Map.of(
-        AvailableSettings.JAKARTA_JDBC_URL,      System.getenv("SQL_DATABASE_URL"),
-        AvailableSettings.JAKARTA_JDBC_USER,     System.getenv("SQL_DATABASE_USER"),
-        AvailableSettings.JAKARTA_JDBC_PASSWORD, System.getenv("SQL_DATABASE_PASSWORD")
+        AvailableSettings.JAKARTA_JDBC_URL,      dbConfig.url(),
+        AvailableSettings.JAKARTA_JDBC_USER,     dbConfig.user(),
+        AvailableSettings.JAKARTA_JDBC_PASSWORD, dbConfig.password()
     )
 );
 SqlFactory sqlFactory = DatabaseService.getInstance().createSqlQuery(persistenceItem);
 ```
+
+> **Alternative** (without Owner): pass values directly via `System.getenv("SQL_DATABASE_URL")`, etc.
 
 ### BaseTest wiring
 

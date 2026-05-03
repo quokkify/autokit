@@ -17,16 +17,30 @@ testImplementation project(":common-utils:signature")
 
 ## Initialization in BaseTest
 
+Define an Owner config interface for the RSA private key (requires `common-utils/config`). `AesEncryption.fromConfig()` already uses Owner internally — no extra setup needed for AES.
+
 ```java
-private static String    privateKey;
+@Config.Sources({"system:env"})
+interface SignatureConfig extends Config {
+    @Key("PRIVATE_KEY") String privateKey();
+}
+```
+
+Then initialize in `@BeforeClass`:
+
+```java
+private static String        privateKey;
 private static AesEncryption aesEncryption;
 
 @BeforeClass
 public static void initCrypto() {
-    privateKey    = System.getenv("PRIVATE_KEY");
-    aesEncryption = AesEncryption.fromConfig();
+    SignatureConfig config = ConfigRegistry.get(SignatureConfig.class);
+    privateKey    = config.privateKey();
+    aesEncryption = AesEncryption.fromConfig();  // reads AES_SECRET_KEY, AES_ALGORITHM_MODE, AES_IV via Owner
 }
 ```
+
+> **Alternative** (without Owner): read values directly via `System.getenv("PRIVATE_KEY")`.
 
 ## Usage in tests
 

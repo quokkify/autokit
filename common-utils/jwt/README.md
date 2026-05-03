@@ -15,18 +15,31 @@ testImplementation project(":common-utils:jwt")
 
 ## Initialization in BaseTest
 
+Define an Owner config interface to read env vars in a type-safe way (requires `common-utils/config`):
+
+```java
+@Config.Sources({"system:env"})
+interface JwtConfig extends Config {
+    @Key("JWT_PRIVATE_KEY") String privateKey();
+    @Key("JWT_PUBLIC_KEY")  String publicKey();
+}
+```
+
+Then initialize in `@BeforeClass`:
+
 ```java
 private static JwtKeyPair keyPair;
 private static Header header;
 
 @BeforeClass
 public static void initJwt() {
-    String privateKey = System.getenv("JWT_PRIVATE_KEY");
-    String publicKey  = System.getenv("JWT_PUBLIC_KEY");
-    keyPair = JwtKeyPairGenerator.generateRs512(privateKey, publicKey);
+    JwtConfig config = ConfigRegistry.get(JwtConfig.class);
+    keyPair = JwtKeyPairGenerator.generateRs512(config.privateKey(), config.publicKey());
     header  = JwtHeaderGenerator.generateRs512("key-id-1");
 }
 ```
+
+> **Alternative** (without Owner): read values directly via `System.getenv("JWT_PRIVATE_KEY")`, `System.getenv("JWT_PUBLIC_KEY")`.
 
 ## Usage in tests
 

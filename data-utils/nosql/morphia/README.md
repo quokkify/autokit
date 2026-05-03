@@ -18,6 +18,19 @@ testImplementation project(":data-utils:nosql:morphia")
 
 ## Initialization in BaseTest
 
+Define an Owner config interface to read env vars in a type-safe way (requires `common-utils/config`):
+
+```java
+@Config.Sources({"system:env"})
+interface MongoConfig extends Config {
+    @Key("MONGO_HOST")     String host();
+    @Key("MONGO_PORT")     @DefaultValue("27017") int port();
+    @Key("MONGO_DATABASE") String database();
+}
+```
+
+Then initialize in `@BeforeClass`:
+
 ```java
 public abstract class BaseTest {
 
@@ -25,15 +38,17 @@ public abstract class BaseTest {
 
     @BeforeClass(alwaysRun = true)
     public void initDatabase() {
-        String host = System.getenv("MONGO_HOST");
-        String port = System.getenv("MONGO_PORT");
-        String dbName = System.getenv("MONGO_DATABASE");
+        MongoConfig config = ConfigRegistry.get(MongoConfig.class);
 
-        MongoClient mongoClient = MongoClients.create("mongodb://" + host + ":" + port);
-        NoSqlFactory noSqlFactory = new NoSqlFactory(mongoClient, dbName);
+        MongoClient mongoClient = MongoClients.create(
+            "mongodb://" + config.host() + ":" + config.port());
+        NoSqlFactory noSqlFactory = new NoSqlFactory(mongoClient, config.database());
         mongoSteps = new MongoDatabaseSteps(noSqlFactory);
     }
 }
+```
+
+> **Alternative** (without Owner): read values directly via `System.getenv("MONGO_HOST")`, `System.getenv("MONGO_PORT")`, `System.getenv("MONGO_DATABASE")`.
 ```
 
 ## Usage in tests
