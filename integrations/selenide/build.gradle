@@ -12,6 +12,7 @@ dependencies {
     compileOnly project(":testng-extensions")
 
     implementation "com.codeborne:selenide:${selenide}"
+    testImplementation project(":testng-extensions")
     testImplementation "io.qameta.allure:allure-testng:${allure}"
 
     api "org.assertj:assertj-core"
