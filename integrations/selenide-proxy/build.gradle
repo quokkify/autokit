@@ -1,0 +1,16 @@
+description = "Selenide BrowserUpProxy integration for HAR recording and request interception"
+
+ext {
+    artifactId = "selenide-proxy"
+}
+
+dependencies {
+    implementation project(":integrations:selenide")
+    implementation project(":common-utils:config")
+    implementation project(":testng-extensions")
+
+    implementation "com.codeborne:selenide-proxy:${selenide}"
+    testImplementation "io.qameta.allure:allure-testng:${allure}"
+
+    api "org.assertj:assertj-core"
+}
