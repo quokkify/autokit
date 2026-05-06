@@ -1,8 +1,4 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:best-practices", "mergeConfidence:all-badges"],
-  "ignorePaths": [],
-  "commitMessageTopic": "{{depName}}",
-  "labels": ["dependencies"],
-  "dependencyDashboardApproval": true
+  "extends": ["github>ylazakovich/renovate-config//presets/gradle/default"]
 }
