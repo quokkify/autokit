@@ -7,7 +7,7 @@ ext {
 dependencies {
     implementation project(":integrations:selenide")
     implementation project(":common-utils:config")
-    implementation project(":testng-extensions")
+    compileOnly project(":testng-extensions")
 
     implementation "com.codeborne:selenide-proxy:${selenide}"
     testImplementation "io.qameta.allure:allure-testng:${allure}"

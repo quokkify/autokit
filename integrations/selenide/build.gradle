@@ -9,7 +9,7 @@ dependencies {
     implementation project(":common-utils:core")
     implementation project(":common-utils:html")
     implementation project(":common-utils:awaitility")
-    implementation project(":testng-extensions")
+    compileOnly project(":testng-extensions")
 
     implementation "com.codeborne:selenide:${selenide}"
     testImplementation "io.qameta.allure:allure-testng:${allure}"
