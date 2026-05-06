@@ -9,11 +9,11 @@ import com.codeborne.selenide.WebDriverRunner;
 import de.sstoehr.harreader.model.Har;
 
 /**
- * Class to work with browser proxy (BrowserUpProxy / HAR recording).
+ * Extension of {@link Browser} with BrowserUpProxy support (HAR recording, request interception).
  */
-public class ProxyBrowser {
+public class ProxyBrowser extends Browser {
 
-  private ProxyBrowser() {
+  protected ProxyBrowser() {
   }
 
   /**
@@ -22,7 +22,7 @@ public class ProxyBrowser {
    * @param requestHeaders proxy filters request headers
    */
   public static void openBrowserAndAddProxyRequestHeaders(Map<String, String> requestHeaders) {
-    Browser.open();
+    open();
     addProxyRequestHeaders(requestHeaders);
   }
 

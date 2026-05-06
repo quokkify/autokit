@@ -23,7 +23,7 @@ public class Browser {
   private static final BrowserConfiguration CONFIG = ConfigRegistry.get(BrowserConfiguration.class);
   private static final Duration DURATION = Duration.ofSeconds(10);
 
-  private Browser() {
+  protected Browser() {
   }
 
   /**
