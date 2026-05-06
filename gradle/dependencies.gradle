@@ -9,7 +9,7 @@ ext {
     aeonbits = "1.0.12"
     log4j = "2.25.4"
     slf4j = "2.0.17"
-    allure = "2.32.0"
+    allure = "2.34.0"
     httpcore5 = "5.4"
     feign = "13.8"
     restAssured = "5.5.1"
