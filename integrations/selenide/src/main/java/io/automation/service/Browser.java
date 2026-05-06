@@ -1,6 +1,7 @@
 package io.automation.service;
 
 import java.time.Duration;
+import java.util.Objects;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Configuration;
@@ -10,7 +11,9 @@ import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.WebDriverRunner;
 import io.automation.config.BrowserConfiguration;
 import io.automation.config.ConfigRegistry;
+import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.Cookie;
+import org.openqa.selenium.MutableCapabilities;
 
 /**
  * Class to work with browser.
@@ -205,5 +208,33 @@ public class Browser {
    */
   public static String source() {
     return WebDriverRunner.source();
+  }
+
+  /**
+   * Set remote configurations to browser.
+   */
+  public static void setRemoteDefaultConfiguration() {
+    Configuration.remote = CONFIG.remoteUrl();
+    Configuration.browserCapabilities.setCapability("se:downloadsEnabled", true);
+  }
+
+  /**
+   * Check that it is remote connection.
+   *
+   * @return true or false
+   */
+  public static boolean isRemote() {
+    return Objects.nonNull(Configuration.remote);
+  }
+
+  /**
+   * Merge two {@link Capabilities} together and return the union of the two as a new {@link Capabilities} instance.
+   * Capabilities from {@code other} will override those in {@code this}.
+   *
+   * @param capabilities {@link Capabilities} from selenium lib
+   * @return {@link MutableCapabilities} mutable obj
+   */
+  public static MutableCapabilities mergeCapabilities(Capabilities capabilities) {
+    return Configuration.browserCapabilities.merge(capabilities);
   }
 }

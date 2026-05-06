@@ -6,7 +6,6 @@ ext {
 
 dependencies {
     implementation project(":integrations:selenide")
-    implementation project(":common-utils:config")
 
     implementation "com.codeborne:selenide-grid:${selenide}"
     testImplementation "io.qameta.allure:allure-testng:${allure}"
