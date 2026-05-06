@@ -2,6 +2,7 @@
 
 ## 2026-05-03
 
+- `integrations/tyrus` — added Tyrus WebSocket module with client, steps, verifier, SPI-based TestNG configuration, and integration tests against embedded echo server
 - `docs` — rewrote all module READMEs with BaseTest initialization and usage patterns
 - `docs` — added README for data-utils/nosql/redis
 - `docs` — fixed data-utils/sql README with correct initialization chain and QueryDSL examples
