@@ -11,11 +11,15 @@ import io.automation.model.FileParams;
 import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.builder.ResponseSpecBuilder;
+import io.restassured.config.HttpClientConfig;
+import io.restassured.config.RestAssuredConfig;
 import io.restassured.filter.Filter;
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.impl.client.HttpClients;
 import org.hamcrest.Matchers;
 
 /**
@@ -397,9 +401,20 @@ public class ApiService {
    * @return request specification as {@link RequestSpecification}
    */
   protected RequestSpecification getRequestSpecification(String uri, ContentType contentType, List<Filter> filters) {
+    int timeoutMs = (int) (CONFIG.maxResponseTimeSeconds() * 1000L);
+    RequestConfig requestConfig = RequestConfig.custom()
+        .setSocketTimeout(timeoutMs)
+        .setConnectTimeout(timeoutMs)
+        .setConnectionRequestTimeout(timeoutMs)
+        .build();
     return new RequestSpecBuilder()
         .setBaseUri(uri)
         .setContentType(contentType)
+        .setConfig(RestAssuredConfig.config()
+            .httpClient(HttpClientConfig.httpClientConfig()
+                .httpClientFactory(() -> HttpClients.custom()
+                    .setDefaultRequestConfig(requestConfig)
+                    .build())))
         .build()
         .filters(filters);
   }
