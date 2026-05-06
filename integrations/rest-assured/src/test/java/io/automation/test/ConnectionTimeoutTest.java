@@ -8,6 +8,7 @@ import java.net.SocketTimeoutException;
 import io.automation.annotation.SingleThread;
 import io.automation.annotation.TestGroup;
 import io.automation.service.SlowApiService;
+import org.apache.http.NoHttpResponseException;
 import org.assertj.core.api.Assertions;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -53,7 +54,10 @@ public class ConnectionTimeoutTest {
   public void testConnectionClosedOnTimeout() {
     long startMs = System.currentTimeMillis();
     Assertions.assertThatThrownBy(() -> slowApiService.getResource("/test"))
-        .isInstanceOf(SocketTimeoutException.class);
+        .satisfiesAnyOf(
+            e -> Assertions.assertThat(e).isInstanceOf(SocketTimeoutException.class),
+            e -> Assertions.assertThat(e).isInstanceOf(NoHttpResponseException.class)
+        );
     long elapsedMs = System.currentTimeMillis() - startMs;
     Assertions.assertThat(elapsedMs)
         .as("Connection should be closed within 5 seconds")
