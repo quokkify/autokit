@@ -53,7 +53,7 @@ public class ConnectionTimeoutTest {
   public void testConnectionClosedOnTimeout() {
     long startMs = System.currentTimeMillis();
     Assertions.assertThatThrownBy(() -> slowApiService.getResource("/test"))
-        .hasRootCauseInstanceOf(SocketTimeoutException.class);
+        .isInstanceOf(SocketTimeoutException.class);
     long elapsedMs = System.currentTimeMillis() - startMs;
     Assertions.assertThat(elapsedMs)
         .as("Connection should be closed within 5 seconds")
