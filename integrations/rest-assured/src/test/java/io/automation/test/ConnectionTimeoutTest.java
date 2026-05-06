@@ -57,7 +57,7 @@ public class ConnectionTimeoutTest {
         .satisfiesAnyOf(
             e -> Assertions.assertThat(e).isInstanceOf(SocketTimeoutException.class),
             e -> Assertions.assertThat(e).isInstanceOf(NoHttpResponseException.class)
-        );
+      );
     long elapsedMs = System.currentTimeMillis() - startMs;
     Assertions.assertThat(elapsedMs)
         .as("Connection should be closed within 5 seconds")
