@@ -66,7 +66,7 @@ public class DatabaseService {
           .findAny()
           .orElseThrow(() -> new PersistenceException("No Persistence provider for : "
               + persistence.getPersistenceProviderClassName()))
-          .createContainerEntityManagerFactory(persistence, null);
+          .createContainerEntityManagerFactory(persistence, Map.of());
       if (Objects.isNull(entityManagerFactory)) {
         throw new PersistenceException("No Persistence provider for EntityManager named: "
             + persistence.getPersistenceUnitName());
