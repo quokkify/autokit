@@ -13,6 +13,7 @@ dependencies {
 
     implementation "com.codeborne:selenide:${selenide}"
     testImplementation project(":testng-extensions")
+    testImplementation project(":integrations:selenide-proxy")
     testImplementation "io.qameta.allure:allure-testng:${allure}"
 
     api "org.assertj:assertj-core"
