@@ -18,8 +18,6 @@ import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.impl.client.HttpClients;
 import org.hamcrest.Matchers;
 
 /**
@@ -402,19 +400,13 @@ public class ApiService {
    */
   protected RequestSpecification getRequestSpecification(String uri, ContentType contentType, List<Filter> filters) {
     int timeoutMs = (int) (CONFIG.maxResponseTimeSeconds() * 1000L);
-    RequestConfig requestConfig = RequestConfig.custom()
-        .setSocketTimeout(timeoutMs)
-        .setConnectTimeout(timeoutMs)
-        .setConnectionRequestTimeout(timeoutMs)
-        .build();
     return new RequestSpecBuilder()
         .setBaseUri(uri)
         .setContentType(contentType)
         .setConfig(RestAssuredConfig.config()
             .httpClient(HttpClientConfig.httpClientConfig()
-                .httpClientFactory(() -> HttpClients.custom()
-                    .setDefaultRequestConfig(requestConfig)
-                    .build())))
+                .setParam("http.socket.timeout", timeoutMs)
+                .setParam("http.connection.timeout", timeoutMs)))
         .build()
         .filters(filters);
   }
