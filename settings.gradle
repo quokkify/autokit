@@ -9,12 +9,9 @@ include(":testng-extensions")            // Extensions for TestNG (used as testI
 // INTEGRATIONS WITH EXTERNAL LIBRARIES / SERVICES
 // ============================================================================
 include(":integrations:rest-assured")    // Wrapper around Rest Assured for HTTP testing
-include(":integrations:selenide:selenide")         // Selenide - UI testing framework wrapper
-project(":integrations:selenide:selenide").projectDir = file("integrations/selenide/core")
-include(":integrations:selenide:selenide-proxy")  // Selenide proxy - BrowserUpProxy / HAR recording
-project(":integrations:selenide:selenide-proxy").projectDir = file("integrations/selenide/proxy")
-include(":integrations:selenide:selenide-grid")   // Selenide grid - Selenium Grid file download support
-project(":integrations:selenide:selenide-grid").projectDir = file("integrations/selenide/grid")
+include(":integrations:selenide")                  // Selenide - UI testing framework wrapper
+include(":integrations:selenide-proxy")            // Selenide proxy - BrowserUpProxy / HAR recording
+include(":integrations:selenide-grid")             // Selenide grid - Selenium Grid file download support
 include(":integrations:kafka")           // Kafka integration
 include(":integrations:rabbitmq")        // RabbitMQ integration
 include(":integrations:tyrus")           // Tyrus WebSocket client wrapper for test automation

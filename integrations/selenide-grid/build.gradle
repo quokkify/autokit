@@ -5,7 +5,7 @@ ext {
 }
 
 dependencies {
-    implementation project(":integrations:selenide:selenide")
+    implementation project(":integrations:selenide")
 
     implementation "com.codeborne:selenide-grid:${selenide}"
     testImplementation "io.qameta.allure:allure-testng:${allure}"

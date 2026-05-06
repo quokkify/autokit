@@ -5,7 +5,7 @@ ext {
 }
 
 dependencies {
-    implementation project(":integrations:selenide:selenide")
+    implementation project(":integrations:selenide")
     implementation project(":common-utils:config")
     compileOnly project(":testng-extensions")
 
