@@ -66,6 +66,8 @@ jobs:
             const integrationsBuildModules = [
               { name: 'rest-assured', module: ':integrations:rest-assured', slug: 'integrations-rest-assured' },
               { name: 'selenide', module: ':integrations:selenide', slug: 'integrations-selenide' },
+              { name: 'selenide-proxy', module: ':integrations:selenide-proxy', slug: 'integrations-selenide-proxy' },
+              { name: 'selenide-grid', module: ':integrations:selenide-grid', slug: 'integrations-selenide-grid' },
               { name: 'tyrus', module: ':integrations:tyrus', slug: 'integrations-tyrus' },
               { name: 'kafka', module: ':integrations:kafka', slug: 'integrations-kafka' },
               { name: 'rabbitmq', module: ':integrations:rabbitmq', slug: 'integrations-rabbitmq' },
@@ -88,6 +90,8 @@ jobs:
             const integrationsTestModules = [
               { name: 'rest-assured', module: ':integrations:rest-assured', slug: 'integrations-rest-assured', profile: 'mock' },
               { name: 'selenide', module: ':integrations:selenide', slug: 'integrations-selenide', profile: 'web' },
+              { name: 'selenide-proxy', module: ':integrations:selenide-proxy', slug: 'integrations-selenide-proxy', profile: 'web' },
+              { name: 'selenide-grid', module: ':integrations:selenide-grid', slug: 'integrations-selenide-grid', profile: 'none' },
               { name: 'tyrus', module: ':integrations:tyrus', slug: 'integrations-tyrus', profile: 'none' },
               { name: 'kafka', module: ':integrations:kafka', slug: 'integrations-kafka', profile: 'messaging' },
               { name: 'rabbitmq', module: ':integrations:rabbitmq', slug: 'integrations-rabbitmq', profile: 'rabbitmq' },

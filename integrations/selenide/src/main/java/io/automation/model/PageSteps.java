@@ -1,6 +1,5 @@
 package io.automation.model;
 
-import de.sstoehr.harreader.model.Har;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.automation.impl.Page;
 import io.automation.impl.StepCreator;
@@ -60,26 +59,5 @@ public abstract class PageSteps<S extends PageSteps<S, V, P>, V extends Verifica
    */
   public <T extends Navigation> T navigate(T navigationSteps) {
     return navigationSteps;
-  }
-
-  /**
-   * Start proxy har recording.
-   *
-   * @return steps class
-   */
-  @Step("Start proxy har recording")
-  public S startProxyHarRecording() {
-    Browser.newProxyHar();
-    return (S) this;
-  }
-
-  /**
-   * Stop proxy har recording.
-   *
-   * @return recorded har as {@link Har}
-   */
-  @Step("Stop proxy har recording")
-  public Har stopProxyHarRecording() {
-    return Browser.endProxyHar();
   }
 }
