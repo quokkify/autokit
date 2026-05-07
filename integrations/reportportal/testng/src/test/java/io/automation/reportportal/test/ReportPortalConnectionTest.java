@@ -1,5 +1,6 @@
 package io.automation.reportportal.test;
 
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Base64;
 import java.util.Objects;
@@ -11,6 +12,8 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.path.json.JsonPath;
 import io.restassured.specification.RequestSpecification;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.SkipException;
 import org.testng.annotations.Test;
 
@@ -18,6 +21,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class ReportPortalConnectionTest {
+
+  private static final Logger LOG = LoggerFactory.getLogger(ReportPortalConnectionTest.class);
 
   private static final byte[] MINIMAL_PNG = Base64.getDecoder().decode(
       "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=");
@@ -73,7 +78,7 @@ public class ReportPortalConnectionTest {
     try {
       int statusCode = sendMultipartLog(launchUuid,
           "Integration test: file attachment",
-          "Integration test file attachment content.\n".getBytes(),
+          "Integration test file attachment content.\n".getBytes(StandardCharsets.UTF_8),
           "test-attachment.txt", "text/plain");
 
       assertThat(statusCode)
@@ -174,7 +179,8 @@ public class ReportPortalConnectionTest {
               .setField("status", "PASSED")
               .asJson())
           .when().put("/api/v1/" + ReportPortalConnectionConfig.PROJECT_NAME + "/launch/" + launchUuid + "/finish");
-    } catch (Exception ignored) {
+    } catch (Exception e) {
+      LOG.debug("Failed to finish test launch {}: {}", launchUuid, e.getMessage());
     }
   }
 
