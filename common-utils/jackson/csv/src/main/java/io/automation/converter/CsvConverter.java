@@ -130,7 +130,7 @@ public final class CsvConverter {
   }
 
   /**
-   * Reads an arbitrary generic target using the provided schema (e.g., new TypeReference<List<User>>(){}).
+   * Reads an arbitrary generic target using the provided schema (e.g., {@code new TypeReference<List<User>>(){}}).
    */
   public static <T> T readBeans(File file, TypeReference<T> typeRef, CsvSchema schema) {
     try {
