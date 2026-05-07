@@ -14,7 +14,8 @@ dependencies {
     api "io.rest-assured:json-schema-validator:${rest_assured}"
     api "io.qameta.allure:allure-rest-assured:${allure}"
 
-    testImplementation"io.qameta.allure:allure-testng:${allure}"
+    testImplementation "io.qameta.allure:allure-testng:${allure}"
+    testImplementation "org.mockito:mockito-core"
 
     implementation platform("com.fasterxml.jackson:jackson-bom:${fasterxml_jackson}")
     api "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"

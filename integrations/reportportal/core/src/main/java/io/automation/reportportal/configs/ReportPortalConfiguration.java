@@ -23,4 +23,10 @@ public interface ReportPortalConfiguration extends Config {
 
   @Key("RP_LAUNCH_MODE")
   String rpLaunchMode();
+
+  @Key("REPORTPORTAL_ENDPOINT")
+  String rpEndpoint();
+
+  @Key("REPORTPORTAL_API_KEY")
+  String rpApiKey();
 }
