@@ -3,7 +3,6 @@ package io.automation.reportportal.test;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Base64;
-import java.util.Objects;
 
 import io.automation.model.CustomPojo;
 import io.automation.reportportal.config.ReportPortalConnectionConfig;
@@ -14,7 +13,6 @@ import io.restassured.path.json.JsonPath;
 import io.restassured.specification.RequestSpecification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.testng.SkipException;
 import org.testng.annotations.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -30,8 +28,6 @@ public class ReportPortalConnectionTest {
   @TmsLink("RP_CONN_1")
   @Test(description = "Verify ReportPortal endpoint and token can access project list")
   public void shouldConnectToReportPortalApi() {
-    skipIfNotConfigured();
-
     CustomPojo result = new CustomPojo(
         buildSpec()
             .queryParam("page.page", 1)
@@ -47,7 +43,6 @@ public class ReportPortalConnectionTest {
   @TmsLink("RP_LOG_1")
   @Test(description = "Verify text log can be sent to ReportPortal and returns log entry ID")
   public void shouldSendTextLogToReportPortal() {
-    skipIfNotConfigured();
     String launchUuid = startTestLaunch();
     try {
       String logBody = new CustomPojo()
@@ -73,7 +68,6 @@ public class ReportPortalConnectionTest {
   @TmsLink("RP_LOG_2")
   @Test(description = "Verify text file attachment can be sent to ReportPortal")
   public void shouldAttachTxtFileToReportPortal() {
-    skipIfNotConfigured();
     String launchUuid = startTestLaunch();
     try {
       int statusCode = sendMultipartLog(launchUuid,
@@ -92,7 +86,6 @@ public class ReportPortalConnectionTest {
   @TmsLink("RP_LOG_3")
   @Test(description = "Verify screenshot (PNG) attachment can be sent to ReportPortal")
   public void shouldAttachPngScreenshotToReportPortal() {
-    skipIfNotConfigured();
     String launchUuid = startTestLaunch();
     try {
       int statusCode = sendMultipartLog(launchUuid,
@@ -110,10 +103,6 @@ public class ReportPortalConnectionTest {
   @TmsLink("RP_NEG_1")
   @Test(description = "Verify ReportPortal rejects requests with an invalid API token")
   public void shouldRejectRequestWithInvalidToken() {
-    if (isBlank(ReportPortalConnectionConfig.ENDPOINT)) {
-      throw new SkipException("ReportPortal endpoint is not configured. Run infra reporting profile first.");
-    }
-
     int statusCode = RestAssured.given()
         .baseUri(ReportPortalConnectionConfig.ENDPOINT)
         .contentType(ContentType.JSON)
@@ -139,12 +128,6 @@ public class ReportPortalConnectionTest {
         .isInstanceOf(Exception.class);
   }
 
-  private static void skipIfNotConfigured() {
-    if (isBlank(ReportPortalConnectionConfig.ENDPOINT) || isBlank(ReportPortalConnectionConfig.API_KEY)) {
-      throw new SkipException("ReportPortal env is not configured. Run infra reporting profile first.");
-    }
-  }
-
   private static RequestSpecification buildSpec() {
     return RestAssured.given()
         .baseUri(ReportPortalConnectionConfig.ENDPOINT)
@@ -165,11 +148,9 @@ public class ReportPortalConnectionTest {
             .when().post("/api/v1/" + ReportPortalConnectionConfig.PROJECT_NAME + "/launch")
             .then().extract().asString());
 
-    if (!response.json().has("id")) {
-      throw new SkipException(
-          "Cannot start a test launch on ReportPortal (project may not exist or mode is not allowed). "
-              + "Response: " + response.asJson());
-    }
+    assertThat(response.json().has("id"))
+        .as("Start launch response should contain 'id'")
+        .isTrue();
     return response.json().get("id").asText();
   }
 
@@ -202,9 +183,5 @@ public class ReportPortalConnectionTest {
         .multiPart("file", fileName, fileBytes, fileContentType)
         .when().post("/api/v1/" + ReportPortalConnectionConfig.PROJECT_NAME + "/log")
         .then().extract().statusCode();
-  }
-
-  private static boolean isBlank(String value) {
-    return Objects.isNull(value) || value.trim().isEmpty();
   }
 }
