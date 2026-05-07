@@ -50,14 +50,14 @@ public class ReportPortalConnectionTest {
           .setField("time", Instant.now().toString())
           .setField("level", "INFO")
           .setField("message", "Integration test: text log verification")
-          .asJsonArray();
+          .asJson();
 
       JsonPath jsonPath = buildSpec()
           .body(logBody)
           .when().post("/api/v1/" + ReportPortalConnectionConfig.PROJECT_NAME + "/log")
           .then().extract().jsonPath();
 
-      assertThat(jsonPath.getString("responses[0].id"))
+      assertThat(jsonPath.getString("id"))
           .as("First log entry should contain an ID")
           .isNotBlank();
     } finally {
