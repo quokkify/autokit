@@ -38,13 +38,11 @@ public class ConnectionTimeoutTest {
     });
     serverThread.setDaemon(true);
     serverThread.start();
-    System.setProperty("MAX_RESPONSE_TIME_SECONDS", "1");
-    slowApiService = new SlowApiService("http://localhost:" + port);
+    slowApiService = new SlowApiService("http://localhost:" + port, 1_000);
   }
 
   @AfterClass
   public void stopSlowServer() throws IOException {
-    System.clearProperty("MAX_RESPONSE_TIME_SECONDS");
     slowServer.close();
   }
 
