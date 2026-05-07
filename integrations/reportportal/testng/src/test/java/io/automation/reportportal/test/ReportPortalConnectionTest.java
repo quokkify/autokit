@@ -57,7 +57,7 @@ public class ReportPortalConnectionTest {
           .when().post("/api/v1/" + ReportPortalConnectionConfig.PROJECT_NAME + "/log")
           .then().extract().jsonPath();
 
-      assertThat(jsonPath.getString("[0].id"))
+      assertThat(jsonPath.getString("responses[0].id"))
           .as("First log entry should contain an ID")
           .isNotBlank();
     } finally {
