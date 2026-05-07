@@ -10,6 +10,7 @@ dependencies {
     compileOnly project(":testng-extensions")
 
     implementation "com.codeborne:selenide-proxy:${selenide}"
+    api "de.sstoehr:har-reader:${harReader}"
     testImplementation project(":testng-extensions")
     testImplementation "io.qameta.allure:allure-testng:${allure}"
 

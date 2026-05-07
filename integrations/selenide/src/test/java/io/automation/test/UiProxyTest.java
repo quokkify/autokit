@@ -12,7 +12,6 @@ import io.automation.config.TestNGExtension;
 import io.automation.parser.HarParser;
 import io.automation.service.ProxyBrowser;
 import io.qameta.allure.TmsLink;
-import org.apache.http.HttpStatus;
 import org.assertj.core.api.Assertions;
 import org.testng.SkipException;
 import org.testng.annotations.AfterClass;
@@ -53,7 +52,7 @@ public class UiProxyTest extends BaseTest {
 
     Assertions.assertThat(getStatusCodeWithFallback(har, requestUrl))
         .as("Response status code is incorrect")
-        .isEqualTo(HttpStatus.SC_OK);
+        .isEqualTo(200);
   }
 
   private static int getStatusCodeWithFallback(Har har, String requestUrl) {
