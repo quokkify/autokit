@@ -475,6 +475,16 @@ services:
         else
           echo "Failed to create project '$$RP_PROJECT_NAME', status: $$STATUS"; exit 1
         fi
+        ASSIGN_STATUS=$$(curl -s -o /dev/null -w '%{http_code}' \
+          -X PUT "http://reportportal-api:8585/v1/project/$$RP_PROJECT_NAME/assign" \
+          -H "Authorization: Bearer $$TOKEN" \
+          -H 'Content-Type: application/json' \
+          -d '{"userNames":{"superadmin":"PROJECT_MANAGER"}}')
+        if [ "$$ASSIGN_STATUS" = "200" ]; then
+          echo "superadmin assigned to project '$$RP_PROJECT_NAME'"
+        else
+          echo "Warning: superadmin assignment returned status: $$ASSIGN_STATUS"
+        fi
     restart: "no"
 
   reportportal-analyzer:

@@ -70,6 +70,21 @@ if [[ -z "$token" ]]; then
   exit 1
 fi
 
+project_target="${REPORTPORTAL_PROJECT_NAME:-quokkify}"
+
+is_project_ready() {
+  local status
+  status="$(curl -sS -o /dev/null -w '%{http_code}' \
+    -H "Authorization: Bearer ${token}" \
+    "${endpoint}/api/v1/project/${project_target}" 2>/dev/null || true)"
+  [[ "$status" == "200" ]]
+}
+
+info "[reporting] waiting for project '${project_target}' to be ready"
+if ! wait_until 60 2 is_project_ready; then
+  warning "[reporting] project '${project_target}' not accessible after 60s — proceeding anyway"
+fi
+
 project_response="$(curl -sS -f \
   -H "Authorization: Bearer ${token}" \
   "${endpoint}/api/v1/project/list?page.page=1&page.size=1")"
@@ -81,6 +96,7 @@ fi
 cat > tools/environment/.reportportal.env <<ENV
 REPORTPORTAL_ENDPOINT=${endpoint}
 REPORTPORTAL_PROJECT=${project_name}
+REPORTPORTAL_PROJECT_NAME=${project_target}
 REPORTPORTAL_API_KEY=${token}
 REPORTPORTAL_BEARER_TOKEN=${token}
 ENV
@@ -88,10 +104,11 @@ ENV
 mkdir -p integrations/reportportal/testng/src/test/resources/local_resources
 cat > integrations/reportportal/testng/src/test/resources/local_resources/reportportal-test.properties <<ENV
 REPORTPORTAL_ENDPOINT=${endpoint}
+REPORTPORTAL_PROJECT_NAME=${project_target}
 REPORTPORTAL_API_KEY=${token}
 ENV
 
 info "[reporting] endpoint: ${endpoint}"
-info "[reporting] project: ${project_name}"
+info "[reporting] project: ${project_target}"
 info "[reporting] env file written: tools/environment/.reportportal.env"
 info "[reporting] owner config written: integrations/reportportal/testng/src/test/resources/local_resources/reportportal-test.properties"
