@@ -34,10 +34,6 @@ services:
     ports:
       - "1080:1080"
 
-  centrifugo:
-    ports:
-      - "8005:8000"
-
   mongodb:
     ports:
       - "${MONGODB_PUBLISHED_PORT:-27017}:27017"
