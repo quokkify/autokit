@@ -440,6 +440,43 @@ services:
       - "traefik.expose=true"
     restart: always
 
+  reportportal-init:
+    profiles: [reporting]
+    image: curlimages/curl:8.13.0
+    depends_on:
+      reportportal-api:
+        condition: service_healthy
+      reportportal-uat:
+        condition: service_healthy
+    environment:
+      RP_ADMIN_PASSWORD: ${REPORTPORTAL_ADMIN_PASSWORD:-erebus}
+      RP_PROJECT_NAME: ${REPORTPORTAL_PROJECT_NAME:-quokkify}
+    entrypoint:
+      - sh
+      - -c
+      - |
+        TOKEN=$$(curl -sf \
+          -X POST http://reportportal-uat:9999/sso/oauth/token \
+          -H 'Content-Type: application/x-www-form-urlencoded' \
+          -d "grant_type=password&username=superadmin&password=$$RP_ADMIN_PASSWORD&client_id=ui" \
+          | sed 's/.*"access_token":"\([^"]*\)".*/\1/')
+        if [ -z "$$TOKEN" ]; then
+          echo "Failed to obtain access token from ReportPortal"; exit 1
+        fi
+        STATUS=$$(curl -s -o /dev/null -w '%{http_code}' \
+          -X POST http://reportportal-api:8585/v1/project \
+          -H "Authorization: Bearer $$TOKEN" \
+          -H 'Content-Type: application/json' \
+          -d "{\"projectName\":\"$$RP_PROJECT_NAME\",\"entryType\":\"INTERNAL\"}")
+        if [ "$$STATUS" = "201" ]; then
+          echo "Project '$$RP_PROJECT_NAME' created successfully"
+        elif [ "$$STATUS" = "409" ]; then
+          echo "Project '$$RP_PROJECT_NAME' already exists — skipping"
+        else
+          echo "Failed to create project '$$RP_PROJECT_NAME', status: $$STATUS"; exit 1
+        fi
+    restart: "no"
+
   reportportal-analyzer:
     profiles: [reporting]
     image: reportportal/service-auto-analyzer:5.15.1@sha256:26b5ce1faa4de034fb7aec8db578a41de4ffe0185896a8c8415f1adbaf4d6f54
