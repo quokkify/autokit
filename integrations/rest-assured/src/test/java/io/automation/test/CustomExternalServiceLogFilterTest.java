@@ -1,5 +1,6 @@
 package io.automation.test;
 
+import io.automation.annotation.SingleThread;
 import io.automation.filter.CustomExternalServiceLogFilter;
 import io.qameta.allure.TmsLink;
 import io.restassured.filter.FilterContext;
@@ -54,6 +55,7 @@ public class CustomExternalServiceLogFilterTest {
     return new Object[][] {{400}, {401}, {403}, {404}, {422}, {500}, {503}};
   }
 
+  @SingleThread
   @TmsLink("FILTER_1")
   @Test(dataProvider = "successStatusCodes",
       description = "Filter does NOT log when response status is below 400")
@@ -67,6 +69,7 @@ public class CustomExternalServiceLogFilterTest {
         .isZero();
   }
 
+  @SingleThread
   @TmsLink("FILTER_2")
   @Test(dataProvider = "errorStatusCodes",
       description = "Filter logs request/response when status code is 400 or above")
@@ -80,6 +83,7 @@ public class CustomExternalServiceLogFilterTest {
         .isEqualTo(1);
   }
 
+  @SingleThread
   @TmsLink("FILTER_3")
   @Test(description = "Filter always returns the response from context.next regardless of status")
   public void filter_alwaysReturnsResponseFromContext() {
@@ -92,6 +96,7 @@ public class CustomExternalServiceLogFilterTest {
     assertThat(result500).as("5xx response must be returned as-is").isSameAs(mockResponse);
   }
 
+  @SingleThread
   @TmsLink("FILTER_4")
   @Test(description = "Filter delegates execution to context.next exactly once per call")
   public void filter_delegatesToContextNextOnce() {
