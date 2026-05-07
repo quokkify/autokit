@@ -11,6 +11,8 @@ import io.automation.model.FileParams;
 import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.builder.ResponseSpecBuilder;
+import io.restassured.config.HttpClientConfig;
+import io.restassured.config.RestAssuredConfig;
 import io.restassured.filter.Filter;
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
@@ -397,9 +399,14 @@ public class ApiService {
    * @return request specification as {@link RequestSpecification}
    */
   protected RequestSpecification getRequestSpecification(String uri, ContentType contentType, List<Filter> filters) {
+    int timeoutMs = (int) (CONFIG.maxResponseTimeSeconds() * 1000L);
     return new RequestSpecBuilder()
         .setBaseUri(uri)
         .setContentType(contentType)
+        .setConfig(RestAssuredConfig.config()
+            .httpClient(HttpClientConfig.httpClientConfig()
+                .setParam("http.socket.timeout", timeoutMs)
+                .setParam("http.connection.timeout", timeoutMs)))
         .build()
         .filters(filters);
   }
