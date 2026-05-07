@@ -16,4 +16,8 @@ public interface ReportPortalConnectionConfiguration extends Config {
 
   @Key("REPORTPORTAL_API_KEY")
   String apiKey();
+
+  @Key("REPORTPORTAL_PROJECT_NAME")
+  @DefaultValue("automation")
+  String projectName();
 }
