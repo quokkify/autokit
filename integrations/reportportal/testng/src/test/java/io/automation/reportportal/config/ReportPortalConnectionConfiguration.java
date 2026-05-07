@@ -18,6 +18,6 @@ public interface ReportPortalConnectionConfiguration extends Config {
   String apiKey();
 
   @Key("REPORTPORTAL_PROJECT_NAME")
-  @DefaultValue("Quokkify")
+  @DefaultValue("quokkify")
   String projectName();
 }
