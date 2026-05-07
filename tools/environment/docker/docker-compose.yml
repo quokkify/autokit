@@ -187,7 +187,7 @@ services:
 
   reportportal-opensearch:
     profiles: [reporting]
-    image: opensearchproject/opensearch:2.19.4
+    image: opensearchproject/opensearch:3.6.0@sha256:57bd3c879ad27123a9a6cd75e2adba504189d3131d00a669f3baf9210bc4538c
     environment:
       discovery.type: single-node
       plugins.security.disabled: "true"
