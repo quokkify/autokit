@@ -15,8 +15,6 @@ dependencies {
     implementation "io.qameta.allure:allure-testng:${allure}"
     api "org.apache.commons:commons-lang3"
 
-    testImplementation "io.github.openfeign:feign-core:${feign}"
-    testImplementation "io.github.openfeign:feign-jackson:${feign}"
-    testImplementation "io.github.openfeign:feign-okhttp:${feign}"
+    testImplementation project(":integrations:rest-assured")
     testImplementation "org.mockito:mockito-core"
 }

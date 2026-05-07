@@ -1,30 +1,21 @@
 package io.automation.reportportal.test;
 
-import java.io.IOException;
 import java.time.Instant;
 import java.util.Base64;
-import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 
-import feign.Feign;
-import feign.FeignException;
-import feign.Headers;
-import feign.Param;
-import feign.RequestLine;
-import feign.jackson.JacksonDecoder;
-import feign.jackson.JacksonEncoder;
-import feign.okhttp.OkHttpClient;
+import io.automation.model.CustomPojo;
 import io.automation.reportportal.config.ReportPortalConnectionConfig;
 import io.qameta.allure.TmsLink;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.Request;
-import okhttp3.RequestBody;
+import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
+import io.restassured.path.json.JsonPath;
+import io.restassured.specification.RequestSpecification;
 import org.testng.SkipException;
 import org.testng.annotations.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class ReportPortalConnectionTest {
 
@@ -35,210 +26,177 @@ public class ReportPortalConnectionTest {
   @Test(description = "Verify ReportPortal endpoint and token can access project list")
   public void shouldConnectToReportPortalApi() {
     skipIfNotConfigured();
-    String endpoint = ReportPortalConnectionConfig.ENDPOINT;
-    String token = ReportPortalConnectionConfig.API_KEY;
 
-    Map<String, Object> result = buildApi(endpoint, token).getProjectList();
+    CustomPojo result = new CustomPojo(
+        buildSpec()
+            .queryParam("page.page", 1)
+            .queryParam("page.size", 1)
+            .when().get("/api/v1/project/list")
+            .then().extract().asString());
 
-    assertThat(result)
+    assertThat(result.json().has("content"))
         .as("Project list response should contain 'content' key")
-        .containsKey("content");
+        .isTrue();
   }
 
   @TmsLink("RP_LOG_1")
   @Test(description = "Verify text log can be sent to ReportPortal and returns log entry ID")
-  public void shouldSendTextLogToReportPortal() throws Exception {
+  public void shouldSendTextLogToReportPortal() {
     skipIfNotConfigured();
-    String endpoint = ReportPortalConnectionConfig.ENDPOINT;
-    String token = ReportPortalConnectionConfig.API_KEY;
-    String project = ReportPortalConnectionConfig.PROJECT_NAME;
-
-    ReportPortalApi api = buildApi(endpoint, token);
-    String launchUuid = startTestLaunch(api, project);
+    String launchUuid = startTestLaunch();
     try {
-      List<Map<String, Object>> response = api.createTextLog(project,
-          List.of(Map.of(
-              "launchUuid", launchUuid,
-              "time", Instant.now().toString(),
-              "level", "INFO",
-              "message", "Integration test: text log verification")));
+      String logBody = new CustomPojo()
+          .setField("launchUuid", launchUuid)
+          .setField("time", Instant.now().toString())
+          .setField("level", "INFO")
+          .setField("message", "Integration test: text log verification")
+          .asJsonArray();
 
-      assertThat(response)
-          .as("Log creation response should not be empty")
-          .isNotEmpty();
-      assertThat(response.get(0))
+      JsonPath jsonPath = buildSpec()
+          .body(logBody)
+          .when().post("/api/v1/" + ReportPortalConnectionConfig.PROJECT_NAME + "/log")
+          .then().extract().jsonPath();
+
+      assertThat(jsonPath.getString("[0].id"))
           .as("First log entry should contain an ID")
-          .containsKey("id");
+          .isNotBlank();
     } finally {
-      finishTestLaunch(api, project, launchUuid);
+      finishTestLaunch(launchUuid);
     }
   }
 
   @TmsLink("RP_LOG_2")
   @Test(description = "Verify text file attachment can be sent to ReportPortal")
-  public void shouldAttachTxtFileToReportPortal() throws Exception {
+  public void shouldAttachTxtFileToReportPortal() {
     skipIfNotConfigured();
-    String endpoint = ReportPortalConnectionConfig.ENDPOINT;
-    String token = ReportPortalConnectionConfig.API_KEY;
-    String project = ReportPortalConnectionConfig.PROJECT_NAME;
-
-    ReportPortalApi api = buildApi(endpoint, token);
-    String launchUuid = startTestLaunch(api, project);
+    String launchUuid = startTestLaunch();
     try {
-      byte[] fileContent = "Integration test file attachment content.\n".getBytes();
-      int statusCode = sendMultipartLog(endpoint, token, project, launchUuid,
-          "Integration test: file attachment", fileContent,
+      int statusCode = sendMultipartLog(launchUuid,
+          "Integration test: file attachment",
+          "Integration test file attachment content.\n".getBytes(),
           "test-attachment.txt", "text/plain");
 
       assertThat(statusCode)
           .as("File attachment should return 2xx")
           .isBetween(200, 299);
     } finally {
-      finishTestLaunch(api, project, launchUuid);
+      finishTestLaunch(launchUuid);
     }
   }
 
   @TmsLink("RP_LOG_3")
   @Test(description = "Verify screenshot (PNG) attachment can be sent to ReportPortal")
-  public void shouldAttachPngScreenshotToReportPortal() throws Exception {
+  public void shouldAttachPngScreenshotToReportPortal() {
     skipIfNotConfigured();
-    String endpoint = ReportPortalConnectionConfig.ENDPOINT;
-    String token = ReportPortalConnectionConfig.API_KEY;
-    String project = ReportPortalConnectionConfig.PROJECT_NAME;
-
-    ReportPortalApi api = buildApi(endpoint, token);
-    String launchUuid = startTestLaunch(api, project);
+    String launchUuid = startTestLaunch();
     try {
-      int statusCode = sendMultipartLog(endpoint, token, project, launchUuid,
-          "Integration test: screenshot attachment", MINIMAL_PNG,
-          "screenshot.png", "image/png");
+      int statusCode = sendMultipartLog(launchUuid,
+          "Integration test: screenshot attachment",
+          MINIMAL_PNG, "screenshot.png", "image/png");
 
       assertThat(statusCode)
           .as("Screenshot attachment should return 2xx")
           .isBetween(200, 299);
     } finally {
-      finishTestLaunch(api, project, launchUuid);
+      finishTestLaunch(launchUuid);
     }
   }
 
   @TmsLink("RP_NEG_1")
   @Test(description = "Verify ReportPortal rejects requests with an invalid API token")
   public void shouldRejectRequestWithInvalidToken() {
-    String endpoint = ReportPortalConnectionConfig.ENDPOINT;
-    if (isBlank(endpoint)) {
+    if (isBlank(ReportPortalConnectionConfig.ENDPOINT)) {
       throw new SkipException("ReportPortal endpoint is not configured. Run infra reporting profile first.");
     }
 
-    ReportPortalApi api = buildApi(endpoint, "INVALID_TOKEN_VALUE_XYZ");
-    try {
-      api.getProjectList();
-      fail("Expected FeignException for invalid token");
-    } catch (FeignException e) {
-      assertThat(e.status())
-          .as("Invalid token should be rejected with 401 or 403")
-          .isIn(401, 403);
-    }
+    int statusCode = RestAssured.given()
+        .baseUri(ReportPortalConnectionConfig.ENDPOINT)
+        .contentType(ContentType.JSON)
+        .header("Authorization", "Bearer INVALID_TOKEN_VALUE_XYZ")
+        .queryParam("page.page", 1)
+        .queryParam("page.size", 1)
+        .when().get("/api/v1/project/list")
+        .then().extract().statusCode();
+
+    assertThat(statusCode)
+        .as("Invalid token should be rejected with 401 or 403")
+        .isIn(401, 403);
   }
 
   @TmsLink("RP_NEG_2")
   @Test(description = "Verify connection failure is raised for an unreachable ReportPortal endpoint")
   public void shouldRaiseErrorForUnreachableEndpoint() {
-    ReportPortalApi api = buildApi("http://localhost:19999", "test-token");
-    try {
-      api.getProjectList();
-      fail("Expected an exception for an unreachable endpoint");
-    } catch (FeignException e) {
-      assertThat(e).isNotNull();
-    }
+    assertThatThrownBy(() ->
+        RestAssured.given()
+            .baseUri("http://localhost:19999")
+            .when().get("/api/v1/project/list"))
+        .as("Expected an exception for an unreachable endpoint")
+        .isInstanceOf(Exception.class);
   }
 
   private static void skipIfNotConfigured() {
-    String endpoint = ReportPortalConnectionConfig.ENDPOINT;
-    String token = ReportPortalConnectionConfig.API_KEY;
-    if (isBlank(endpoint) || isBlank(token)) {
+    if (isBlank(ReportPortalConnectionConfig.ENDPOINT) || isBlank(ReportPortalConnectionConfig.API_KEY)) {
       throw new SkipException("ReportPortal env is not configured. Run infra reporting profile first.");
     }
   }
 
-  private static ReportPortalApi buildApi(String endpoint, String token) {
-    return Feign.builder()
-        .client(new OkHttpClient())
-        .encoder(new JacksonEncoder())
-        .decoder(new JacksonDecoder())
-        .requestInterceptor(t -> t.header("Authorization", "Bearer " + token))
-        .target(ReportPortalApi.class, endpoint);
+  private static RequestSpecification buildSpec() {
+    return RestAssured.given()
+        .baseUri(ReportPortalConnectionConfig.ENDPOINT)
+        .contentType(ContentType.JSON)
+        .header("Authorization", "Bearer " + ReportPortalConnectionConfig.API_KEY);
   }
 
-  private static String startTestLaunch(ReportPortalApi api, String project) {
-    Map<String, Object> body = Map.of(
-        "name", "test-coverage-run",
-        "startTime", Instant.now().toString(),
-        "mode", "DEBUG");
-    Map<String, Object> response = api.startLaunch(project, body);
-    assertThat(response)
+  private static String startTestLaunch() {
+    String body = new CustomPojo()
+        .setField("name", "test-coverage-run")
+        .setField("startTime", Instant.now().toString())
+        .setField("mode", "DEBUG")
+        .asJson();
+
+    CustomPojo response = new CustomPojo(
+        buildSpec()
+            .body(body)
+            .when().post("/api/v1/" + ReportPortalConnectionConfig.PROJECT_NAME + "/launch")
+            .then().extract().asString());
+
+    assertThat(response.json().has("id"))
         .as("Start launch response should contain 'id'")
-        .containsKey("id");
-    return (String) response.get("id");
+        .isTrue();
+    return response.json().get("id").asText();
   }
 
-  private static void finishTestLaunch(ReportPortalApi api, String project, String launchUuid) {
+  private static void finishTestLaunch(String launchUuid) {
     try {
-      api.finishLaunch(project, launchUuid, Map.of(
-          "endTime", Instant.now().toString(),
-          "status", "PASSED"));
+      buildSpec()
+          .body(new CustomPojo()
+              .setField("endTime", Instant.now().toString())
+              .setField("status", "PASSED")
+              .asJson())
+          .when().put("/api/v1/" + ReportPortalConnectionConfig.PROJECT_NAME + "/launch/" + launchUuid + "/finish");
     } catch (Exception ignored) {
     }
   }
 
-  private static int sendMultipartLog(String endpoint, String token, String project,
-      String launchUuid, String message, byte[] fileBytes, String fileName, String fileContentType)
-      throws IOException {
-    String jsonPart = "[{\"launchUuid\":\"%s\",\"time\":\"%s\",\"level\":\"INFO\",\"message\":\"%s\"}]"
-        .formatted(launchUuid, Instant.now(), message);
+  private static int sendMultipartLog(String launchUuid, String message,
+      byte[] fileBytes, String fileName, String fileContentType) {
+    String jsonPart = new CustomPojo()
+        .setField("launchUuid", launchUuid)
+        .setField("time", Instant.now().toString())
+        .setField("level", "INFO")
+        .setField("message", message)
+        .asJsonArray();
 
-    RequestBody multipart = new MultipartBody.Builder()
-        .setType(MultipartBody.FORM)
-        .addFormDataPart("json_request_part", null,
-            RequestBody.create(jsonPart.getBytes(), MediaType.parse("application/json")))
-        .addFormDataPart("file", fileName,
-            RequestBody.create(fileBytes, MediaType.parse(fileContentType)))
-        .build();
-
-    okhttp3.OkHttpClient rawClient = new okhttp3.OkHttpClient();
-    okhttp3.Request request = new Request.Builder()
-        .url(endpoint + "/api/v1/" + project + "/log")
-        .header("Authorization", "Bearer " + token)
-        .post(multipart)
-        .build();
-
-    try (okhttp3.Response rawResponse = rawClient.newCall(request).execute()) {
-      return rawResponse.code();
-    }
+    return RestAssured.given()
+        .baseUri(ReportPortalConnectionConfig.ENDPOINT)
+        .header("Authorization", "Bearer " + ReportPortalConnectionConfig.API_KEY)
+        .multiPart("json_request_part", jsonPart, "application/json")
+        .multiPart("file", fileName, fileBytes, fileContentType)
+        .when().post("/api/v1/" + ReportPortalConnectionConfig.PROJECT_NAME + "/log")
+        .then().extract().statusCode();
   }
 
   private static boolean isBlank(String value) {
-    return value == null || value.trim().isEmpty();
-  }
-
-  interface ReportPortalApi {
-
-    @RequestLine("GET /api/v1/project/list?page.page=1&page.size=1")
-    @Headers("Accept: application/json")
-    Map<String, Object> getProjectList();
-
-    @RequestLine("POST /api/v1/{project}/launch")
-    @Headers({"Content-Type: application/json", "Accept: application/json"})
-    Map<String, Object> startLaunch(@Param("project") String project, Map<String, Object> body);
-
-    @RequestLine("PUT /api/v1/{project}/launch/{launchUuid}/finish")
-    @Headers({"Content-Type: application/json", "Accept: application/json"})
-    void finishLaunch(@Param("project") String project,
-        @Param("launchUuid") String launchUuid,
-        Map<String, Object> body);
-
-    @RequestLine("POST /api/v1/{project}/log")
-    @Headers({"Content-Type: application/json", "Accept: application/json"})
-    List<Map<String, Object>> createTextLog(@Param("project") String project,
-        List<Map<String, Object>> body);
+    return Objects.isNull(value) || value.trim().isEmpty();
   }
 }

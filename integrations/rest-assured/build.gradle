@@ -10,9 +10,9 @@ dependencies {
     implementation "com.github.reinert:jjschema:${jjschema}"
 
     implementation "org.aeonbits.owner:owner:${aeonbits}"
-    implementation "io.rest-assured:rest-assured:${rest_assured}"
-    implementation "io.rest-assured:json-schema-validator:${rest_assured}"
-    implementation "io.qameta.allure:allure-rest-assured:${allure}"
+    api "io.rest-assured:rest-assured:${rest_assured}"
+    api "io.rest-assured:json-schema-validator:${rest_assured}"
+    api "io.qameta.allure:allure-rest-assured:${allure}"
 
     testImplementation"io.qameta.allure:allure-testng:${allure}"
 
