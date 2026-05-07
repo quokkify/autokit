@@ -60,7 +60,7 @@ services:
 
   kafka-ui:
     profiles: [messaging]
-    image: provectuslabs/kafka-ui:v0.7.2
+    image: provectuslabs/kafka-ui:v0.7.2@sha256:8f2ff02d64b0a7a2b71b6b3b3148b85f66d00ec20ad40c30bdcd415d46d31818
     environment:
       KAFKA_CLUSTERS_0_NAME: local
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
@@ -136,7 +136,7 @@ services:
 
   reportportal-postgres:
     profiles: [reporting]
-    image: bitnamilegacy/postgresql:17.5.0-debian-12-r20
+    image: bitnamilegacy/postgresql:17.5.0-debian-12-r20@sha256:42a8200d35971f931b869ef5252d996e137c6beb4b8f1b6d2181dc7d1b6f62e0
     environment:
       POSTGRES_USER: ${REPORTPORTAL_POSTGRES_USER:-rpuser}
       POSTGRES_PASSWORD: ${REPORTPORTAL_POSTGRES_PASSWORD:-rppass}
@@ -215,7 +215,7 @@ services:
 
   reportportal-index:
     profiles: [reporting]
-    image: reportportal/service-index:5.15.0
+    image: reportportal/service-index:5.15.0@sha256:09014e4d7fbae2a8d474bc4d99b07bf2a8fb5507d493cf8a66d7cb9edbf8d8d8
     depends_on:
       reportportal-gateway:
         condition: service_started
@@ -249,7 +249,7 @@ services:
 
   reportportal-jobs:
     profiles: [reporting]
-    image: reportportal/service-jobs:5.15.0
+    image: reportportal/service-jobs:5.15.0@sha256:70f38cf54a5e28637e83a6ce1f321120cb1a39c86359566e785b9ccb0b511dca
     depends_on:
       reportportal-rabbitmq:
         condition: service_healthy
@@ -390,7 +390,7 @@ services:
 
   reportportal-uat:
     profiles: [reporting]
-    image: reportportal/service-authorization:5.15.0
+    image: reportportal/service-authorization:5.15.0@sha256:8ebd5ff388d24e305da3c221fd59a32e26d79794dc4783d9efd58ea1bdfa39f4
     depends_on:
       reportportal-postgres:
         condition: service_healthy
@@ -442,7 +442,7 @@ services:
 
   reportportal-analyzer:
     profiles: [reporting]
-    image: reportportal/service-auto-analyzer:5.15.1
+    image: reportportal/service-auto-analyzer:5.15.1@sha256:26b5ce1faa4de034fb7aec8db578a41de4ffe0185896a8c8415f1adbaf4d6f54
     environment:
       LOGGING_LEVEL: info
       AMQP_EXCHANGE_NAME: analyzer-default
