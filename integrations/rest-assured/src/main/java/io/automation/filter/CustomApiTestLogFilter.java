@@ -7,7 +7,7 @@ import io.restassured.specification.FilterableRequestSpecification;
 import io.restassured.specification.FilterableResponseSpecification;
 
 /**
- * Filter for Platform tests requests that should log everything.
+ * Filter for tests requests that should log everything.
  */
 public class CustomApiTestLogFilter extends ApiLogFilter implements Filter {
 

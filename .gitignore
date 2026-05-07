@@ -24,3 +24,7 @@ statics/bin
 **/generated/
 **/generated_tests/
 .aider*
+
+# MemPalace per-project files (issue #185)
+mempalace.yaml
+entities.json

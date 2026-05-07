@@ -3,9 +3,12 @@ package io.automation.filter;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import io.restassured.filter.log.LogDetail;
 import io.restassured.internal.print.RequestPrinter;
@@ -16,66 +19,70 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Custom api log filter for Rest Assured.
- */
 public abstract class ApiLogFilter {
 
   private static final Logger LOG = LoggerFactory.getLogger(ApiLogFilter.class);
 
   protected static final int MAX_BODY_LENGTH_FOR_LOG_TO_CONSOLE = 5000;
   private static final boolean PRETTY_PRINT = true;
-  private final Set<String> blacklistedHeaders = Collections.emptySet();
+  private static final Set<String> NO_BLACKLIST = Collections.emptySet();
 
   protected Response processFilter(FilterableRequestSpecification requestSpec, Response response) {
-    LOG.debug("REQUEST:");
-    logRequest(requestSpec);
-    final int responseBodyLength = response.getBody().asString().length();
-    LOG.debug("RESPONSE:");
-    logResponse(response, LogDetail.HEADERS);
-    logResponse(response, LogDetail.COOKIES);
-    logResponse(response, LogDetail.STATUS);
-    if (responseBodyLength != 0 && responseBodyLength <= MAX_BODY_LENGTH_FOR_LOG_TO_CONSOLE) {
-      logResponse(response, LogDetail.BODY);
-    } else if (responseBodyLength == 0) {
-      LOG.debug("Response body is empty");
-    } else {
-      LOG.debug("Response body length is longer then {} symbols.", MAX_BODY_LENGTH_FOR_LOG_TO_CONSOLE);
+    if (LOG.isDebugEnabled()) {
+      LOG.debug(buildCurlLog(requestSpec, response));
     }
-    LOG.debug("REQUEST TIME: {} seconds", response.getTime() / 1000.0);
     return response;
   }
 
-  private void logRequest(FilterableRequestSpecification requestSpec) {
-    logEntity(fakePrintStream ->
-        RequestPrinter.print(
-            requestSpec,
-            requestSpec.getMethod(),
-            requestSpec.getURI(),
-            LogDetail.ALL,
-            blacklistedHeaders,
-            fakePrintStream,
-            PRETTY_PRINT)
-    );
+  private String buildCurlLog(FilterableRequestSpecification requestSpec, Response response) {
+    String reqText = captureText(ps ->
+        RequestPrinter.print(requestSpec, requestSpec.getMethod(), requestSpec.getURI(),
+            LogDetail.ALL, NO_BLACKLIST, ps, PRETTY_PRINT));
+
+    String resBody = response.getBody().asString();
+    boolean bodyTooLong = StringUtils.isNotBlank(resBody) && resBody.length() > MAX_BODY_LENGTH_FOR_LOG_TO_CONSOLE;
+
+    String resText = buildResponseText(response, resBody, bodyTooLong);
+
+    String requestBlock = Arrays.stream(reqText.split("\n", -1))
+        .filter(l -> StringUtils.isNotBlank(l) && !l.trim().endsWith("<none>"))
+        .map(l -> "> " + l)
+        .collect(Collectors.joining("\n"));
+
+    List<String> resLines = Arrays.stream(resText.split("\n", -1))
+        .filter(l -> StringUtils.isNotBlank(l) && !l.trim().endsWith("<none>"))
+        .collect(Collectors.toList());
+    if (!resLines.isEmpty()) {
+      resLines.set(0, resLines.get(0).stripTrailing() + " (" + response.getTime() + "ms)");
+    }
+    String responseBlock = resLines.stream()
+        .map(l -> "< " + l)
+        .collect(Collectors.joining("\n"));
+
+    return requestBlock + "\n\n" + responseBlock;
   }
 
-  private void logResponse(Response response, LogDetail logDetail) {
-    LOG.debug("{}:\n", StringUtils.capitalize(logDetail.name().toLowerCase()));
-    logEntity(fakePrintStream ->
-        ResponsePrinter.print(
-            response,
-            response,
-            fakePrintStream,
-            logDetail,
-            PRETTY_PRINT,
-            blacklistedHeaders)
-    );
+  private String buildResponseText(Response response, String resBody, boolean bodyTooLong) {
+    if (!bodyTooLong) {
+      return captureText(ps ->
+          ResponsePrinter.print(response, response, ps, LogDetail.ALL, PRETTY_PRINT, NO_BLACKLIST));
+    }
+    String statusPart = captureText(ps ->
+        ResponsePrinter.print(response, response, ps, LogDetail.STATUS, PRETTY_PRINT, NO_BLACKLIST));
+    String headersPart = captureText(ps ->
+        ResponsePrinter.print(response, response, ps, LogDetail.HEADERS, PRETTY_PRINT, NO_BLACKLIST));
+    String cookiesPart = captureText(ps ->
+        ResponsePrinter.print(response, response, ps, LogDetail.COOKIES, PRETTY_PRINT, NO_BLACKLIST));
+    return statusPart.stripTrailing()
+        + "\n" + headersPart.stripTrailing()
+        + "\n" + cookiesPart.stripTrailing()
+        + "\n\nBody:\n[body too long: " + resBody.length() + " chars, exceeds limit]";
   }
 
-  private void logEntity(Function<PrintStream, String> function) {
-    ByteArrayOutputStream fakeOutputStream = new ByteArrayOutputStream();
-    try (PrintStream fakePrintStream = new PrintStream(fakeOutputStream, false, StandardCharsets.UTF_8)) {
-      LOG.debug(function.apply(fakePrintStream));
+  private String captureText(Function<PrintStream, String> printer) {
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    try (PrintStream ps = new PrintStream(out, false, StandardCharsets.UTF_8)) {
+      return printer.apply(ps);
     }
   }
 }
