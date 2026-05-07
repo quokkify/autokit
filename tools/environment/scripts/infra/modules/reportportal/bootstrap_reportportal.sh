@@ -81,8 +81,8 @@ is_project_ready() {
 }
 
 info "[reporting] waiting for project '${project_target}' to be ready"
-if ! wait_until 60 2 is_project_ready; then
-  warning "[reporting] project '${project_target}' not accessible after 60s — proceeding anyway"
+if ! wait_until 90 2 is_project_ready; then
+  warning "[reporting] project '${project_target}' not accessible after 180s — proceeding anyway"
 fi
 
 project_response="$(curl -sS -f \

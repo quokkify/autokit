@@ -455,11 +455,18 @@ services:
       - sh
       - -c
       - |
-        TOKEN=$$(curl -sf \
-          -X POST http://reportportal-uat:9999/sso/oauth/token \
-          -H 'Content-Type: application/x-www-form-urlencoded' \
-          -d "grant_type=password&username=superadmin&password=$$RP_ADMIN_PASSWORD&client_id=ui" \
-          | sed 's/.*"access_token":"\([^"]*\)".*/\1/')
+        TOKEN=""
+        i=0
+        while [ -z "$$TOKEN" ] && [ $$i -lt 20 ]; do
+          TOKEN=$$(curl -sf \
+            -u ui:uiman \
+            -X POST http://reportportal-uat:9999/sso/oauth/token \
+            -H 'Content-Type: application/x-www-form-urlencoded' \
+            -d "grant_type=password&username=superadmin&password=$$RP_ADMIN_PASSWORD&client_id=ui" \
+            2>/dev/null | sed 's/.*"access_token":"\([^"]*\)".*/\1/' || true)
+          [ -z "$$TOKEN" ] && sleep 3
+          i=$$((i + 1))
+        done
         if [ -z "$$TOKEN" ]; then
           echo "Failed to obtain access token from ReportPortal"; exit 1
         fi
