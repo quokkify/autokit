@@ -5,7 +5,7 @@ import org.aeonbits.owner.Config;
 /**
  * Interface for config with api settings.
  */
-@Config.LoadPolicy(Config.LoadType.MERGE)
+@Config.LoadPolicy(Config.LoadType.FIRST)
 @Config.Sources({"system:env", "system:properties", "classpath:api-config.properties"})
 public interface Configuration extends Config {
 
