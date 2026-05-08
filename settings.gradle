@@ -26,6 +26,8 @@ include(":integrations:testrail:testng") // TestRail TestNG integration
 include(":integrations:reportportal:reportportal-core") // ReportPortal core integration
 project(":integrations:reportportal:reportportal-core").projectDir = file("integrations/reportportal/core")
 include(":integrations:reportportal:testng") // ReportPortal TestNG integration
+include(":integrations:reportportal:testrail") // TestRail description provider for ReportPortal
+project(":integrations:reportportal:testrail").projectDir = file("integrations/reportportal/testrail")
 
 // ============================================================================
 // DATA ACCESS MODULES (SQL / NoSQL)
