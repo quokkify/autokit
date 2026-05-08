@@ -83,7 +83,8 @@ jobs:
 
             const dataTestModules = [
               { name: 'sql', module: ':data-utils:sql', slug: 'data-utils-sql', profile: 'none' },
-              { name: 'nosql • parent', module: ':data-utils:nosql', slug: 'data-utils-nosql', profile: 'none' },
+              // TODO: add tests for data-utils:nosql, then uncomment
+              // { name: 'nosql • parent', module: ':data-utils:nosql', slug: 'data-utils-nosql', profile: 'none' },
               { name: 'nosql • morphia', module: ':data-utils:nosql:morphia', slug: 'data-utils-nosql-morphia', profile: 'storage' },
               { name: 'nosql • redis', module: ':data-utils:nosql:redis', slug: 'data-utils-nosql-redis', profile: 'redis' },
             ];
@@ -91,17 +92,25 @@ jobs:
             const integrationsTestModules = [
               { name: 'rest-assured', module: ':integrations:rest-assured', slug: 'integrations-rest-assured', profile: 'mock' },
               { name: 'selenide', module: ':integrations:selenide', slug: 'integrations-selenide', profile: 'web' },
-              { name: 'selenide-proxy', module: ':integrations:selenide-proxy', slug: 'integrations-selenide-proxy', profile: 'web' },
-              { name: 'selenide-grid', module: ':integrations:selenide-grid', slug: 'integrations-selenide-grid', profile: 'none' },
+              // TODO: add tests for selenide-proxy, then uncomment
+              // { name: 'selenide-proxy', module: ':integrations:selenide-proxy', slug: 'integrations-selenide-proxy', profile: 'web' },
+              // TODO: add tests for selenide-grid, then uncomment
+              // { name: 'selenide-grid', module: ':integrations:selenide-grid', slug: 'integrations-selenide-grid', profile: 'none' },
               { name: 'tyrus', module: ':integrations:tyrus', slug: 'integrations-tyrus', profile: 'none' },
               { name: 'kafka', module: ':integrations:kafka', slug: 'integrations-kafka', profile: 'messaging' },
               { name: 'rabbitmq', module: ':integrations:rabbitmq', slug: 'integrations-rabbitmq', profile: 'rabbitmq' },
-              { name: 'jira • core', module: ':integrations:jira:jira-core', slug: 'integrations-jira-core', profile: 'none' },
-              { name: 'jira • testng', module: ':integrations:jira:testng', slug: 'integrations-jira-testng', profile: 'none' },
-              { name: 'jira • testrail', module: ':integrations:jira:testrail', slug: 'integrations-jira-testrail', profile: 'none' },
-              { name: 'testrail • core', module: ':integrations:testrail:testrail-core', slug: 'integrations-testrail-core', profile: 'none' },
-              { name: 'testrail • testng', module: ':integrations:testrail:testng', slug: 'integrations-testrail-testng', profile: 'none' },
-              { name: 'reportportal • core', module: ':integrations:reportportal:reportportal-core', slug: 'integrations-reportportal-core', profile: 'none' },
+              // TODO: add tests for jira:core, then uncomment
+              // { name: 'jira • core', module: ':integrations:jira:jira-core', slug: 'integrations-jira-core', profile: 'none' },
+              // TODO: add tests for jira:testng, then uncomment
+              // { name: 'jira • testng', module: ':integrations:jira:testng', slug: 'integrations-jira-testng', profile: 'none' },
+              // TODO: add tests for jira:testrail, then uncomment
+              // { name: 'jira • testrail', module: ':integrations:jira:testrail', slug: 'integrations-jira-testrail', profile: 'none' },
+              // TODO: add tests for testrail:core, then uncomment
+              // { name: 'testrail • core', module: ':integrations:testrail:testrail-core', slug: 'integrations-testrail-core', profile: 'none' },
+              // TODO: add tests for testrail:testng, then uncomment
+              // { name: 'testrail • testng', module: ':integrations:testrail:testng', slug: 'integrations-testrail-testng', profile: 'none' },
+              // TODO: add tests for reportportal:core, then uncomment
+              // { name: 'reportportal • core', module: ':integrations:reportportal:reportportal-core', slug: 'integrations-reportportal-core', profile: 'none' },
               { name: 'reportportal • testng', module: ':integrations:reportportal:testng', slug: 'integrations-reportportal-testng', profile: 'reporting' },
               // TODO: add tests for reportportal:testrail, then uncomment
               // { name: 'reportportal • testrail', module: ':integrations:reportportal:testrail', slug: 'integrations-reportportal-testrail', profile: 'none' },
