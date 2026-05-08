@@ -2,6 +2,7 @@ package io.automation.reportportal.services;
 
 import java.util.Calendar;
 import java.util.Objects;
+import java.util.ServiceLoader;
 import java.util.function.Supplier;
 
 import com.epam.reportportal.listeners.ItemStatus;
@@ -14,11 +15,10 @@ import com.epam.ta.reportportal.ws.model.FinishTestItemRQ;
 import com.epam.ta.reportportal.ws.model.StartTestItemRQ;
 import com.epam.ta.reportportal.ws.model.launch.Mode;
 import com.epam.ta.reportportal.ws.model.launch.StartLaunchRQ;
-import io.automation.config.ConfigRegistry;
 import io.automation.constant.StringConstant;
 import io.automation.reportportal.configs.ReportPortalConfig;
-import io.automation.testrail.configs.TestRailConfiguration;
-import io.automation.testrail.services.TestRailService;
+import io.automation.reportportal.spi.NoOpTmsDescriptionProvider;
+import io.automation.reportportal.spi.TmsDescriptionProvider;
 import io.automation.util.TestUtils;
 import io.qameta.allure.TmsLink;
 import org.apache.commons.lang3.StringUtils;
@@ -33,7 +33,12 @@ public class ParamOverrideTestNgService extends TestNGService {
   protected static final String BRANCH =
       Objects.requireNonNullElse(System.getenv("CI_COMMIT_REF_NAME"), StringUtils.EMPTY);
   protected static final ThreadLocal<String> TEST_CASE_ID = new ThreadLocal<>();
-  private static final TestRailConfiguration TESTRAIL_CONFIG = ConfigRegistry.get(TestRailConfiguration.class);
+  private static final TmsDescriptionProvider TMS_PROVIDER =
+      ServiceLoader.load(TmsDescriptionProvider.class).stream()
+          .map(ServiceLoader.Provider::get)
+          .filter(TmsDescriptionProvider::isEnabled)
+          .findFirst()
+          .orElseGet(NoOpTmsDescriptionProvider::new);
 
   public ParamOverrideTestNgService() {
     super(getLaunchOverriddenProperties());
@@ -65,14 +70,11 @@ public class ParamOverrideTestNgService extends TestNGService {
   protected static String getTestCaseDescription(ITestResult testResult) {
     ITestNGMethod testMethod = testResult.getMethod();
     String testDescription = testMethod.getDescription();
-    String testRailCaseUrl = StringUtils.isNotBlank(TESTRAIL_CONFIG.testRailCaseUrl())
-        ? TESTRAIL_CONFIG.testRailCaseUrl().formatted(TEST_CASE_ID.get())
-        : StringUtils.EMPTY;
     return """
         **Test Case ID:** [%s](%s)%n\
         **Description:** %s%n\
         """.formatted(
-        TEST_CASE_ID.get(), testRailCaseUrl,
+        TEST_CASE_ID.get(), TMS_PROVIDER.testCaseUrl(TEST_CASE_ID.get()),
         StringUtils.isEmpty(testDescription)
             ? StringConstant.NOT_AVAILABLE
             : testDescription);
@@ -131,8 +133,8 @@ public class ParamOverrideTestNgService extends TestNGService {
           jobId, jobUrl,
           pipelineId, pipelineUrl);
     }
-    if (parameters.getEnable() && isTestRailEnabled()) {
-      description = setTestrailDataForLaunchDescription(description);
+    if (parameters.getEnable() && TMS_PROVIDER.isEnabled()) {
+      description += TMS_PROVIDER.enrichLaunchDescription();
     }
     String rcVersion = System.getenv("RC_VERSION");
     if (StringUtils.isNotBlank(rcVersion)) {
@@ -140,24 +142,6 @@ public class ParamOverrideTestNgService extends TestNGService {
     }
     String rpDefaultDescription = StringUtils.defaultIfBlank(parameters.getDescription(), StringUtils.EMPTY);
     parameters.setDescription("%s%s".formatted(description, rpDefaultDescription));
-  }
-
-  private static boolean isTestRailEnabled() {
-    return !TESTRAIL_CONFIG.isTestrailDisabled() && StringUtils.isNotEmpty(TESTRAIL_CONFIG.testRailId());
-  }
-
-  private static String setTestrailDataForLaunchDescription(String description) {
-    TestRailService testRailService = TestRailService.getInstance();
-    if (testRailService.isTestPlan() && StringUtils.isNotBlank(TESTRAIL_CONFIG.testRailTestPlanUrl())) {
-      String testRailPlanId = testRailService.getTestPlan().getId().toString();
-      return "%s **TestRail plan id:** [%s](%s)%n"
-          .formatted(description, testRailPlanId, TESTRAIL_CONFIG.testRailTestPlanUrl().formatted(testRailPlanId));
-    } else if (testRailService.isTestRun() && StringUtils.isNotBlank(TESTRAIL_CONFIG.testRailTestRunUrl())) {
-      String testRailRunId = testRailService.getTestRun().getId().toString();
-      return "%s **TestRail run id:** [%s](%s)%n"
-          .formatted(description, testRailRunId, TESTRAIL_CONFIG.testRailTestRunUrl().formatted(testRailRunId));
-    }
-    return description;
   }
 
   private static void setLaunchMode(ListenerParameters parameters) {
