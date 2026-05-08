@@ -55,7 +55,7 @@ ext {
     rabbitmq = "5.30.0"
     h2 = "2.4.240"
     classgraph = "4.8.184"
-    mockito = "5.15.2"
+    mockito = "5.23.0"
 }
 
 subprojects {
