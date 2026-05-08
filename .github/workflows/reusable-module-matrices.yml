@@ -103,7 +103,8 @@ jobs:
               { name: 'testrail • testng', module: ':integrations:testrail:testng', slug: 'integrations-testrail-testng', profile: 'none' },
               { name: 'reportportal • core', module: ':integrations:reportportal:reportportal-core', slug: 'integrations-reportportal-core', profile: 'none' },
               { name: 'reportportal • testng', module: ':integrations:reportportal:testng', slug: 'integrations-reportportal-testng', profile: 'reporting' },
-              { name: 'reportportal • testrail', module: ':integrations:reportportal:testrail', slug: 'integrations-reportportal-testrail', profile: 'none' },
+              // TODO: add tests for reportportal:testrail, then uncomment
+              // { name: 'reportportal • testrail', module: ':integrations:reportportal:testrail', slug: 'integrations-reportportal-testrail', profile: 'none' },
             ];
 
             core.setOutput('common_modules', JSON.stringify(commonModules));
