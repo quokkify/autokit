@@ -37,9 +37,9 @@ Stop infrastructure:
 
 ### Built-in providers
 
-| Module | Provider | When active |
-|--------|----------|-------------|
-| `reportportal:testng` | `NoOpTmsDescriptionProvider` | fallback when no provider is enabled |
+| Module                  | Provider                      | When active                                                |
+| ----------------------- | ----------------------------- | ---------------------------------------------------------- |
+| `reportportal:testng`   | `NoOpTmsDescriptionProvider`  | fallback when no provider is enabled                       |
 | `reportportal:testrail` | `TestRailDescriptionProvider` | when `IS_TESTRAIL_DISABLED=false` and `TESTRAIL_ID` is set |
 
 ### Adding a custom provider
