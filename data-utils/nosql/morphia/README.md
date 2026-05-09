@@ -119,11 +119,11 @@ mongoSteps.verify()
 
 ### Verification methods
 
-| Method                                              | Description                                                              |
-| --------------------------------------------------- | ------------------------------------------------------------------------ |
-| `hasDocument(Callable<List<E>>, Predicate<E>)`      | Waits until the query returns at least one document matching the predicate |
-| `doesNotHaveDocument(Callable<List<E>>, Predicate<E>)` | Asserts no matching document appears within the configured window    |
-| `hasDocumentCount(Callable<List<E>>, int)`          | Waits until the query returns at least N documents                       |
+| Method                                                 | Description                                                                |
+| ------------------------------------------------------ | -------------------------------------------------------------------------- |
+| `hasDocument(Callable<List<E>>, Predicate<E>)`         | Waits until the query returns at least one document matching the predicate |
+| `doesNotHaveDocument(Callable<List<E>>, Predicate<E>)` | Asserts no matching document appears within the configured window          |
+| `hasDocumentCount(Callable<List<E>>, int)`             | Waits until the query returns at least N documents                         |
 
 Default timeout is 30 seconds with 1 second polling.
 

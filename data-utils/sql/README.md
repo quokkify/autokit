@@ -182,11 +182,11 @@ databaseSteps.verify()
 
 ### Verification methods
 
-| Method                                           | Description                                                         |
-| ------------------------------------------------ | ------------------------------------------------------------------- |
-| `hasRecord(Callable<List<E>>, Predicate<E>)`     | Waits until the query returns at least one record matching the predicate |
-| `doesNotHaveRecord(Callable<List<E>>, Predicate<E>)` | Asserts no matching record appears within the configured window |
-| `hasRecordCount(Callable<List<E>>, int)`         | Waits until the query returns at least N records                    |
+| Method                                               | Description                                                              |
+| ---------------------------------------------------- | ------------------------------------------------------------------------ |
+| `hasRecord(Callable<List<E>>, Predicate<E>)`         | Waits until the query returns at least one record matching the predicate |
+| `doesNotHaveRecord(Callable<List<E>>, Predicate<E>)` | Asserts no matching record appears within the configured window          |
+| `hasRecordCount(Callable<List<E>>, int)`             | Waits until the query returns at least N records                         |
 
 Default timeout is 60 seconds with 5 second polling.
 

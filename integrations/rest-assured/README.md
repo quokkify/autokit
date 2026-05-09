@@ -81,10 +81,10 @@ public class OrderApiVerification extends BaseApiVerification<OrderApiVerificati
 
 ## Verification methods
 
-| Method                                                    | Description                                          |
-| --------------------------------------------------------- | ---------------------------------------------------- |
-| `verifyResponseStatusCode(response, int)`                 | Asserts a single response has the expected status    |
-| `verifyResponseStatusCode(List<response>, int)`           | Soft-asserts all responses have the expected status  |
-| `verifyResponseBody(response, String)`                    | Asserts the response body equals the expected string |
-| `verifyResponseBody(List<response>, String)`              | Soft-asserts all response bodies match              |
-| `verifyResponseSchema(response, JsonValidation)`          | Validates the response body against a JSON schema    |
+| Method                                           | Description                                          |
+| ------------------------------------------------ | ---------------------------------------------------- |
+| `verifyResponseStatusCode(response, int)`        | Asserts a single response has the expected status    |
+| `verifyResponseStatusCode(List<response>, int)`  | Soft-asserts all responses have the expected status  |
+| `verifyResponseBody(response, String)`           | Asserts the response body equals the expected string |
+| `verifyResponseBody(List<response>, String)`     | Soft-asserts all response bodies match               |
+| `verifyResponseSchema(response, JsonValidation)` | Validates the response body against a JSON schema    |

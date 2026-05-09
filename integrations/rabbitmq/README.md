@@ -24,12 +24,12 @@ rabbitSteps.verify()
 
 ## Verification methods
 
-| Method                                           | Description                                                          |
-| ------------------------------------------------ | -------------------------------------------------------------------- |
-| `hasMessage(String queue)`                       | Waits until the queue has at least one message                       |
-| `hasMessage(String queue, Predicate<...> pred)`  | Waits until a message matching the predicate appears in the queue    |
-| `hasMessageWithBody(String queue, String substr)`| Waits until a message whose body contains the substring is present   |
-| `doesNotHaveMessage(String queue)`               | Asserts no message appears in the queue within the configured window |
+| Method                                            | Description                                                          |
+| ------------------------------------------------- | -------------------------------------------------------------------- |
+| `hasMessage(String queue)`                        | Waits until the queue has at least one message                       |
+| `hasMessage(String queue, Predicate<...> pred)`   | Waits until a message matching the predicate appears in the queue    |
+| `hasMessageWithBody(String queue, String substr)` | Waits until a message whose body contains the substring is present   |
+| `doesNotHaveMessage(String queue)`                | Asserts no message appears in the queue within the configured window |
 
 Default timeout is 10 seconds with 500 ms polling.
 

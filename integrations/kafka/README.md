@@ -38,11 +38,11 @@ kafkaSteps.verify()
 
 ## Verification methods
 
-| Method                                        | Description                                                            |
-| --------------------------------------------- | ---------------------------------------------------------------------- |
-| `containsMessage(Predicate<M>)`               | Waits until at least one consumed message matches the predicate        |
-| `doesNotContainMessage(Predicate<M>)`         | Asserts no matching message appears within the configured window       |
-| `hasMessageCount(int, Predicate<M>)`          | Waits until at least N messages matching the predicate have been seen  |
+| Method                                | Description                                                           |
+| ------------------------------------- | --------------------------------------------------------------------- |
+| `containsMessage(Predicate<M>)`       | Waits until at least one consumed message matches the predicate       |
+| `doesNotContainMessage(Predicate<M>)` | Asserts no matching message appears within the configured window      |
+| `hasMessageCount(int, Predicate<M>)`  | Waits until at least N messages matching the predicate have been seen |
 
 Default timeout is 30 seconds with 1 second polling.
 
