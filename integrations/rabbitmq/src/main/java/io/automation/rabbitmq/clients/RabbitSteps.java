@@ -15,7 +15,6 @@ public class RabbitSteps extends AbstractSteps<RabbitVerifier> {
   private static final Logger LOG = LogManager.getLogger(RabbitSteps.class);
 
   private final ThreadLocal<RabbitClient> client = new ThreadLocal<>();
-  private final RabbitVerifier verification = new RabbitVerifier(this::getClient);
   private final RabbitMqConfiguration rabbitMqConfiguration;
   private final String configurationUrl;
 
@@ -31,7 +30,7 @@ public class RabbitSteps extends AbstractSteps<RabbitVerifier> {
 
   @Override
   public RabbitVerifier verify() {
-    return verification;
+    return new RabbitVerifier(this::getClient);
   }
 
   @Step("Send message to RabbitMQ")

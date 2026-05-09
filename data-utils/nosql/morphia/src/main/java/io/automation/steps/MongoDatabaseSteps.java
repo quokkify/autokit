@@ -20,7 +20,11 @@ public class MongoDatabaseSteps extends AbstractMongoSteps<MongoVerifier> {
 
   public MongoDatabaseSteps(NoSqlFactory noSqlFactory) {
     this.noSqlFactory = noSqlFactory;
-    this.verification = new MongoVerifier();
+  }
+
+  @Override
+  public MongoVerifier verify() {
+    return new MongoVerifier();
   }
 
   public NoSqlFactory getNoSqlFactory() {

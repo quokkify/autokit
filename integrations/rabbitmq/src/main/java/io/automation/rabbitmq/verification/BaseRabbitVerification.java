@@ -1,5 +1,6 @@
 package io.automation.rabbitmq.verification;
 
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -76,7 +77,7 @@ public abstract class BaseRabbitVerification<T extends BaseRabbitVerification<T>
     Waiter.awaitCondition(
         () -> {
           Optional<RabbitMessage<byte[]>> msg = clientSupplier.get().getMessage(queue, false);
-          return msg.isPresent() && new String(msg.get().getPayload()).contains(substring);
+          return msg.isPresent() && new String(msg.get().getPayload(), StandardCharsets.UTF_8).contains(substring);
         },
         "Expected message with body containing '" + substring + "' in queue: " + queue,
         timeout,
