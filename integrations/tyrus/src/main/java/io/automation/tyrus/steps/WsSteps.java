@@ -10,17 +10,20 @@ public final class WsSteps extends AbstractWsSteps<WsVerifier> {
 
   private WsClient client;
 
+  @Override
+  public WsVerifier verify() {
+    return new WsVerifier(client);
+  }
+
   @Step("Connect to WebSocket: {url}")
   public WsSteps connect(String url) {
     client = WsClient.connect(url);
-    this.verification = new WsVerifier(client);
     return this;
   }
 
   @Step("Connect to WebSocket")
   public WsSteps connect() {
     client = WsClient.connect();
-    this.verification = new WsVerifier(client);
     return this;
   }
 

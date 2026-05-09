@@ -12,7 +12,7 @@ import io.qameta.allure.Step;
  * @param <V> verification steps class
  * @param <P> page class
  */
-public abstract class ProxyPageSteps<S extends ProxyPageSteps<S, V, P>, V extends Verification<S, P>, P extends Page>
+public abstract class ProxyPageSteps<S extends ProxyPageSteps<S, V, P>, V extends Verification<S, V, P>, P extends Page>
     extends PageSteps<S, V, P> {
 
   /**

@@ -1,8 +1,8 @@
 package io.automation.tyrus.client;
 
+import java.time.Duration;
+
 import io.automation.annotation.SingleThread;
-import io.automation.constant.PollingInterval;
-import io.automation.constant.Timeout;
 import io.automation.tyrus.server.EchoServerEndpoint;
 import io.automation.tyrus.steps.WsSteps;
 import org.glassfish.tyrus.server.Server;
@@ -39,8 +39,8 @@ public class WsClientIntegrationTest {
     wsSteps.clearMessages()
         .sendMessage("hello")
         .verify()
-        .withTimeout(Timeout.SECONDS_5)
-        .withPolling(PollingInterval.MILLIS_100)
+        .withTimeout(Duration.ofSeconds(5))
+        .withPolling(Duration.ofMillis(100))
         .containsMessage("hello");
   }
 

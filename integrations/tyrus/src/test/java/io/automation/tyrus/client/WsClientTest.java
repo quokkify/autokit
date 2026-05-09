@@ -1,8 +1,8 @@
 package io.automation.tyrus.client;
 
+import java.time.Duration;
+
 import io.automation.annotation.SingleThread;
-import io.automation.constant.PollingInterval;
-import io.automation.constant.Timeout;
 import io.automation.tyrus.steps.WsVerifier;
 import io.automation.tyrus.steps.WsVerifierFactory;
 import org.testng.Assert;
@@ -21,8 +21,8 @@ public class WsClientTest {
     simulator = WsSimulator.create();
     client = simulator.asClient();
     verifier = WsVerifierFactory.create(client)
-        .withTimeout(Timeout.SECONDS_5)
-        .withPolling(PollingInterval.MILLIS_100);
+        .withTimeout(Duration.ofSeconds(5))
+        .withPolling(Duration.ofMillis(100));
   }
 
   @AfterMethod
@@ -72,8 +72,8 @@ public class WsClientTest {
     simulator.send("expected message");
 
     WsVerifierFactory.create(client)
-        .withTimeout(Timeout.SECONDS_3)
-        .withPolling(PollingInterval.MILLIS_100)
+        .withTimeout(Duration.ofSeconds(3))
+        .withPolling(Duration.ofMillis(100))
         .doesNotContainMessage("absent substring");
   }
 

@@ -1,5 +1,6 @@
 package io.automation.verification;
 
+import java.time.Duration;
 import java.util.List;
 
 import io.automation.helper.ResponseHelper;
@@ -14,7 +15,28 @@ import org.hamcrest.Matchers;
  */
 public abstract class BaseApiVerification<T extends BaseApiVerification<T>> implements ApiVerification {
 
+  private Duration timeout = Duration.ofSeconds(10);
+  private Duration pollingInterval = Duration.ofMillis(500);
+
   protected abstract T self();
+
+  public T withTimeout(Duration timeout) {
+    this.timeout = timeout;
+    return self();
+  }
+
+  public T withPolling(Duration pollingInterval) {
+    this.pollingInterval = pollingInterval;
+    return self();
+  }
+
+  protected Duration getTimeout() {
+    return timeout;
+  }
+
+  protected Duration getPollingInterval() {
+    return pollingInterval;
+  }
 
   /**
    * Verify responses status code.

@@ -147,6 +147,51 @@ public class UserTest extends BaseTest {
 }
 ```
 
+## Fluent verification chain
+
+Use `verify()` to assert database state with polling and configurable timeouts:
+
+```java
+QUser user = QUser.user;
+
+databaseSteps.verify()
+    .hasRecord(
+        () -> databaseSteps.selectDsl(user).where(user.email.eq("alice@example.com")).fetch(),
+        u -> u.getStatus().equals("active")
+    );
+```
+
+Negative assertion — record must not appear within the window:
+
+```java
+databaseSteps.verify()
+    .doesNotHaveRecord(
+        () -> databaseSteps.selectDsl(user).where(user.email.eq("deleted@example.com")).fetch(),
+        u -> u.getStatus().equals("active")
+    );
+```
+
+Override timing per-call:
+
+```java
+databaseSteps.verify()
+    .withTimeout(Duration.ofSeconds(30))
+    .withPolling(Duration.ofMillis(1000))
+    .hasRecord(query, predicate);
+```
+
+### Verification methods
+
+| Method                                               | Description                                                              |
+| ---------------------------------------------------- | ------------------------------------------------------------------------ |
+| `hasRecord(Callable<List<E>>, Predicate<E>)`         | Waits until the query returns at least one record matching the predicate |
+| `doesNotHaveRecord(Callable<List<E>>, Predicate<E>)` | Asserts no matching record appears within the configured window          |
+| `hasRecordCount(Callable<List<E>>, int)`             | Waits until the query returns at least N records                         |
+
+Default timeout is 60 seconds with 5 second polling.
+
+---
+
 ## Key API
 
 | Method                             | Description                          |

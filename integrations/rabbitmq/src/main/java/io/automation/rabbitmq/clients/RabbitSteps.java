@@ -4,11 +4,13 @@ import java.util.Objects;
 import java.util.Optional;
 
 import io.automation.rabbitmq.configs.RabbitMqConfiguration;
+import io.automation.rabbitmq.verification.RabbitVerifier;
+import io.automation.step.AbstractSteps;
 import io.qameta.allure.Step;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class RabbitSteps {
+public class RabbitSteps extends AbstractSteps<RabbitVerifier> {
 
   private static final Logger LOG = LogManager.getLogger(RabbitSteps.class);
 
@@ -24,6 +26,11 @@ public class RabbitSteps {
   public RabbitSteps(String configurationUrl) {
     this.rabbitMqConfiguration = null;
     this.configurationUrl = configurationUrl;
+  }
+
+  @Override
+  public RabbitVerifier verify() {
+    return new RabbitVerifier(this::getClient);
   }
 
   @Step("Send message to RabbitMQ")

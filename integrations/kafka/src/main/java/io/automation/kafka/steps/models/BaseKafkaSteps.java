@@ -8,7 +8,6 @@ import java.util.concurrent.Callable;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.automation.constant.PollingInterval;
 import io.automation.constant.StringConstant;
 import io.automation.constant.Timeout;
@@ -29,7 +28,6 @@ import org.apache.kafka.common.serialization.StringSerializer;
 import org.awaitility.core.ConditionTimeoutException;
 import org.hamcrest.Matchers;
 
-@SuppressFBWarnings("UWF_UNWRITTEN_PUBLIC_OR_PROTECTED_FIELD")
 public abstract class BaseKafkaSteps<M extends KafkaMessageValue, V extends KafkaVerification>
     extends AbstractSteps<V> {
 
@@ -37,8 +35,6 @@ public abstract class BaseKafkaSteps<M extends KafkaMessageValue, V extends Kafk
   private static final int DEFAULT_LOG_MESSAGE_LENGTH = 1000;
   private final KafkaConsumerSteps<String, String, StringDeserializer, StringDeserializer> kafkaConsumerSteps;
   private final KafkaProducerSteps<String, String, StringSerializer, StringSerializer> kafkaProducerSteps;
-
-  protected V verification;
 
   public BaseKafkaSteps(KafkaService kafkaService) {
     this.kafkaConsumerSteps = kafkaService.getKafkaConsumerSteps();
@@ -54,11 +50,6 @@ public abstract class BaseKafkaSteps<M extends KafkaMessageValue, V extends Kafk
   }
 
   protected abstract String getTopic();
-
-  @Override
-  public V verify() {
-    return this.verification;
-  }
 
   /**
    * Get topic partitions offsets.

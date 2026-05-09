@@ -10,7 +10,11 @@ public class DatabaseUserDbSteps extends DatabaseSteps<DatabaseUserVerification>
 
   public DatabaseUserDbSteps(SqlDatabaseSteps sqlDatabaseSteps) {
     this.sqlDatabaseSteps = sqlDatabaseSteps;
-    this.verification = new DatabaseUserVerification();
+  }
+
+  @Override
+  public DatabaseUserVerification verify() {
+    return new DatabaseUserVerification();
   }
 
   @Step("Get database user with '{expectedUser.firstName}' first name")

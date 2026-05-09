@@ -6,7 +6,7 @@ import io.automation.service.steps.w3schools.HtmlHorizontalTablePageSteps;
 import io.qameta.allure.Step;
 
 public class HtmlHorizontalTablePageVerification
-    extends Verification<HtmlHorizontalTablePageSteps, HtmlHorizontalTablePage> {
+    extends Verification<HtmlHorizontalTablePageSteps, HtmlHorizontalTablePageVerification, HtmlHorizontalTablePage> {
 
   public HtmlHorizontalTablePageVerification(HtmlHorizontalTablePageSteps steps, HtmlHorizontalTablePage page) {
     super(steps, page);

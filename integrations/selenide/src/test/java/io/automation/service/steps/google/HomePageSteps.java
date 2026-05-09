@@ -1,14 +1,14 @@
 package io.automation.service.steps.google;
 
 import io.automation.model.PageSteps;
-import io.automation.model.Verification;
 import io.automation.page.google.HomePage;
+import io.automation.service.verifications.google.HomePageVerification;
 import io.qameta.allure.Step;
 
-public class HomePageSteps extends PageSteps<HomePageSteps, Verification<HomePageSteps, HomePage>, HomePage> {
+public class HomePageSteps extends PageSteps<HomePageSteps, HomePageVerification, HomePage> {
 
   public HomePageSteps(HomePage page) {
-    super.verification = null;
+    super.verification = new HomePageVerification(this, page);
     super.page = page;
   }
 

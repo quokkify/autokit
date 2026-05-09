@@ -69,7 +69,7 @@ public class OrderWsSteps extends AbstractWsSteps<OrderWsVerification> {
 orderWsSteps.connect()
     .subscribeToOrders("user-42")
     .verify()
-    .withTimeout(Timeout.SECONDS_15)
+    .withTimeout(Duration.ofSeconds(15))
     .verifyOrderCreated("order-99")
     .hasMessageCount(1);
 ```
@@ -82,7 +82,7 @@ orderWsSteps.connect()
 | --------------------------------------- | ------------------------------------------------------------------ |
 | `containsMessage(String)`               | Waits until any message payload contains the substring             |
 | `containsMessage(Predicate<WsMessage>)` | Waits until any message matches the predicate                      |
-| `doesNotContainMessage(String)`         | Asserts the substring never appears (within 3 seconds)             |
+| `doesNotContainMessage(String)`         | Asserts the substring never appears within the configured timeout  |
 | `hasJsonField(String, String)`          | Waits until any message has the JSON field with the expected value |
 | `hasMessageCount(int)`                  | Waits until at least N messages have been received                 |
 | `messagesInOrder(String...)`            | Waits until substrings appear across messages in the given order   |
@@ -93,8 +93,8 @@ Default timeout is 10 seconds with 500 ms polling. Override per-assertion:
 
 ```java
 wsSteps.verify()
-    .withTimeout(Timeout.SECONDS_30)
-    .withPolling(PollingInterval.MILLIS_100)
+    .withTimeout(Duration.ofSeconds(30))
+    .withPolling(Duration.ofMillis(100))
     .containsMessage("slow_event");
 ```
 

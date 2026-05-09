@@ -15,7 +15,7 @@ import io.qameta.allure.Step;
  * @param <P> page class
  */
 @SuppressFBWarnings({"UWF_UNWRITTEN_PUBLIC_OR_PROTECTED_FIELD", "UUF_UNUSED_PUBLIC_OR_PROTECTED_FIELD"})
-public abstract class PageSteps<S extends PageSteps<S, V, P>, V extends Verification<S, P>, P extends Page>
+public abstract class PageSteps<S extends PageSteps<S, V, P>, V extends Verification<S, V, P>, P extends Page>
     extends AbstractSteps<V> implements StepCreator {
 
   protected V verification;

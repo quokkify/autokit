@@ -1,6 +1,41 @@
 # RabbitMQ integration
 
-Run local RabbitMQ stack:
+Provides a fluent verification API for asserting message presence and content in RabbitMQ queues,
+with configurable polling timeout and Allure step reporting.
+
+---
+
+## API overview
+
+```java
+rabbitSteps.verify()
+    .hasMessage("orders")
+    .hasMessageWithBody("orders", "order_created");
+```
+
+Adjust timing per-call:
+
+```java
+rabbitSteps.verify()
+    .withTimeout(Duration.ofSeconds(30))
+    .withPolling(Duration.ofMillis(500))
+    .hasMessage("payments");
+```
+
+## Verification methods
+
+| Method                                            | Description                                                          |
+| ------------------------------------------------- | -------------------------------------------------------------------- |
+| `hasMessage(String queue)`                        | Waits until the queue has at least one message                       |
+| `hasMessage(String queue, Predicate<...> pred)`   | Waits until a message matching the predicate appears in the queue    |
+| `hasMessageWithBody(String queue, String substr)` | Waits until a message whose body contains the substring is present   |
+| `doesNotHaveMessage(String queue)`                | Asserts no message appears in the queue within the configured window |
+
+Default timeout is 10 seconds with 500 ms polling.
+
+---
+
+## Run local RabbitMQ stack
 
 ```bash
 ./tools/environment/scripts/infra/run_app.sh rabbitmq
