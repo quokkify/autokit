@@ -15,12 +15,12 @@ testImplementation project(":data-utils:nosql:redis")
 
 ## Environment variables
 
-| Variable              | Default   | Description                                      |
-| --------------------- | --------- | ------------------------------------------------ |
-| `REDIS_HOST`          | `127.0.0.1` | Redis host                                     |
-| `REDIS_PORT`          | `6379`    | Redis port                                       |
-| `REDIS_PASSWORD`      | —         | Redis password (optional)                        |
-| `REDIS_CLUSTER_NODES` | —         | Comma-separated `host:port` list for cluster mode |
+| Variable              | Default     | Description                                       |
+| --------------------- | ----------- | ------------------------------------------------- |
+| `REDIS_HOST`          | `127.0.0.1` | Redis host                                        |
+| `REDIS_PORT`          | `6379`      | Redis port                                        |
+| `REDIS_PASSWORD`      | —           | Redis password (optional)                         |
+| `REDIS_CLUSTER_NODES` | —           | Comma-separated `host:port` list for cluster mode |
 
 ---
 
@@ -76,13 +76,13 @@ Default timeout is 10 seconds with 500 ms polling.
 
 ## Verification methods
 
-| Method                                              | Description                                                        |
-| --------------------------------------------------- | ------------------------------------------------------------------ |
-| `hasKey(String key)`                                | Waits until the key exists in Redis                                |
-| `doesNotHaveKey(String key)`                        | Asserts the key does not appear within the configured window       |
-| `hasValue(String key, String expectedValue)`        | Waits until the bucket at `key` equals `expectedValue`            |
+| Method                                                   | Description                                                  |
+| -------------------------------------------------------- | ------------------------------------------------------------ |
+| `hasKey(String key)`                                     | Waits until the key exists in Redis                          |
+| `doesNotHaveKey(String key)`                             | Asserts the key does not appear within the configured window |
+| `hasValue(String key, String expectedValue)`             | Waits until the bucket at `key` equals `expectedValue`       |
 | `hasMapEntry(String mapKey, String field, String value)` | Waits until the map field equals the expected value          |
-| `hasSetMember(String setKey, String member)`        | Waits until the set contains `member`                             |
+| `hasSetMember(String setKey, String member)`             | Waits until the set contains `member`                        |
 
 ---
 
