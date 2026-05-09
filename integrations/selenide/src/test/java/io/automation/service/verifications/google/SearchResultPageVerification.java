@@ -11,7 +11,7 @@ import io.automation.util.Waiter;
 import io.qameta.allure.Step;
 import org.assertj.core.api.Assertions;
 
-public class SearchResultPageVerification extends Verification<SearchResultPageSteps, SearchResultPage> {
+public class SearchResultPageVerification extends Verification<SearchResultPageSteps, SearchResultPageVerification, SearchResultPage> {
 
   public SearchResultPageVerification(SearchResultPageSteps steps, SearchResultPage page) {
     super(steps, page);

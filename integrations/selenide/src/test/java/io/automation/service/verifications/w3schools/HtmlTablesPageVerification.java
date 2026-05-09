@@ -10,7 +10,7 @@ import io.automation.service.steps.w3schools.HtmlTablesPageSteps;
 import io.automation.test.UiTableTest;
 import io.qameta.allure.Step;
 
-public class HtmlTablesPageVerification extends Verification<HtmlTablesPageSteps, HtmlTablesPage> {
+public class HtmlTablesPageVerification extends Verification<HtmlTablesPageSteps, HtmlTablesPageVerification, HtmlTablesPage> {
 
   public HtmlTablesPageVerification(HtmlTablesPageSteps steps, HtmlTablesPage page) {
     super(steps, page);
