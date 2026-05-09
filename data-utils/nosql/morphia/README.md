@@ -84,6 +84,51 @@ public class UserTest extends BaseTest {
 }
 ````
 
+## Fluent verification chain
+
+Use `verify()` to assert MongoDB state with polling and configurable timeouts:
+
+```java
+mongoSteps.verify()
+    .hasDocument(
+        () -> mongoSteps.selectDsl(User.class)
+            .filter(Filters.eq("email", "alice@example.com")).iterator().toList(),
+        user -> user.getStatus().equals("active")
+    );
+```
+
+Negative assertion — document must not appear within the window:
+
+```java
+mongoSteps.verify()
+    .doesNotHaveDocument(
+        () -> mongoSteps.selectDsl(User.class)
+            .filter(Filters.eq("email", "deleted@example.com")).iterator().toList(),
+        user -> user.getStatus().equals("active")
+    );
+```
+
+Override timing per-call:
+
+```java
+mongoSteps.verify()
+    .withTimeout(Duration.ofSeconds(15))
+    .withPolling(Duration.ofMillis(500))
+    .hasDocument(query, predicate);
+```
+
+### Verification methods
+
+| Method                                              | Description                                                              |
+| --------------------------------------------------- | ------------------------------------------------------------------------ |
+| `hasDocument(Callable<List<E>>, Predicate<E>)`      | Waits until the query returns at least one document matching the predicate |
+| `doesNotHaveDocument(Callable<List<E>>, Predicate<E>)` | Asserts no matching document appears within the configured window    |
+| `hasDocumentCount(Callable<List<E>>, int)`          | Waits until the query returns at least N documents                       |
+
+Default timeout is 30 seconds with 1 second polling.
+
+---
+
 ## Key API
 
 | Method                                   | Description                                       |

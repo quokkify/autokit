@@ -1,12 +1,11 @@
 package io.automation.tyrus.steps;
 
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import io.automation.constant.PollingInterval;
-import io.automation.constant.Timeout;
 import io.automation.tyrus.client.WsClient;
 import io.automation.tyrus.client.WsMessage;
 import io.automation.util.JsonConverter;
@@ -20,14 +19,14 @@ public abstract class BaseWsVerification<T extends BaseWsVerification<T>> implem
   private static final Logger LOG = LogManager.getLogger(BaseWsVerification.class);
 
   protected final WsClient client;
-  private Timeout timeout;
-  private PollingInterval pollingInterval;
+  private Duration timeout;
+  private Duration pollingInterval;
 
   protected BaseWsVerification(WsClient client) {
-    this(client, Timeout.SECONDS_10, PollingInterval.MILLIS_500);
+    this(client, Duration.ofSeconds(10), Duration.ofMillis(500));
   }
 
-  protected BaseWsVerification(WsClient client, Timeout timeout, PollingInterval pollingInterval) {
+  protected BaseWsVerification(WsClient client, Duration timeout, Duration pollingInterval) {
     this.client = client;
     this.timeout = timeout;
     this.pollingInterval = pollingInterval;
@@ -35,12 +34,12 @@ public abstract class BaseWsVerification<T extends BaseWsVerification<T>> implem
 
   protected abstract T self();
 
-  public T withTimeout(Timeout timeout) {
+  public T withTimeout(Duration timeout) {
     this.timeout = timeout;
     return self();
   }
 
-  public T withPolling(PollingInterval pollingInterval) {
+  public T withPolling(Duration pollingInterval) {
     this.pollingInterval = pollingInterval;
     return self();
   }
@@ -72,7 +71,7 @@ public abstract class BaseWsVerification<T extends BaseWsVerification<T>> implem
     LOG.debug("WS verify: does not contain message '{}'", substring);
     Waiter.assertNeverTrue(
         () -> client.getMessages().stream().anyMatch(m -> m.payload().contains(substring)),
-        Timeout.SECONDS_3, PollingInterval.MILLIS_500,
+        timeout, pollingInterval,
         "Unexpected WS message containing: " + substring
     );
     return self();

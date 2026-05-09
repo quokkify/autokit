@@ -22,15 +22,15 @@ Quick check with a custom timeout (500ms poll):
 Waiter.awaitQuickAssertion(() -> assertTrue(cache.containsKey("session-123")), Timeout.SECONDS_10);
 ```
 
-Wait for a supplier value to match a Hamcrest matcher:
+Wait for a supplier value to match a Hamcrest matcher — using `Duration` directly:
 
 ```java
 Waiter.awaitCondition(
         () -> fetchJobStatus(),
         Matchers.equalTo("COMPLETED"),
         "Job never reached COMPLETED",
-        Timeout.SECONDS_30,
-        PollingInterval.MILLIS_1000
+        Duration.ofSeconds(30),
+        Duration.ofMillis(1000)
 );
 ```
 
@@ -39,8 +39,8 @@ Assert a flag never flips to true (e.g. no error popup appears for 10 seconds):
 ```java
 Waiter.assertNeverTrue(
         () -> errorPopup.isDisplayed(),
-        Timeout.SECONDS_10,
-        PollingInterval.MILLIS_500,
+        Duration.ofSeconds(10),
+        Duration.ofMillis(500),
         "Error popup appeared unexpectedly"
 );
 ```
@@ -50,11 +50,15 @@ Assert a condition holds true for the full window (e.g. status stays ACTIVE):
 ```java
 Waiter.assertAlwaysTrue(
         () -> "ACTIVE".equals(fetchStatus()),
-        Timeout.SECONDS_30,
-        PollingInterval.MILLIS_1000,
+        Duration.ofSeconds(30),
+        Duration.ofMillis(1000),
         "Status dropped from ACTIVE before expected"
 );
 ```
+
+> **Enum overloads**: `Timeout` and `PollingInterval` enum overloads remain available as convenience wrappers
+> (e.g. `Timeout.SECONDS_30`, `PollingInterval.MILLIS_1000`) and delegate to the `Duration` forms internally.
+> Prefer `Duration` for new code.
 
 ## Key API
 
@@ -63,8 +67,8 @@ Waiter.assertAlwaysTrue(
 | `awaitAssertion(assertion)`                                     | 60s     | 5s      | AssertJ / TestNG assertion               |
 | `awaitQuickAssertion(assertion)`                                | 5s      | 500ms   | fast path, no overrides                  |
 | `awaitQuickAssertion(assertion, timeout)`                       | custom  | 500ms   | custom `Timeout` constant                |
-| `awaitCondition(callable, message, timeout, interval)`          | custom  | custom  | boolean `Callable`                       |
-| `awaitCondition(supplier, matcher, message, timeout, interval)` | custom  | custom  | Hamcrest `Matcher`                       |
+| `awaitCondition(callable, message, timeout, interval)`          | custom  | custom  | boolean `Callable`; accepts `Duration`   |
+| `awaitCondition(supplier, matcher, message, timeout, interval)` | custom  | custom  | Hamcrest `Matcher`; accepts `Duration`   |
 | `awaitConditionWithAction(condition, action, message)`          | default | default | runs `action` each tick                  |
 | `threadSleep(millis)`                                           | —       | —       | safe sleep, handles interrupt            |
 | `waitForNextSecond()`                                           | —       | —       | waits until clock ticks                  |

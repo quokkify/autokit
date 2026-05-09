@@ -237,10 +237,10 @@ public final class Waiter {
     assertNeverTrue(condition, Timeout.SECONDS_60, PollingInterval.MILLIS_1000, failMessage);
   }
 
-  private static void assertNeverTrue(BooleanSupplier condition,
-                                      Duration timeout,
-                                      Duration pollInterval,
-                                      String failMessage) {
+  public static void assertNeverTrue(BooleanSupplier condition,
+                                     Duration timeout,
+                                     Duration pollInterval,
+                                     String failMessage) {
     try {
       Awaitility.await()
           .atMost(timeout)
