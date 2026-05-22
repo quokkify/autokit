@@ -47,7 +47,7 @@ ext {
     querydsl = "5.1.0"
     jedis = "5.2.0"
     redisson = "4.4.0"
-    morphia = "2.5.2"
+    morphia = "2.5.3"
     mongodb_driver = "5.7.0"
     reportportal = "5.4.3"
     tyrus          = "2.2.2"
