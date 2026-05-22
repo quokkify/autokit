@@ -108,7 +108,7 @@ services:
 
   redis:
     profiles: [redis]
-    image: redis:8.6.3@sha256:718b0178d05af0c7e83eed8dfb829462a7c6b3c5a5e685eee184404f7a29ceb8
+    image: redis:8.6.3@sha256:4d25e2fe601f7ffaeb4437cb6ced3518bc36edf34ebe98863c80836943d94529
 
   reportportal-gateway:
     profiles: [reporting]
