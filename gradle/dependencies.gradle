@@ -9,7 +9,7 @@ ext {
     harReader = "2.5.0"
     aeonbits = "1.0.12"
     log4j = "2.26.0"
-    slf4j = "2.0.17"
+    slf4j = "2.0.18"
     allure = "2.34.0"
     httpcore5 = "5.4"
     feign = "13.12"
