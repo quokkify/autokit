@@ -249,7 +249,7 @@ services:
 
   reportportal-jobs:
     profiles: [reporting]
-    image: reportportal/service-jobs:5.15.0@sha256:70f38cf54a5e28637e83a6ce1f321120cb1a39c86359566e785b9ccb0b511dca
+    image: reportportal/service-jobs:5.15.1@sha256:f9d5a4a16c360f73b558b8a02c5577b1ca65543096013050a121e644372295b5
     depends_on:
       reportportal-rabbitmq:
         condition: service_healthy
