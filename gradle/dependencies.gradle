@@ -52,7 +52,7 @@ ext {
     reportportal = "5.4.3"
     tyrus          = "2.2.2"
     kafka          = "4.3.0"
-    rabbitmq = "5.30.0"
+    rabbitmq = "5.31.0"
     h2 = "2.4.240"
     classgraph = "4.8.184"
     mockito = "5.23.0"
