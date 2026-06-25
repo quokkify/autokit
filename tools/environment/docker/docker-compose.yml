@@ -93,7 +93,7 @@ services:
 
   mock-server:
     profiles: [mock]
-    image: mockserver/mockserver:6.0.0@sha256:f8e83858019cc48102c2920cf860d3c730854d839d89a9efbeac6f872323445b
+    image: mockserver/mockserver:7.2.0@sha256:b4fddf798d33f385e52e8f685085e3d646da0c5c8e498d2c9b6b4e87a1ffcde0
     command: -logLevel DEBUG -serverPort 1080
     environment:
       MOCKSERVER_WATCH_INITIALIZATION_JSON: true
