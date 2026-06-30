@@ -51,7 +51,7 @@ ext {
     mongodb_driver = "5.8.0"
     reportportal = "5.4.3"
     tyrus          = "2.2.2"
-    kafka          = "4.3.0"
+    kafka          = "4.3.1"
     rabbitmq = "5.31.0"
     h2 = "2.4.240"
     classgraph = "4.8.184"
