@@ -8,7 +8,7 @@ ext {
     selenide = "7.16.2"
     harReader = "2.5.0"
     aeonbits = "1.0.12"
-    log4j = "2.26.0"
+    log4j = "2.26.1"
     slf4j = "2.0.18"
     allure = "2.35.2"
     httpcore5 = "5.4"
