@@ -112,7 +112,7 @@ services:
 
   reportportal-gateway:
     profiles: [reporting]
-    image: traefik:v2.11.46@sha256:f51c7a1e285483c11d44eddd417f92b0a27657a5973e0d7dc4d8c18cdd3b1065
+    image: traefik:v2.11.50@sha256:e4cf36c7f13f76ad750720a8b51e9d2458964961b50a0148a806d589b5cfa88b
     command:
       - --providers.docker=true
       - --providers.docker.constraints=Label(`traefik.expose`, `true`)
