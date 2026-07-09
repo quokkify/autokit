@@ -12,7 +12,7 @@ ext {
     slf4j = "2.0.18"
     allure = "2.35.2"
     httpcore5 = "5.4"
-    feign = "13.12"
+    feign = "13.13"
     restAssured = "5.5.1"
     awaitility = "4.3.0"
     spotbugs_annotations = "4.10.2"
