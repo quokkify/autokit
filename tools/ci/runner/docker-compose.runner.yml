@@ -1,6 +1,6 @@
 services:
   dind:
-    image: docker:29.5-dind@sha256:6b9cd914eb9c6b342c040a49a27a5eb3804453bae6ecc90f7ff96133595a95e8
+    image: docker:29.5-dind@sha256:7278248384185bcbb54c7a76b2f0a7d354c4aac920605cc1ab48968d961052fb
     privileged: true
     environment:
       DOCKER_TLS_CERTDIR: ""
