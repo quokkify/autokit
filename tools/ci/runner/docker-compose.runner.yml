@@ -11,7 +11,7 @@ services:
       - dind-data:/var/lib/docker
 
   runner:
-    image: myoung34/github-runner:2.334.0@sha256:da8f1a351d2b93ee74602154545d2954c31225dfb730265f87079ed9884fc7ea
+    image: myoung34/github-runner:2.335.1@sha256:71231f16be5226f91c40d970c49d7e11588aba345eee6ea95ab9dc8e47d0a3d9
     depends_on:
       - dind
     environment:
