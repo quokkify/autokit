@@ -1,1 +1,1 @@
-{"id":"58d57605cb681da29ab589c782d4886e","fullName":"io.automation.test.DatabaseNoSqlTest.checkSelect","name":"Check select record from database","status":"passed","testResultsByEnv":{"common":"a4d273bb866aa61635d3659369cd392a"}}
+{"id":"58d57605cb681da29ab589c782d4886e","fullName":"io.automation.test.DatabaseNoSqlTest.checkSelect","name":"Check select record from database","status":"passed","testResultsByEnv":{"data":"ff2d7ca26c53fd45383eebf9d9cf7702"}}

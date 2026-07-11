@@ -1,1 +1,1 @@
-{"id":"9abe90d56562b7714378ff085ffbb424","fullName":"io.automation.test.SqlConverterTest.checkConvertingWhenFetchOne","name":"Check sql converting when 'fetchOne'","status":"passed","testResultsByEnv":{"common":"9837c67809bb143c976d8e3ece7e4c68"}}
+{"id":"9abe90d56562b7714378ff085ffbb424","fullName":"io.automation.test.SqlConverterTest.checkConvertingWhenFetchOne","name":"Check sql converting when 'fetchOne'","status":"passed","testResultsByEnv":{"data":"8de2248db0f5adcf478072f22042a729"}}

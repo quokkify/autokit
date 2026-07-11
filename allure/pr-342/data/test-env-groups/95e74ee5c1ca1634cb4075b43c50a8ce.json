@@ -1,1 +1,1 @@
-{"id":"95e74ee5c1ca1634cb4075b43c50a8ce","fullName":"io.automation.test.RedisSmokeTest.shouldStoreAndReadBasicTypes","name":"shouldStoreAndReadBasicTypes","status":"passed","testResultsByEnv":{"common":"2063238ad3d21dd6f0bfc8e543d3246e"}}
+{"id":"95e74ee5c1ca1634cb4075b43c50a8ce","fullName":"io.automation.test.RedisSmokeTest.shouldStoreAndReadBasicTypes","name":"shouldStoreAndReadBasicTypes","status":"passed","testResultsByEnv":{"data":"f57ac96253e0afb5081eb1280bdd9f5e"}}

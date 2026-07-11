@@ -1,1 +1,1 @@
-{"id":"8528d3cc46d6b050b8be3929062ac705","fullName":"io.automation.tyrus.client.WsClientTest.clearMessages_emptiesQueue","name":"clearMessages_emptiesQueue","status":"passed","testResultsByEnv":{"common":"933bcd16633c272c8f15de8af54bbba9"}}
+{"id":"8528d3cc46d6b050b8be3929062ac705","fullName":"io.automation.tyrus.client.WsClientTest.clearMessages_emptiesQueue","name":"clearMessages_emptiesQueue","status":"passed","testResultsByEnv":{"integrations":"7f31d3f444405e649dbec56866221183"}}

@@ -1,1 +1,1 @@
-{"id":"7115ea859121c1382950eb9a4205dbeb","fullName":"io.automation.tyrus.client.WsClientTest.verifier_hasJsonField_passes","name":"verifier_hasJsonField_passes","status":"passed","testResultsByEnv":{"common":"a4474ba4cb01dbdb7316ce3f695f8f1c"}}
+{"id":"7115ea859121c1382950eb9a4205dbeb","fullName":"io.automation.tyrus.client.WsClientTest.verifier_hasJsonField_passes","name":"verifier_hasJsonField_passes","status":"passed","testResultsByEnv":{"integrations":"b96edb825d648ee92d33920cb9bb20ae"}}
