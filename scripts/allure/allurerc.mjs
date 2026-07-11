@@ -52,13 +52,60 @@ function partitionMergedVariables(merged) {
 
 /**
  * @param {{labels?: {name?: string, value?: string}[]}} result
+ * @param {string} name
+ */
+function labelValue(result, name) {
+  const labels = Array.isArray(result.labels) ? result.labels : [];
+  return String(labels.find((label) => label.name === name)?.value || "");
+}
+
+/**
+ * @param {string} value
  * @param {string[]} prefixes
  */
-function packageStartsWith(result, prefixes) {
-  const labels = Array.isArray(result.labels) ? result.labels : [];
-  const packageLabel =
-    labels.find(({ name }) => name === "package")?.value || "";
-  return prefixes.some((prefix) => String(packageLabel).startsWith(prefix));
+function startsWithAny(value, prefixes) {
+  return prefixes.some((prefix) => value.startsWith(prefix));
+}
+
+/**
+ * @param {{labels?: {name?: string, value?: string}[]}} result
+ */
+function isDataResult(result) {
+  const parentSuite = labelValue(result, "parentSuite");
+  const packageLabel = labelValue(result, "package");
+
+  return (
+    startsWithAny(parentSuite, ["data-utils@"]) ||
+    startsWithAny(packageLabel, [
+      "io.automation.test.Database",
+      "io.automation.test.Redis",
+    ])
+  );
+}
+
+/**
+ * @param {{labels?: {name?: string, value?: string}[]}} result
+ */
+function isIntegrationsResult(result) {
+  const parentSuite = labelValue(result, "parentSuite");
+  const packageLabel = labelValue(result, "package");
+
+  return (
+    startsWithAny(parentSuite, ["integrations@"]) ||
+    startsWithAny(packageLabel, [
+      "io.automation.kafka.",
+      "io.automation.rabbitmq.",
+      "io.automation.reportportal.",
+      "io.automation.tyrus.",
+    ])
+  );
+}
+
+/**
+ * @param {{labels?: {name?: string, value?: string}[]}} result
+ */
+function isCommonResult(result) {
+  return !isDataResult(result) && !isIntegrationsResult(result);
 }
 
 const merged = loadMergedVariablesRaw();
@@ -70,17 +117,15 @@ export default {
   variables: global,
   environments: {
     common: {
-      matcher: (result) =>
-        packageStartsWith(result, ["io.quokkify.common", "io.automation"]),
+      matcher: isCommonResult,
       variables: common,
     },
     data: {
-      matcher: (result) => packageStartsWith(result, ["io.quokkify.data"]),
+      matcher: isDataResult,
       variables: data,
     },
     integrations: {
-      matcher: (result) =>
-        packageStartsWith(result, ["io.quokkify.integrations"]),
+      matcher: isIntegrationsResult,
       variables: integrations,
     },
   },
