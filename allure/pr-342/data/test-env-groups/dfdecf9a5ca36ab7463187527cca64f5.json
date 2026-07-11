@@ -1,0 +1,1 @@
+{"id":"dfdecf9a5ca36ab7463187527cca64f5","fullName":"io.automation.reportportal.test.ReportPortalApiServiceTest.getItemByUuid_pathContainsProjectAndUuid","name":"getItemByUuid path is built correctly for project and UUID","status":"passed","testResultsByEnv":{"common":"dd5b19a71179484d28a0122bc9d6e25e"}}
