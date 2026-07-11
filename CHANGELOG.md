@@ -18,6 +18,9 @@
 - Closed REST Assured connections when `max_response_time` is exceeded ([#202](https://github.com/ylazakovich/quokkify/issues/202)).
 - Stabilized GitHub Actions runner selection with self-hosted preference and GitHub-hosted fallback ([#115](https://github.com/ylazakovich/quokkify/issues/115)).
 - Fixed workflow permissions and reporting issues needed for reliable CI/report publication.
+
+### Dependencies
+
 - Updated the dependency baseline across testing, serialization, persistence, messaging, logging, and browser/integration modules.
 
 ### Documentation
