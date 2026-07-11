@@ -1,0 +1,26 @@
+name: Deploy subdirectory to gh-pages
+description: >
+  Publishes a folder to a path on branch gh-pages using git + rsync only.
+  Avoids third-party actions that run under a separate Node runtime.
+
+inputs:
+  token:
+    description: Token with contents write (e.g. secrets.GITHUB_TOKEN)
+    required: true
+  publish_dir:
+    description: Directory to publish, relative to workspace root
+    required: true
+  destination_dir:
+    description: Target path on gh-pages (e.g. allure/pr-42)
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Git push to gh-pages
+      shell: bash
+      env:
+        INPUT_TOKEN: ${{ inputs.token }}
+        INPUT_PUBLISH_DIR: ${{ inputs.publish_dir }}
+        INPUT_DEST_DIR: ${{ inputs.destination_dir }}
+      run: bash "${GITHUB_ACTION_PATH}/deploy-gh-pages-subdir.sh"
