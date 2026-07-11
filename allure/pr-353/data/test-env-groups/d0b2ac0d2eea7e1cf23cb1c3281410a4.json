@@ -1,0 +1,1 @@
+{"id":"d0b2ac0d2eea7e1cf23cb1c3281410a4","fullName":"io.automation.reportportal.test.ReportPortalConnectionTest.shouldRejectRequestWithInvalidToken","name":"Verify ReportPortal rejects requests with an invalid API token","status":"passed","testResultsByEnv":{"integrations":"e71a130f3b3a21af2533e625f760b235"}}
