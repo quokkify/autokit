@@ -3,7 +3,6 @@ package io.automation.factory;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import javax.annotation.CheckReturnValue;
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.codeborne.selenide.Driver;
@@ -11,6 +10,7 @@ import com.codeborne.selenide.impl.SelenidePageFactory;
 import com.codeborne.selenide.impl.WebElementSource;
 import io.automation.elements.base.Component;
 import io.automation.elements.base.ComponentsCollection;
+import org.jspecify.annotations.Nullable;
 import org.openqa.selenium.By;
 
 /**

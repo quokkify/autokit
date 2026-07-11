@@ -27,6 +27,7 @@ import org.apache.commons.lang3.StringUtils;
 public class CommonRandomData {
 
   protected static final Faker FAKER = new Faker(LocaleProviders.get());
+  private static final AtomicLong UNIQUE_LONG = new AtomicLong();
   protected static final String TEMPLATE_EMAIL = "%s.%s@%s";
   protected static final String TEMPLATE_WITH_DOT = "%s.%s";
   protected static final String TEMPLATE_WITH_SPACE = "%s %s";
@@ -348,8 +349,8 @@ public class CommonRandomData {
    *
    * @return the current Unix timestamp as a Long
    */
-  public static synchronized long uniqLong() {
-    return new AtomicLong(System.currentTimeMillis()).incrementAndGet();
+  public static long uniqLong() {
+    return UNIQUE_LONG.updateAndGet(previous -> Math.max(previous + 1, System.currentTimeMillis()));
   }
 
   /**
