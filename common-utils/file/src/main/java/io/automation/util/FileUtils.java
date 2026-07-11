@@ -24,6 +24,7 @@ import org.apache.logging.log4j.Logger;
 public final class FileUtils {
 
   private static final Logger LOG = LogManager.getLogger(FileUtils.class);
+  private static final Object FILE_WRITE_LOCK = new Object();
 
   private FileUtils() {
   }
@@ -171,16 +172,18 @@ public final class FileUtils {
    * @param text     text to append
    * @throws RuntimeException if an {@link IOException} occurs
    */
-  public static synchronized void addTextToFile(String fileName, String text) {
-    try {
-      Files.writeString(
-          Paths.get(fileName),
-          "%s%n".formatted(text),
-          StandardOpenOption.APPEND,
-          StandardOpenOption.CREATE
-      );
-    } catch (IOException e) {
-      throw new RuntimeException("Failed to write text to file: " + fileName, e);
+  public static void addTextToFile(String fileName, String text) {
+    synchronized (FILE_WRITE_LOCK) {
+      try {
+        Files.writeString(
+            Paths.get(fileName),
+            "%s%n".formatted(text),
+            StandardOpenOption.APPEND,
+            StandardOpenOption.CREATE
+        );
+      } catch (IOException e) {
+        throw new RuntimeException("Failed to write text to file: " + fileName, e);
+      }
     }
   }
 
@@ -191,16 +194,18 @@ public final class FileUtils {
    * @param texts    list of texts to append
    * @throws RuntimeException if an {@link IOException} occurs
    */
-  public static synchronized void addTextsToFile(String fileName, List<String> texts) {
-    try {
-      Files.writeString(
-          Paths.get(fileName),
-          "[%s]%n".formatted(String.join(StringConstant.COMMA, texts)),
-          StandardOpenOption.APPEND,
-          StandardOpenOption.CREATE
-      );
-    } catch (IOException e) {
-      throw new RuntimeException("Failed to write texts to file: " + fileName, e);
+  public static void addTextsToFile(String fileName, List<String> texts) {
+    synchronized (FILE_WRITE_LOCK) {
+      try {
+        Files.writeString(
+            Paths.get(fileName),
+            "[%s]%n".formatted(String.join(StringConstant.COMMA, texts)),
+            StandardOpenOption.APPEND,
+            StandardOpenOption.CREATE
+        );
+      } catch (IOException e) {
+        throw new RuntimeException("Failed to write texts to file: " + fileName, e);
+      }
     }
   }
 
