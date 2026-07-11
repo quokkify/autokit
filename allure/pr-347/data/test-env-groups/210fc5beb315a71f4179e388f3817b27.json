@@ -1,0 +1,1 @@
+{"id":"210fc5beb315a71f4179e388f3817b27","fullName":"io.automation.rabbitmq.test.RabbitMessageTest.testPayloadSerialization","name":"Verify RabbitMessage object payload serialization","status":"passed","testResultsByEnv":{"common":"610c6564df3bf9ef6b516b62974aa1c4"}}

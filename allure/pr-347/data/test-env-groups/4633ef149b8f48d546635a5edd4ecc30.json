@@ -1,0 +1,1 @@
+{"id":"4633ef149b8f48d546635a5edd4ecc30","fullName":"io.automation.util.JsonConverterModuleDiscoveryTest.shouldUseDefaultDiscoveredJavaTimeModule","name":"Verify default discovered modules support Java Time serialization and deserialization","status":"passed","testResultsByEnv":{"common":"e238f73192ea529ea7fc02604e2257e4"}}
