@@ -37,7 +37,7 @@ ext {
     jaxb = "4.0.5"
     guice = "7.0.0"
     jjwt = "0.13.0"
-    rest_assured = "6.0.0"
+    rest_assured = "6.0.1"
     jjschema = "1.16"
     report_portal_rest_assured = "5.3.4"
     report_portal_client_java = "5.2.15"
