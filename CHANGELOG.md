@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.0.1](https://github.com/ylazakovich/quokkify/compare/v1.0.0...v1.0.1) (2026-07-11)
+
+
+### Documentation
+
+* **changelog:** curate initial release notes ([#352](https://github.com/ylazakovich/quokkify/issues/352)) ([b0677e7](https://github.com/ylazakovich/quokkify/commit/b0677e7f02a2cc07f5c2306a793e18992e909623))
+* **changelog:** format release notes ([#350](https://github.com/ylazakovich/quokkify/issues/350)) ([2756ad0](https://github.com/ylazakovich/quokkify/commit/2756ad08cd0da74bbdfb4deef2ca375856fdeca3))
+
+
+### CI
+
+* **prettier:** ignore generated changelog ([#351](https://github.com/ylazakovich/quokkify/issues/351)) ([90ea1d4](https://github.com/ylazakovich/quokkify/commit/90ea1d4d144d93d5e3ab222df28d2b25eade0a11))
+* **release:** configure changelog sections ([#353](https://github.com/ylazakovich/quokkify/issues/353)) ([353dba1](https://github.com/ylazakovich/quokkify/commit/353dba1ec5ee636fa53cbd81ef250bff769a7708))
+
 ## 1.0.0 (2026-07-11)
 
 ### Features
