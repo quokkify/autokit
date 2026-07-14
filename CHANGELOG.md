@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/ylazakovich/quokkify/compare/v1.0.1...v1.0.2) (2026-07-14)
+
+
+### ⚙️ CI
+
+* **release:** add emoji headings in release changelog ([#357](https://github.com/ylazakovich/quokkify/issues/357)) ([4774552](https://github.com/ylazakovich/quokkify/commit/4774552357021927eb46baa0c0b807281730ed5f))
+
 ## [1.0.1](https://github.com/ylazakovich/quokkify/compare/v1.0.0...v1.0.1) (2026-07-11)
 
 
