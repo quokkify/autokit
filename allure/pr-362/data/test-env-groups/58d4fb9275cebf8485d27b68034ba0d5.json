@@ -1,0 +1,1 @@
+{"id":"58d4fb9275cebf8485d27b68034ba0d5","fullName":"io.automation.converter.CsvConverterModuleDiscoveryTest.shouldSerializeWithCustomFormattingWhenModuleRegistered","name":"Verify CSV serialization applies discovered custom module formatting","status":"passed","testResultsByEnv":{"common":"c172e8695cdcfe57956e46a0c87ee39f"}}
