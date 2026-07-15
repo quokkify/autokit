@@ -1,0 +1,1 @@
+{"id":"c6a16ce80a505b41223f2aeff216663e","fullName":"io.automation.converter.XmlConverterModuleDiscoveryTest.shouldSerializeWithTypeFieldWhenCustomModuleRegistered","name":"Verify XML serialization contains type discriminator when module discovery is enabled","status":"passed","testResultsByEnv":{"common":"29aed224e3a7fa0d3e5cc327334a1f2c"}}
