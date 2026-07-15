@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.0.3](https://github.com/ylazakovich/quokkify/compare/v1.0.2...v1.0.3) (2026-07-15)
+
+
+### 🐛 Bug Fixes
+
+* **deps:** update checkstyle to v13.8.0 ([#361](https://github.com/ylazakovich/quokkify/issues/361)) ([aad5824](https://github.com/ylazakovich/quokkify/commit/aad58249c1a2ee0f945a9b0a814697b9a32ae51f))
+* **deps:** update hibernate-orm monorepo to v7.4.5.final ([#360](https://github.com/ylazakovich/quokkify/issues/360)) ([33b3057](https://github.com/ylazakovich/quokkify/commit/33b3057c13fea7590e248c9924048b771434f947))
+* **deps:** update org.bouncycastle:bcprov-jdk18on to v1.85 ([#365](https://github.com/ylazakovich/quokkify/issues/365)) ([5f9f067](https://github.com/ylazakovich/quokkify/commit/5f9f0679d35ac7db30253f1bdb8dcead8ee28b9d))
+* **deps:** update selenide to v7.17.0 ([#362](https://github.com/ylazakovich/quokkify/issues/362)) ([1dbec12](https://github.com/ylazakovich/quokkify/commit/1dbec126af62e5faf2280043e3b040272227f64b))
+
+
+### 🧹 Chores
+
+* **deps:** update actions/setup-node action to v7 ([#363](https://github.com/ylazakovich/quokkify/issues/363)) ([27af211](https://github.com/ylazakovich/quokkify/commit/27af2114e8d1af7912814f9a58765227e9911528))
+
 ## [1.0.2](https://github.com/ylazakovich/quokkify/compare/v1.0.1...v1.0.2) (2026-07-14)
 
 
