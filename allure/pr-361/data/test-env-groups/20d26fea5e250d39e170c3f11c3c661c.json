@@ -1,1 +1,1 @@
-{"id":"20d26fea5e250d39e170c3f11c3c661c","fullName":"io.automation.test.ApiTest.testValidateSchemaByJsonSchemaFile","name":"Verify scheme validation by json schema file","status":"passed","testResultsByEnv":{"integrations":"ba0498d3033eb3e1e1145d75d848815e"}}
+{"id":"20d26fea5e250d39e170c3f11c3c661c","fullName":"io.automation.test.ApiTest.testValidateSchemaByJsonSchemaFile","name":"Verify scheme validation by json schema file","status":"passed","testResultsByEnv":{"integrations":"2dca239ae5e43d254801a2fef9c0db15"}}
