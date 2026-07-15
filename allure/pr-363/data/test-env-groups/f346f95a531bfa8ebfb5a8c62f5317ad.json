@@ -1,1 +1,1 @@
-{"id":"f346f95a531bfa8ebfb5a8c62f5317ad","fullName":"io.automation.test.ApiTest.testLocalDateTimeFormatterAndParser","name":"Verify 'LocalDateFormatter' and 'LocalDateParser'","status":"passed","testResultsByEnv":{"integrations":"b804993d9cf8adb47364d78fdca6c98a"}}
+{"id":"f346f95a531bfa8ebfb5a8c62f5317ad","fullName":"io.automation.test.ApiTest.testLocalDateTimeFormatterAndParser","name":"Verify 'LocalDateFormatter' and 'LocalDateParser'","status":"passed","testResultsByEnv":{"integrations":"1a113252d90d78558271ba19d8658bd7"}}
