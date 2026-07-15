@@ -1,0 +1,1 @@
+{"id":"42a1c056b4b7d88b9be91b0831419654","fullName":"io.automation.parser.YamlParserModuleDiscoveryIntegrationTest.shouldConvertYamlToPolymorphicTypeUsingDiscoveredModule","name":"Verify YamlParser + JsonConverter path applies discovered polymorphic module","status":"passed","testResultsByEnv":{"common":"500c3248cdd905a4358f98a5fa84190c"}}
