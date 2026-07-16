@@ -1,1 +1,1 @@
-{"id":"d4ff50915a7100e65c7dba55752d9713","fullName":"io.automation.tyrus.client.WsClientIntegrationTest.connect_receivesEchoedMessage","name":"connect_receivesEchoedMessage","status":"passed","testResultsByEnv":{"integrations":"54d98fa52ef5ea49c86901d2d3b475fe"}}
+{"id":"d4ff50915a7100e65c7dba55752d9713","fullName":"io.automation.tyrus.client.WsClientIntegrationTest.connect_receivesEchoedMessage","name":"connect_receivesEchoedMessage","status":"passed","testResultsByEnv":{"integrations":"7f0a14374eff1df8de8476a9fb4b0c72"}}
