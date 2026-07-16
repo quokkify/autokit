@@ -1,0 +1,1 @@
+{"id":"ebea902cb2371b6cff2b54e32e9e7b6c","fullName":"io.automation.parser.YamlParserModuleDiscoveryIntegrationTest.shouldConvertYamlToJavaTimeTypeUsingDiscoveredModule","name":"Verify YamlParser + JsonConverter path supports Java Time via discovered modules","status":"passed","testResultsByEnv":{"common":"be53c68ca227a411c680a02b0c2f5f53"}}
