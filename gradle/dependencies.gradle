@@ -15,7 +15,7 @@ ext {
     feign = "13.13"
     restAssured = "5.5.1"
     awaitility = "4.3.0"
-    spotbugs_annotations = "4.10.2"
+    spotbugs_annotations = "4.10.3"
     bouncy_castle = "1.85"
     snakeyaml = "2.2"
     gson = "2.13.0"
