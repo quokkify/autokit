@@ -103,7 +103,7 @@ services:
 
   mongodb:
     profiles: [storage]
-    image: mongo:8.3.4@sha256:0f887198e29c093fd2b36c3e2eb43c7b98e47c081d89fbd5bc212da0cd43ec58
+    image: mongo:8.3.7@sha256:a7f5aa200005611166adcec0192c2f11d0acc3bfd9d5eb68e1a998a990412e41
     restart: always
 
   redis:
