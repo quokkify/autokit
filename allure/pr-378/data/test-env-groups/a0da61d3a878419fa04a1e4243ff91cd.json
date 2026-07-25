@@ -1,0 +1,1 @@
+{"id":"a0da61d3a878419fa04a1e4243ff91cd","fullName":"io.automation.test.ConnectionTimeoutTest.testConnectionClosedOnTimeout","name":"Verify connection is closed when MAX_RESPONSE_TIME_SECONDS is exceeded","status":"passed","testResultsByEnv":{"integrations":"45f87285de7ccb8c0e1dfd559626d03b"}}

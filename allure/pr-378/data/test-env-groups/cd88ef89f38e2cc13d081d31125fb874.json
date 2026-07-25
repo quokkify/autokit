@@ -1,0 +1,1 @@
+{"id":"cd88ef89f38e2cc13d081d31125fb874","fullName":"io.automation.converter.CsvConverterModuleDiscoveryTest.shouldDeserializeCustomFormattedEnumWhenModuleRegistered","name":"Verify CSV deserialization succeeds with discovered custom module","status":"passed","testResultsByEnv":{"common":"c1976198eb3e410adc5eeb8c2a1dbed3"}}
