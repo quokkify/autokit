@@ -1,0 +1,1 @@
+{"id":"6b39bc147a6d994c396e7d07fbf790ef","fullName":"io.automation.reportportal.services.ParamOverrideTestNgServiceTest.getTestCaseDescription_returnsExpectedMarkdown","name":"getTestCaseDescription builds correct markdown for all combinations","status":"passed","testResultsByEnv":{"integrations":"e84a98168f8fddf2d4bc1450f84575af"}}

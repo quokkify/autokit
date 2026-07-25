@@ -1,0 +1,1 @@
+{"id":"5eee594a9080750f0b5f614a788658b2","fullName":"io.automation.reportportal.test.ReportPortalConnectionTest.shouldSendTextLogToReportPortal","name":"Verify text log can be sent to ReportPortal and returns log entry ID","status":"passed","testResultsByEnv":{"integrations":"104fce7337b93ad545264b125f50ade5"}}

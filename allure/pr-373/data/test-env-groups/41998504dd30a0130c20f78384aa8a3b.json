@@ -1,0 +1,1 @@
+{"id":"41998504dd30a0130c20f78384aa8a3b","fullName":"io.automation.reportportal.test.ReportPortalApiServiceTest.getItemByUuid_nonExistentUuid_returnsItemWithNullId","name":"getItemByUuid returns an object for an existing project (negative: non-existent UUID)","status":"passed","testResultsByEnv":{"integrations":"3be00965b46e3ae1f348645b23fc7489"}}
