@@ -1,0 +1,1 @@
+{"id":"4cc87799133e8568d97e2125b82755aa","fullName":"io.automation.converter.CsvConverterModuleDiscoveryTest.shouldSerializeWithoutCustomFormattingWhenModuleNotRegistered","name":"Verify CSV serialization keeps default enum format when module discovery is disabled","status":"passed","testResultsByEnv":{"common":"2796e10f5e677f87c99cb9b7019ddab3"}}
