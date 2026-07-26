@@ -496,7 +496,7 @@ services:
 
   reportportal-analyzer:
     profiles: [reporting]
-    image: reportportal/service-auto-analyzer:5.15.3@sha256:f2b91659daf57db082b025b8bea3866ff092fbcb1e6e2d05c5a573d0f5d952e6
+    image: reportportal/service-auto-analyzer:5.15.4@sha256:dd90cfa9761340b38d1f925f6d9288e880f6cc2c7db7758dbdbbcb416154abef
     environment:
       LOGGING_LEVEL: info
       AMQP_EXCHANGE_NAME: analyzer-default
