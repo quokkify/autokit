@@ -1,1 +1,1 @@
-{"id":"c74bb7b9e0be8588a6772545bbe40591","fullName":"io.automation.kafka.test.KafkaTest.testKafkaPublishMessage","name":"Verify the publication of Kafka message","status":"passed","testResultsByEnv":{"integrations":"0edb14f8fbd37819f7d2fbc6fff14108"}}
+{"id":"c74bb7b9e0be8588a6772545bbe40591","fullName":"io.automation.kafka.test.KafkaTest.testKafkaPublishMessage","name":"Verify the publication of Kafka message","status":"passed","testResultsByEnv":{"integrations":"d633299d8bcbe734fe6e63c5dfbe9d57"}}
