@@ -1,1 +1,0 @@
-{"id":"03c938d96313f9bcc9165dc179adac80","fullName":"io.automation.test.CustomExternalServiceLogFilterTest.filter_alwaysReturnsResponseFromContext","name":"Filter always returns the response from context.next regardless of status","status":"passed","testResultsByEnv":{"integrations":"db2e43e8283ac9dca42657c690355c3e"}}
