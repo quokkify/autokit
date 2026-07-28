@@ -1,0 +1,1 @@
+{"id":"b0ad1ac81b13a63728d928895b1dcb82","fullName":"io.automation.reportportal.test.ReportPortalConnectionTest.shouldConnectToReportPortalApi","name":"Verify ReportPortal endpoint and token can access project list","status":"passed","testResultsByEnv":{"integrations":"ceef75c02f8627163683d07ddad97d52"}}
