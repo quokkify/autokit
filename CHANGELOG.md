@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.0.4](https://github.com/ylazakovich/quokkify/compare/v1.0.3...v1.0.4) (2026-07-28)
+
+
+### 🐛 Bug Fixes
+
+* **deps:** update allure to v2.35.4 ([#377](https://github.com/ylazakovich/quokkify/issues/377)) ([5a66f4c](https://github.com/ylazakovich/quokkify/commit/5a66f4cef29787f2f6b9453f09c83b3bc288fec9))
+* **deps:** update com.github.spotbugs:spotbugs-annotations to v4.10.3 ([#371](https://github.com/ylazakovich/quokkify/issues/371)) ([64e442b](https://github.com/ylazakovich/quokkify/commit/64e442b699224432020f60fb3c2d16869174321b))
+* **deps:** update org.mongodb:mongodb-driver-sync to v5.9.1 ([#378](https://github.com/ylazakovich/quokkify/issues/378)) ([de7e54e](https://github.com/ylazakovich/quokkify/commit/de7e54ea8cce9592c0bcc6b122fe797706ee9fce))
+
+
+### 🧹 Chores
+
+* **deps:** update mongo docker tag to v8.3.7 ([#373](https://github.com/ylazakovich/quokkify/issues/373)) ([f2166f3](https://github.com/ylazakovich/quokkify/commit/f2166f312a3813e69ff6417edfde4bbf54643898))
+* **deps:** update nginx docker tag to v1.31.3 ([#368](https://github.com/ylazakovich/quokkify/issues/368)) ([05400be](https://github.com/ylazakovich/quokkify/commit/05400be71ef719683d3602babe18c0352950f5a7))
+* **deps:** update redis docker tag to v8.8.1 ([#374](https://github.com/ylazakovich/quokkify/issues/374)) ([f23486c](https://github.com/ylazakovich/quokkify/commit/f23486c6a633b7ed7b96a826deb06fde3e272b92))
+* **deps:** update reportportal/service-auto-analyzer docker tag to v5.15.4 ([#375](https://github.com/ylazakovich/quokkify/issues/375)) ([51f09e9](https://github.com/ylazakovich/quokkify/commit/51f09e9ecd2e0365f119b1e183b29c1e11e47b38))
+* **deps:** update traefik docker tag to v3.7.8 ([#370](https://github.com/ylazakovich/quokkify/issues/370)) ([ab25bc0](https://github.com/ylazakovich/quokkify/commit/ab25bc0190cecbf25ffe706550ab4a73d8a27889))
+* **deps:** update traefik docker tag to v3.7.9 ([#376](https://github.com/ylazakovich/quokkify/issues/376)) ([bb9f276](https://github.com/ylazakovich/quokkify/commit/bb9f276a8700fb978dc86642b16c5a932dda74cf))
+
 ## [1.0.3](https://github.com/ylazakovich/quokkify/compare/v1.0.2...v1.0.3) (2026-07-15)
 
 
