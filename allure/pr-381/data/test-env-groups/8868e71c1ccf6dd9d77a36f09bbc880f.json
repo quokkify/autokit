@@ -1,0 +1,1 @@
+{"id":"8868e71c1ccf6dd9d77a36f09bbc880f","fullName":"io.automation.test.CustomExternalServiceLogFilterTest.filter_delegatesToContextNextOnce","name":"Filter delegates execution to context.next exactly once per call","status":"passed","testResultsByEnv":{"integrations":"1d0138618a3d71f8619ea691a13b203d"}}

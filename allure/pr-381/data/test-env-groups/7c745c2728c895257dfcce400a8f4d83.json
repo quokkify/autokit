@@ -1,0 +1,1 @@
+{"id":"7c745c2728c895257dfcce400a8f4d83","fullName":"io.automation.reportportal.test.ReportPortalConnectionTest.shouldAttachPngScreenshotToReportPortal","name":"Verify screenshot (PNG) attachment can be sent to ReportPortal","status":"passed","testResultsByEnv":{"integrations":"cfd8fdde828f750d26a28680ad5ce9da"}}
