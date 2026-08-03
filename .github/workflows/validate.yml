@@ -1,0 +1,53 @@
+name: Validate
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  template-contract:
+    name: Shared template contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.14"
+      - name: Validate generated configuration
+        run: |
+          python -m pip install PyYAML==6.0.3
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import yaml
+
+          answers = yaml.safe_load(Path(".copier-answers.yml").read_text())
+          if not isinstance(answers, dict) or not answers.get("_src_path"):
+              raise SystemExit(".copier-answers.yml must contain _src_path")
+          for path in (Path("renovate.json"), Path(".github/release-please/config.json"), Path(".github/release-please/manifest.json")):
+              if path.exists():
+                  json.loads(path.read_text())
+          for path in Path(".github/workflows").glob("*.yml"):
+              yaml.safe_load(path.read_text())
+          PY
+          git diff --check
+
+  java-1:
+    name: java (.)
+    uses: quokkify/project-toolkit/.github/workflows/java-ci.yml@v2.8.1
+    with:
+      working-directory: "."
