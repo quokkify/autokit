@@ -58,4 +58,4 @@ jobs:
       - name: Scan repository
         run: |
           # Historical scanning is enabled after the 16 pre-existing findings are triaged.
-          "$RUNNER_TEMP/bin/gitleaks" dir --redact --no-banner --config "$RUNNER_TEMP/gitleaks.toml" --gitleaks-ignore-path "$RUNNER_TEMP/gitleaksignore" .
+          "$RUNNER_TEMP/bin/gitleaks" dir --verbose --redact --no-banner --config "$RUNNER_TEMP/gitleaks.toml" --gitleaks-ignore-path "$RUNNER_TEMP/gitleaksignore" .
