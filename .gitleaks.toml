@@ -1,0 +1,14 @@
+# Keep the built-in rules; these paths contain deliberate cryptographic fixtures,
+# documented PEM markers, local-development credentials, or captured vendor HTML.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Autokit non-production fixtures and documentation"
+paths = [
+  '''^common-utils/signature/src/main/java/io/automation/generator/SignatureGenerator\.java$''',
+  '''^common-utils/signature/src/main/java/io/automation/formatter/KeyPairFormatter\.java$''',
+  '''^common-utils/signature/src/main/resources/aes-encryption\.properties$''',
+  '''^tools/environment/docker/docker-compose\.yml$''',
+  '''^tools/environment/assets/nginx/html/google/index\.html$''',
+]
