@@ -1,0 +1,1 @@
+{"id":"bd5aebfd8129fa7f1555eb914753cb9f","fullName":"io.automation.test.SqlConverterTest.checkInWithEscapingInCollection","name":"IN: string items with single quotes must be escaped (O'Hara -> O''Hara)","status":"passed","testResultsByEnv":{"data":"604b0bba47f91a15935fb390ae569141"}}
