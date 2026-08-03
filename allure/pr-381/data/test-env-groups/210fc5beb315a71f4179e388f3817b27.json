@@ -1,1 +1,1 @@
-{"id":"210fc5beb315a71f4179e388f3817b27","fullName":"io.automation.rabbitmq.test.RabbitMessageTest.testPayloadSerialization","name":"Verify RabbitMessage object payload serialization","status":"passed","testResultsByEnv":{"integrations":"fc2bbb6180df3fcf743d9126f137f425"}}
+{"id":"210fc5beb315a71f4179e388f3817b27","fullName":"io.automation.rabbitmq.test.RabbitMessageTest.testPayloadSerialization","name":"Verify RabbitMessage object payload serialization","status":"passed","testResultsByEnv":{"integrations":"8b8043fb273a86896464bcfedd1e5cca"}}
