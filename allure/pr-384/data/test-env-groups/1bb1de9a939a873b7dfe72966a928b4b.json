@@ -1,0 +1,1 @@
+{"id":"1bb1de9a939a873b7dfe72966a928b4b","fullName":"io.automation.util.JsonConverterModuleDiscoveryTest.shouldFailDeserializePolymorphicPayloadWhenCustomModuleNotRegistered","name":"Verify deserialization to base type fails without discovered custom module","status":"passed","testResultsByEnv":{"common":"0378d9380a92c62a1750d46adb071209"}}
