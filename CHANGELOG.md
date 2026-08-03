@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.0.6](https://github.com/quokkify/autokit/compare/v1.0.5...v1.0.6) (2026-08-03)
+
+
+### 🐛 Bug Fixes
+
+* **ci:** align Copier template baseline ([#389](https://github.com/quokkify/autokit/issues/389)) ([5ab37dd](https://github.com/quokkify/autokit/commit/5ab37ddbb02233ad8c8e6a200631e06862a848c8))
+* **ci:** use Renovate-compatible Copier source URL ([#386](https://github.com/quokkify/autokit/issues/386)) ([7baee5e](https://github.com/quokkify/autokit/commit/7baee5eeb5f354e8a7807b09fb388be8c0a6a2e4))
+* **deps:** update checkstyle to v13.9.0 ([#392](https://github.com/quokkify/autokit/issues/392)) ([e1c1f71](https://github.com/quokkify/autokit/commit/e1c1f710990e3b59453d20e0f640b110604d84ca))
+* **deps:** update io.github.classgraph:classgraph to v4.8.186 ([#385](https://github.com/quokkify/autokit/issues/385)) ([2a2c655](https://github.com/quokkify/autokit/commit/2a2c6552312e6eecb54d15470878583b10f0da5f))
+
+
+### 🧹 Chores
+
+* **deps:** update docker docker tag to v29.7 ([#393](https://github.com/quokkify/autokit/issues/393)) ([03eac68](https://github.com/quokkify/autokit/commit/03eac68f815d7511b1fd765ff39c8503039b3708))
+* **deps:** update mockserver/mockserver docker tag to v7.5.0 ([#388](https://github.com/quokkify/autokit/issues/388)) ([5c0842a](https://github.com/quokkify/autokit/commit/5c0842a78e65b44356e3aee2212ae566e0cc758d))
+* **deps:** update myoung34/github-runner docker tag to v2.336.0 ([#390](https://github.com/quokkify/autokit/issues/390)) ([fa50aa7](https://github.com/quokkify/autokit/commit/fa50aa7969155637bf1314d35d734bc9d8af921e))
+* **deps:** update tecnativa/docker-socket-proxy docker tag to v0.5.0 ([#391](https://github.com/quokkify/autokit/issues/391)) ([801eea2](https://github.com/quokkify/autokit/commit/801eea220045a66194ae769a4f02677d5d2fdae6))
+
 ## [1.0.5](https://github.com/quokkify/autokit/compare/v1.0.4...v1.0.5) (2026-08-03)
 
 
