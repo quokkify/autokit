@@ -1,0 +1,1 @@
+{"id":"acbbc561b07645e9b2de1206fcf5c46a","fullName":"io.automation.converter.XmlConverterModuleDiscoveryTest.shouldDeserializePolymorphicPayloadWhenCustomModuleRegistered","name":"Verify XML deserialization to base type works with discovered custom module","status":"passed","testResultsByEnv":{"common":"5f8f2fb90c6e5488b9cb0a612ced2b21"}}
