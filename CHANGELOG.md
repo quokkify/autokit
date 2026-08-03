@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.5](https://github.com/quokkify/autokit/compare/v1.0.4...v1.0.5) (2026-08-03)
+
+
+### 🧹 Chores
+
+* **ci:** adopt project-toolkit v2.8.1 ([#382](https://github.com/quokkify/autokit/issues/382)) ([0290a26](https://github.com/quokkify/autokit/commit/0290a26074f1adcd75f2f7b7f93ef609b55a1576))
+
 ## [1.0.4](https://github.com/ylazakovich/quokkify/compare/v1.0.3...v1.0.4) (2026-07-28)
 
 
