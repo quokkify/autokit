@@ -1,0 +1,1 @@
+{"id":"2d07d9d90fa59cabb70375fab3b86bd0","fullName":"io.automation.test.SqlConverterTest.checkLimitAndOffsetReplacement","name":"Limit/Offset: placeholders should be replaced with numeric values in Executable SQL","status":"passed","testResultsByEnv":{"data":"955f112ab03cdf8224436de8375584a4"}}
