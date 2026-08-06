@@ -1,0 +1,1 @@
+{"id":"38ce0d8a86974ed6152dbdf9e9a70b40","fullName":"io.automation.model.CustomPojoTest.testSetEachAtReplacesFieldInAllElements","name":"Verify set value in each array element by relative json pointer","status":"passed","testResultsByEnv":{"common":"438548af4ea3f0c3f10449ed33b5e58a"}}

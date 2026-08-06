@@ -1,0 +1,1 @@
+{"id":"6e77733cb13e0579606d815cb8fe0ac7","fullName":"io.automation.model.CustomPojoTest.testAtReturnsMissingNodeForAbsentPath","name":"Verify get node by json pointer returns missing node for absent path","status":"passed","testResultsByEnv":{"common":"468a6b33efded1212a870ecbad8902d7"}}

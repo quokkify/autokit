@@ -1,0 +1,1 @@
+{"id":"5c3dd09370782cd5955c2ea3dd5c304a","fullName":"io.automation.model.CustomPojoTest.testAsJsonArrayJoinsSeveralPojos","name":"Verify static json array serialization joins several pojos","status":"passed","testResultsByEnv":{"common":"70db8f724456350c5cef17ff2347a89a"}}
