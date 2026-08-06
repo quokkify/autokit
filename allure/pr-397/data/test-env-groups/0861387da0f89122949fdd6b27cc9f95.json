@@ -1,1 +1,0 @@
-{"id":"0861387da0f89122949fdd6b27cc9f95","fullName":"io.automation.model.CustomPojoTest.testSetEachAtThrowsWhenArrayMissing","name":"Verify set value in each array element rejects missing array","status":"passed","testResultsByEnv":{"common":"57cdd4a6aa65bb2773b7981282da36f0"}}

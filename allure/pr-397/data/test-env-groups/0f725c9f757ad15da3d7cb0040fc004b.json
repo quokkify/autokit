@@ -1,0 +1,1 @@
+{"id":"0f725c9f757ad15da3d7cb0040fc004b","fullName":"io.automation.model.JsonPojoTest.testSetAtPropertyOnArrayThrows","name":"Verify set property by json pointer on array node is rejected","status":"passed","testResultsByEnv":{"common":"813d04129de1a2948a230b23b874aa92"}}

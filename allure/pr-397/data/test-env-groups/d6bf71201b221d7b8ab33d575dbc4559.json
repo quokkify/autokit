@@ -1,0 +1,1 @@
+{"id":"d6bf71201b221d7b8ab33d575dbc4559","fullName":"io.automation.model.JsonPojoTest.testSetAtCreatesArrayForIndexSegment","name":"Verify set value by json pointer creates array for index segment","status":"passed","testResultsByEnv":{"common":"2c55e48d7a08d010d48b9ff2b51c7f62"}}
