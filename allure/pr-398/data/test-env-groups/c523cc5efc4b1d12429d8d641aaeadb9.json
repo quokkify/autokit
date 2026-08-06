@@ -1,0 +1,1 @@
+{"id":"c523cc5efc4b1d12429d8d641aaeadb9","fullName":"io.automation.test.SqlConverterTest.checkInWithStringCollection","name":"IN: simple string collection should expand into ('a','b','c')","status":"passed","testResultsByEnv":{"data":"a5aa6f3edc40fa533bb85f96ad9a0f53"}}
