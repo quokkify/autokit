@@ -148,29 +148,23 @@ jobs:
           ALLURE_SOURCE_RUN_ID: ${{ github.event.workflow_run.id }}
         run: bash scripts/ci/write-allure-environment.sh
 
-      - name: Generate Allure HTML, badges, PR comment markdown
+      - name: Generate, publish, and comment Allure report
         if: steps.allure.outputs.present == 'true'
-        env:
-          PR_NUMBER: ${{ steps.pr_ctx.outputs.number }}
-          FORK_PR: ${{ steps.fork.outputs.fork }}
-          SOURCE_RUN_ID: ${{ github.event.workflow_run.id }}
-          OWNER: ${{ github.repository_owner }}
-          REPO: ${{ github.event.repository.name }}
-        run: |
-          cp -f .github/allure/categories.json artifacts/allure-results/categories.json
-          npx --yes allure@3.14.1 generate artifacts/allure-results -o allure-report --config scripts/allure/allurerc.mjs
-          node .github/scripts/allure-ci.mjs badges --results artifacts/allure-results --out allure-report
-          PAGES_URL=""
-          if [ -n "$PR_NUMBER" ]; then
-            PAGES_URL="https://${OWNER}.github.io/${REPO}/allure/pr-${PR_NUMBER}/?run=${SOURCE_RUN_ID}"
-          fi
-          node .github/scripts/allure-ci.mjs pr-body \
-            --results artifacts/allure-results \
-            --report allure-report \
-            --output allure-pr-comment.md \
-            --pages-url "$PAGES_URL" \
-            --fork-pr "$FORK_PR" \
-            --source-run-id "${SOURCE_RUN_ID}"
+        uses: quokkify/project-toolkit/actions/allure-report@42becfe82b966cbb47aa24bdec32edd0a1f1e025 # v2.9.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          results-directory: artifacts/allure-results
+          report-directory: allure-report
+          config-file: scripts/allure/allurerc.mjs
+          categories-file: .github/allure/categories.json
+          allure-version: "3.14.2"
+          pr-number: ${{ steps.pr_ctx.outputs.number }}
+          pages-url: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/allure/pr-${{ steps.pr_ctx.outputs.number }}/?run=${{ github.event.workflow_run.id }}
+          fork-pr: ${{ steps.fork.outputs.fork }}
+          source-run-id: ${{ github.event.workflow_run.id }}
+          comment-marker: "<!-- quokkify-allure-ci -->"
+          publish-pages: ${{ steps.pr_ctx.outputs.has_pr == 'true' && steps.fork.outputs.fork == 'false' }}
+          pages-destination-directory: allure/pr-${{ steps.pr_ctx.outputs.number }}
 
       - name: Upload Allure HTML report artifact
         if: steps.allure.outputs.present == 'true'
@@ -180,41 +174,6 @@ jobs:
           path: allure-report/
           retention-days: 14
 
-      - name: Deploy Allure HTML to GitHub Pages
-        if: ${{ steps.allure.outputs.present == 'true' && steps.pr_ctx.outputs.has_pr == 'true' && steps.fork.outputs.fork == 'false' }}
-        uses: ./.github/actions/deploy-gh-pages-subdir
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: allure-report
-          destination_dir: allure/pr-${{ steps.pr_ctx.outputs.number }}
-
-      - name: Post or update Allure comment on PR
-        if: steps.allure.outputs.present == 'true'
-        env:
-          PR_NUMBER_RESOLVED: ${{ steps.pr_ctx.outputs.number }}
-        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
-        with:
-          script: |
-            const fs = require('fs');
-            const issue_number = parseInt(process.env.PR_NUMBER_RESOLVED || '', 10);
-            if (!issue_number) {
-              core.info('No PR number; skip Allure PR comment.');
-              return;
-            }
-            const marker = '<!-- quokkify-allure-ci -->';
-            const body = fs.readFileSync('allure-pr-comment.md', 'utf8');
-            const comments = await github.paginate(github.rest.issues.listComments, {
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number,
-              per_page: 100
-            });
-            const existing = comments.find((c) => c.user?.login === 'github-actions[bot]' && (c.body || '').includes(marker));
-            if (existing) {
-              await github.rest.issues.updateComment({ owner: context.repo.owner, repo: context.repo.repo, comment_id: existing.id, body });
-            } else {
-              await github.rest.issues.createComment({ owner: context.repo.owner, repo: context.repo.repo, issue_number, body });
-            }
 
       - name: Mirror Run tests conclusion
         if: always()
