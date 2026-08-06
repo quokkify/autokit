@@ -1,0 +1,1 @@
+{"id":"5f93c7c8ae68de0e2780b6178235c7ba","fullName":"io.automation.model.JsonPojoTest.testRemoveAtMissingPathIsNoOp","name":"Verify remove node by missing json pointer is no-op","status":"passed","testResultsByEnv":{"common":"e75a262988f7eff5e0fe25476ea3de5f"}}
