@@ -4,7 +4,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Base64;
 
-import io.automation.model.CustomPojo;
+import io.automation.model.JsonPojo;
 import io.automation.reportportal.config.ReportPortalConnectionConfig;
 import io.qameta.allure.TmsLink;
 import io.restassured.RestAssured;
@@ -28,7 +28,7 @@ public class ReportPortalConnectionTest {
   @TmsLink("RP_CONN_1")
   @Test(description = "Verify ReportPortal endpoint and token can access project list")
   public void shouldConnectToReportPortalApi() {
-    CustomPojo result = new CustomPojo(
+    JsonPojo result = new JsonPojo(
         buildSpec()
             .queryParam("page.page", 1)
             .queryParam("page.size", 1)
@@ -45,7 +45,7 @@ public class ReportPortalConnectionTest {
   public void shouldSendTextLogToReportPortal() {
     String launchUuid = startTestLaunch();
     try {
-      String logBody = new CustomPojo()
+      String logBody = new JsonPojo()
           .setField("launchUuid", launchUuid)
           .setField("time", Instant.now().toString())
           .setField("level", "INFO")
@@ -136,13 +136,13 @@ public class ReportPortalConnectionTest {
   }
 
   private static String startTestLaunch() {
-    String body = new CustomPojo()
+    String body = new JsonPojo()
         .setField("name", "test-coverage-run")
         .setField("startTime", Instant.now().toString())
         .setField("mode", "DEBUG")
         .asJson();
 
-    CustomPojo response = new CustomPojo(
+    JsonPojo response = new JsonPojo(
         buildSpec()
             .body(body)
             .when().post("/api/v1/" + ReportPortalConnectionConfig.PROJECT_NAME + "/launch")
@@ -157,7 +157,7 @@ public class ReportPortalConnectionTest {
   private static void finishTestLaunch(String launchUuid) {
     try {
       buildSpec()
-          .body(new CustomPojo()
+          .body(new JsonPojo()
               .setField("endTime", Instant.now().toString())
               .setField("status", "PASSED")
               .asJson())
@@ -169,7 +169,7 @@ public class ReportPortalConnectionTest {
 
   private static int sendMultipartLog(String launchUuid, String message,
       byte[] fileBytes, String fileName, String fileContentType) {
-    String jsonPart = new CustomPojo()
+    String jsonPart = new JsonPojo()
         .setField("launchUuid", launchUuid)
         .setField("time", Instant.now().toString())
         .setField("level", "INFO")

@@ -8,6 +8,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.reinert.jjschema.v1.JsonSchemaV4Factory;
+import io.automation.model.JsonPojo;
 import io.automation.model.JsonValidation;
 import io.automation.parser.RegexParser;
 import io.restassured.http.Header;
@@ -29,6 +30,16 @@ public final class ResponseHelper {
   private static final ObjectMapper JSON = new ObjectMapper();
 
   private ResponseHelper() {
+  }
+
+  /**
+   * Create {@link JsonPojo} from response body.
+   *
+   * @param response {@link ValidatableResponse}
+   * @return response body as {@link JsonPojo}
+   */
+  public static JsonPojo toJsonPojo(ValidatableResponse response) {
+    return new JsonPojo(response.extract().asString());
   }
 
   /**
