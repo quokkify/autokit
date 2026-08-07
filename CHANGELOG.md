@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.1.0](https://github.com/quokkify/autokit/compare/v1.0.6...v1.1.0) (2026-08-07)
+
+
+### ✨ Features
+
+* **jackson:** add json pointer api to JsonPojo and move it to jackson-json ([#397](https://github.com/quokkify/autokit/issues/397)) ([dc6bfb6](https://github.com/quokkify/autokit/commit/dc6bfb6a565ec67227fdc10b03b03970a9346e10))
+
+
+### ⚙️ CI
+
+* **report:** reuse project-toolkit for Allure reporting ([#396](https://github.com/quokkify/autokit/issues/396)) ([89b8539](https://github.com/quokkify/autokit/commit/89b85398f3ef5a0d2c2540bb35402aed398574d9))
+
+
+### 🧹 Chores
+
+* **deps:** update mongo:8.3.7 docker digest to 2f02e21 ([#401](https://github.com/quokkify/autokit/issues/401)) ([4f6c53a](https://github.com/quokkify/autokit/commit/4f6c53ab8c189ffd675c31096584fb273e5eb383))
+* **deps:** update traefik docker tag to v3.7.10 ([#394](https://github.com/quokkify/autokit/issues/394)) ([896b628](https://github.com/quokkify/autokit/commit/896b628f3bbb4575854b04a07dbd4d10d06f802e))
+* **toolkit:** adopt project-toolkit v2.10.1 ([#398](https://github.com/quokkify/autokit/issues/398)) ([588d24e](https://github.com/quokkify/autokit/commit/588d24e9f271cef09e570d85b5fe8a1c47eb5459))
+
 ## [1.0.6](https://github.com/quokkify/autokit/compare/v1.0.5...v1.0.6) (2026-08-03)
 
 
