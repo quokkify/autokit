@@ -1,1 +1,1 @@
-{"id":"a3119fcd21682a9e7ca042348f93910a","fullName":"io.automation.test.DatabaseNoSqlTest.checkDelete","name":"Check delete records from database","status":"passed","testResultsByEnv":{"data":"f21ae28bdee6c4cc619eb92b15a79089"}}
+{"id":"a3119fcd21682a9e7ca042348f93910a","fullName":"io.automation.test.DatabaseNoSqlTest.checkDelete","name":"Check delete records from database","status":"passed","testResultsByEnv":{"data-utils-nosql-morphia":"13cc98e6b2a5bd32dd9b0270a9849f84"}}

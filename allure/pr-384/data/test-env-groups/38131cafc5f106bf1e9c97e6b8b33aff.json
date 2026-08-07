@@ -1,1 +1,1 @@
-{"id":"38131cafc5f106bf1e9c97e6b8b33aff","fullName":"io.automation.test.ApiTest.testGetMethodAndResponseHelper","name":"Verify 'GET' method and 'ResponseHelper'","status":"passed","testResultsByEnv":{"integrations":"0a56b7ae6b5a4d27aca8edf80f51758b"}}
+{"id":"38131cafc5f106bf1e9c97e6b8b33aff","fullName":"io.automation.test.ApiTest.testGetMethodAndResponseHelper","name":"Verify 'GET' method and 'ResponseHelper'","status":"passed","testResultsByEnv":{"integrations-rest-assured":"3a543a3e0e350e3d8e60219f659cb38a"}}

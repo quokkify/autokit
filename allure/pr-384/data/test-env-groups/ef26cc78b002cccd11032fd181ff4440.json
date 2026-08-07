@@ -1,1 +1,1 @@
-{"id":"ef26cc78b002cccd11032fd181ff4440","fullName":"io.automation.test.UiProxyTest.testProxyHar","name":"Verify proxy 'Har' recording","status":"skipped","testResultsByEnv":{"integrations":"b21c332fe9e04f998d8311fdb3202fb7"}}
+{"id":"ef26cc78b002cccd11032fd181ff4440","fullName":"io.automation.test.UiProxyTest.testProxyHar","name":"Verify proxy 'Har' recording","status":"skipped","testResultsByEnv":{"integrations-selenide":"61fe499b776833c82e777b8b98a1658a"}}

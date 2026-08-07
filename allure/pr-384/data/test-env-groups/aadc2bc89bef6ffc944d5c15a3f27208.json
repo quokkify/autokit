@@ -1,1 +1,1 @@
-{"id":"aadc2bc89bef6ffc944d5c15a3f27208","fullName":"io.automation.test.DatabaseSqlTest.checkReadingPersistenceXml","name":"Check reading persistence.xml","status":"passed","testResultsByEnv":{"data":"ae7c7dede8a0ff079d4fd49182378cf8"}}
+{"id":"aadc2bc89bef6ffc944d5c15a3f27208","fullName":"io.automation.test.DatabaseSqlTest.checkReadingPersistenceXml","name":"Check reading persistence.xml","status":"passed","testResultsByEnv":{"data-utils-sql":"9a82fae9fb33731b46d816ed77b71453"}}

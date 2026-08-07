@@ -1,1 +1,1 @@
-{"id":"d311cb62526026041c8d99a78197a093","fullName":"io.automation.test.ConnectionProviderTest.checkC3P0ProviderViaPersistenceProvider","name":"Check connection via Provider","status":"passed","testResultsByEnv":{"data":"a6883d531d7f753b86143863d6bb357f"}}
+{"id":"d311cb62526026041c8d99a78197a093","fullName":"io.automation.test.ConnectionProviderTest.checkC3P0ProviderViaPersistenceProvider","name":"Check connection via Provider","status":"passed","testResultsByEnv":{"data-utils-sql":"d36b9fce2c9224bb42b732ee1c96f820"}}

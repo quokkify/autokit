@@ -1,1 +1,1 @@
-{"id":"a4e86110a760c630c0713386d1df4bf8","fullName":"io.automation.test.ApiTest.testApiVerificationSteps","name":"Verify 'ApiVerification' steps","status":"passed","testResultsByEnv":{"integrations":"c5f91eb9ac83aa493b2608465761afb5"}}
+{"id":"a4e86110a760c630c0713386d1df4bf8","fullName":"io.automation.test.ApiTest.testApiVerificationSteps","name":"Verify 'ApiVerification' steps","status":"passed","testResultsByEnv":{"integrations-rest-assured":"17eab4383b762189d538f2bbf010c9ad"}}

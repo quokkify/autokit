@@ -1,1 +1,1 @@
-{"id":"67a54b5c95b6fae2e6a0cbcd51154266","fullName":"io.automation.model.JsonPojoTest.testFromPojo","name":"Verify creation from typed pojo","status":"passed","testResultsByEnv":{"common":"84f3721051cd3bd79708cfff64ec79ac"}}
+{"id":"67a54b5c95b6fae2e6a0cbcd51154266","fullName":"io.automation.model.JsonPojoTest.testFromPojo","name":"Verify creation from typed pojo","status":"passed","testResultsByEnv":{"common-utils-jackson-json":"b6ad32a684fb3e8d7251c3b6c4ddc30b"}}

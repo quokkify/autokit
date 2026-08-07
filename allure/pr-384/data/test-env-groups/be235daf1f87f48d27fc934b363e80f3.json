@@ -1,1 +1,1 @@
-{"id":"be235daf1f87f48d27fc934b363e80f3","fullName":"io.automation.test.UiTest.testVerifyBlockInputButtonCollection","name":"Verify 'BLOCK', 'INPUT', 'BUTTON', 'COLLECTION'","status":"passed","testResultsByEnv":{"integrations":"6b4615fcae7e8a7507f2683d6499449c"}}
+{"id":"be235daf1f87f48d27fc934b363e80f3","fullName":"io.automation.test.UiTest.testVerifyBlockInputButtonCollection","name":"Verify 'BLOCK', 'INPUT', 'BUTTON', 'COLLECTION'","status":"passed","testResultsByEnv":{"integrations-selenide":"f6cda7d76c73ed7c797257bf659aa690"}}

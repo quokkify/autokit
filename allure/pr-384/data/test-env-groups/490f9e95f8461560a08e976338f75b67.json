@@ -1,1 +1,1 @@
-{"id":"490f9e95f8461560a08e976338f75b67","fullName":"io.automation.test.UiTableTest.testTable","name":"Verify 'TABLE'","status":"passed","testResultsByEnv":{"integrations":"77c894ff87e551481813acf942b4f90e"}}
+{"id":"490f9e95f8461560a08e976338f75b67","fullName":"io.automation.test.UiTableTest.testTable","name":"Verify 'TABLE'","status":"passed","testResultsByEnv":{"integrations-selenide":"4b395d1e30166ee11f2c4c9e6ecafbcf"}}
