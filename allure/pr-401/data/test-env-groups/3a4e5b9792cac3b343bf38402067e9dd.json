@@ -1,0 +1,1 @@
+{"id":"3a4e5b9792cac3b343bf38402067e9dd","fullName":"io.automation.converter.XmlConverterModuleDiscoveryTest.shouldSerializeWithoutTypeFieldWhenCustomModuleNotRegistered","name":"Verify XML serialization does not contain type discriminator when module discovery is disabled","status":"passed","testResultsByEnv":{"common-utils-jackson-xml":"22555087a5898163e4f9968e8b6ead6a"}}

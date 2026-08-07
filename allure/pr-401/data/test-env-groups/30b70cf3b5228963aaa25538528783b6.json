@@ -1,0 +1,1 @@
+{"id":"30b70cf3b5228963aaa25538528783b6","fullName":"io.automation.model.JsonPojoTest.testReadAtScalar","name":"Verify read scalar value by json pointer","status":"passed","testResultsByEnv":{"common-utils-jackson-json":"f6b4f2504b3c853baaef601cfd006b67"}}

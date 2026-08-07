@@ -1,0 +1,1 @@
+{"CI":"true","Runner.OS":"Linux","Runner.Arch":"X64","GitHub.Repository":"quokkify/autokit","GitHub.Ref":"main","GitHub.Workflow":"Run tests","GitHub.RunId":"31151755664","GitHub.SHA":"588d24e","Java":"openjdk version \"21.0.11\" 2026-04-21 LTS","Gradle":"9.6.1","Suite":"Gradle TestNG","Job":"test-common","Module":":common-utils:file","Runner":"GitHub Actions 1000006923"}
