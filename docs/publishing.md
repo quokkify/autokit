@@ -1,42 +1,114 @@
-# Publishing Q4J to Maven Central
+# 🚀 Publishing Q4J
 
-Q4J publishes signed Java modules under the Maven group `dev.quokkify`.
-Java source packages use the same `dev.quokkify` namespace.
+> Publish every Q4J module as a signed, immutable Maven Central release.
 
-## One-time Central Portal setup
+- ✅ Maven group: `dev.quokkify`
+- ✅ Java namespace: `dev.quokkify.*`
+- ✅ Sources and Javadoc included
+- ✅ Every publication is signed
+- ✅ Releases are validated against an existing Git tag
+
+---
+
+## 🔐 One-time Central Portal setup
 
 1. Sign in to the [Central Portal](https://central.sonatype.com/).
-2. Confirm that the `dev.quokkify` namespace is verified through ownership of `quokkify.dev` before publishing.
+2. Confirm that the `dev.quokkify` namespace is verified through ownership of `quokkify.dev`.
 3. Generate a Central Portal user token.
 4. Create a GPG signing key and distribute its public key to a public keyserver.
-5. Create a protected GitHub environment named `maven-central`.
-6. Add these repository or environment secrets:
-   - `MAVEN_CENTRAL_USERNAME`
-   - `MAVEN_CENTRAL_PASSWORD`
-   - `SIGNING_IN_MEMORY_KEY`
-   - `SIGNING_IN_MEMORY_KEY_ID` (optional)
-   - `SIGNING_IN_MEMORY_KEY_PASSWORD` (optional for an unencrypted key)
+5. Keep the protected GitHub environment named `maven-central`.
+6. Add the following environment secrets:
 
-The Central username and password are the generated publishing token values, not the interactive login credentials. Store the complete ASCII-armored private key in `SIGNING_IN_MEMORY_KEY`.
+| Secret                           | Required        | Purpose                                |
+| -------------------------------- | --------------- | -------------------------------------- |
+| `MAVEN_CENTRAL_USERNAME`         | yes             | Username from the Central Portal token |
+| `MAVEN_CENTRAL_PASSWORD`         | yes             | Password from the Central Portal token |
+| `SIGNING_IN_MEMORY_KEY`          | yes             | ASCII-armored private GPG key          |
+| `SIGNING_IN_MEMORY_KEY_PASSWORD` | when configured | Password protecting the signing key    |
+| `SIGNING_IN_MEMORY_KEY_ID`       | no              | Explicit signing key ID                |
 
-## Release flow
+Never commit Central credentials or private signing material to the repository.
 
-`.github/workflows/publish-maven-central.yml` runs for a non-prerelease GitHub release and can also be started manually for an existing tag. It:
+---
 
-1. checks out the immutable release tag;
-2. verifies that the tag and `version.txt` agree;
-3. builds sources, Javadocs, POM metadata, and signatures;
-4. uploads all publishable Q4J modules as one Maven Central deployment;
-5. releases the validated deployment to the public repository.
+## 🤖 Release workflow
 
-A failed or interrupted publish must be inspected in Central Portal before retrying. Maven Central coordinates are immutable; never reuse a version after a successful publication.
+The [Publish to Maven Central](../.github/workflows/publish-maven-central.yml) workflow runs for a published, non-prerelease GitHub release. It can also be dispatched manually for an existing release tag.
 
-## Local publication validation
-
-The publication model and generated POMs can be inspected without Central credentials. Local builds use `<version.txt>-SNAPSHOT`; the release workflow is the only supported path that supplies a stable version:
-
-```bash
-./gradlew generatePomFileForMavenPublication --no-daemon --console=plain
+```text
+GitHub release tag
+        ↓
+validate stable vMAJOR.MINOR.PATCH format
+        ↓
+match the tag to version.txt and checked-out commit
+        ↓
+build 33 module publications
+        ↓
+generate POM + JAR + sources + Javadoc
+        ↓
+sign and publish one Central deployment
+        ↓
+release on Maven Central
 ```
 
-A real Central upload additionally requires the five secrets listed above. Do not place credentials or signing material in `gradle.properties` inside the repository.
+The workflow rejects:
+
+- malformed or prerelease tags;
+- a tag whose version differs from `version.txt`;
+- a checkout that does not point at the requested tag;
+- missing Central Portal credentials or signing material.
+
+---
+
+## 📦 Published coordinates
+
+Every public artifact follows the same pattern:
+
+```text
+dev.quokkify:q4j-<module>:<version>
+```
+
+For example:
+
+```text
+dev.quokkify:q4j-core:0.2.0
+dev.quokkify:q4j-testng:0.2.0
+dev.quokkify:q4j-selenide:0.2.0
+```
+
+After publication, the artifacts are available from Maven Central and searchable through [Central Search](https://central.sonatype.com/).
+
+---
+
+## 🧪 Local publication validation
+
+Local builds use `<version.txt>-SNAPSHOT`. A stable version is supplied only by the release workflow.
+
+Generate every Maven POM without contacting Central:
+
+```bash
+./gradlew generatePomFileForMavenPublication \
+  --no-daemon --console=plain
+```
+
+Build the binary, sources, and Javadoc artifacts:
+
+```bash
+./gradlew assemble \
+  --no-daemon --console=plain
+```
+
+List the aggregate publishing tasks:
+
+```bash
+./gradlew tasks --group publishing \
+  --no-daemon --console=plain
+```
+
+The structural `q4j-nosql` parent project is not published. Every other configured Q4J module must have unique metadata in `gradle/module-metadata.gradle`.
+
+---
+
+## ⚠️ Immutability
+
+Maven Central releases cannot be overwritten or removed as part of a normal correction workflow. If a released artifact is wrong, fix the source and publish a new version.
