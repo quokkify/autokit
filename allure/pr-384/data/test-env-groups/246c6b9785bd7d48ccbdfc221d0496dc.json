@@ -1,1 +1,0 @@
-{"id":"246c6b9785bd7d48ccbdfc221d0496dc","fullName":"io.automation.test.SqlConverterTest.checkEscapingSingleQuote","name":"Escaping: single quote in string parameter should be doubled in Executable SQL","status":"passed","testResultsByEnv":{"data-utils-sql":"5be6aa51eaeb3cfd3a86098ef3b46c1d"}}

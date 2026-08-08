@@ -1,1 +1,0 @@
-{"id":"7247afe12f036cab5ad5c143175a8092","fullName":"io.automation.model.JsonPojoTest.testSetEachAtSkipsNonObjectElements","name":"Verify set value in each array element skips non object elements","status":"passed","testResultsByEnv":{"common-utils-jackson-json":"3d50329001d139779b8d3b2a777b4ede"}}

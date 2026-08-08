@@ -1,1 +1,0 @@
-{"id":"0ed60fefcc5995adf15a97b5cb3d4999","fullName":"io.automation.test.CustomExternalServiceLogFilterTest.filter_withSuccessStatus_doesNotCallProcessFilter","name":"Filter does NOT log when response status is below 400","status":"passed","testResultsByEnv":{"integrations-rest-assured":"f24d545ddb91eecdd132e8af2ded4888"}}

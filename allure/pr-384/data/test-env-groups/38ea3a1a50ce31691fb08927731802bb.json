@@ -1,1 +1,0 @@
-{"id":"38ea3a1a50ce31691fb08927731802bb","fullName":"io.automation.test.CsvParserTest.testReadAllLinesHeader","name":"Verify read all lines as String[] with header","status":"passed","testResultsByEnv":{"common-utils-jackson-csv":"032b7bed0ef7b5d8a6719f345cc3690c"}}

@@ -1,1 +1,0 @@
-{"id":"37ce0a7cfca28dd547df8da53f1782c5","fullName":"io.automation.model.JsonPojoTest.testSetAtRootPointerThrows","name":"Verify set value by root json pointer is rejected","status":"passed","testResultsByEnv":{"common-utils-jackson-json":"31bf33238cc9358eb1d06663eba05acb"}}

@@ -1,1 +1,0 @@
-{"id":"903f33820e4dbf1401b89a6156dba39b","fullName":"io.automation.converter.CsvConverterModuleDiscoveryTest.shouldUseDefaultDiscoveredJdk8Module","name":"Verify default discovered modules support JDK8 Optional serialization and deserialization for CSV","status":"passed","testResultsByEnv":{"common-utils-jackson-csv":"b388cd46fc5c55319034fc6f0848fd32"}}
