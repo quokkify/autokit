@@ -14,7 +14,7 @@ Collect every method annotated with `@Step` from a package and verify the full c
 
 ```java
 Set<Method> steps = ClasspathScanner.getMethodsWithAnnotationFromPackage(
-        "io.automation.steps",
+        "dev.quokkify.steps",
         Step.class
 );
 assertThat(steps).hasSizeGreaterThan(0);
@@ -24,7 +24,7 @@ Cross-check that all discovered step methods are also present in a documentation
 
 ```java
 Set<Method> steps = ClasspathScanner.getMethodsWithAnnotationFromPackage(
-        "io.automation.steps",
+        "dev.quokkify.steps",
         Step.class
 );
 Set<String> stepNames = steps.stream().map(Method::getName).collect(toSet());

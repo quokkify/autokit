@@ -1,0 +1,43 @@
+subprojects {
+    def metadata = rootProject.q4jModules[path]
+    if (metadata == null || metadata.publish == false) {
+        return
+    }
+
+    apply plugin: 'com.vanniktech.maven.publish'
+
+    mavenPublishing {
+        coordinates(rootProject.group.toString(), metadata.artifactId, project.version.toString())
+        publishToMavenCentral()
+        signAllPublications()
+
+        pom {
+            name = metadata.displayName
+            description = metadata.description
+            inceptionYear = '2026'
+            url = 'https://github.com/quokkify/q4j'
+
+            licenses {
+                license {
+                    name = 'MIT License'
+                    url = 'https://opensource.org/licenses/MIT'
+                    distribution = 'repo'
+                }
+            }
+
+            developers {
+                developer {
+                    id = 'ylazakovich'
+                    name = 'Yaraslau Lazakovich'
+                    url = 'https://github.com/ylazakovich'
+                }
+            }
+
+            scm {
+                url = 'https://github.com/quokkify/q4j'
+                connection = 'scm:git:https://github.com/quokkify/q4j.git'
+                developerConnection = 'scm:git:ssh://git@github.com/quokkify/q4j.git'
+            }
+        }
+    }
+}

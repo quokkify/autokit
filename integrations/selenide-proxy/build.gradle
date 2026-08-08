@@ -1,9 +1,5 @@
 description = "Selenide BrowserUpProxy integration for HAR recording and request interception"
 
-ext {
-    artifactId = "selenide-proxy"
-}
-
 dependencies {
     implementation project(":integrations:selenide")
     implementation project(":common-utils:config")

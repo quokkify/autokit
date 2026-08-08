@@ -1,9 +1,5 @@
 description = "Selenide Selenium Grid integration for remote WebDriver execution"
 
-ext {
-    artifactId = "selenide-grid"
-}
-
 dependencies {
     implementation project(":integrations:selenide")
 

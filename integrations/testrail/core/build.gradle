@@ -1,9 +1,5 @@
 description = "TestRail core integration"
 
-ext {
-    artifactId = "testrail-core"
-}
-
 dependencies {
     implementation project(":common-utils:config")
     implementation project(":common-utils:core")

@@ -1,2 +1,2 @@
-io.automation.listener.lifecycle.TestListener
+dev.quokkify.listener.lifecycle.TestListener
 io.qameta.allure.testng.AllureTestNg

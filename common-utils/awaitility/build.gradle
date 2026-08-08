@@ -1,7 +1,3 @@
-ext {
-    artifactId = 'awaitility'
-}
-
 dependencies {
     implementation project(":common-utils:core")
     api "org.awaitility:awaitility"

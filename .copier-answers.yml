@@ -6,12 +6,12 @@ allure_external_artifact_min_count: 24
 allure_external_artifact_prefix: allure-results-
 allure_external_workflow_name: Run tests
 allure_external_workflow_path: .github/workflows/test.yml
-allure_pages_url: https://quokkify.github.io/autokit
+allure_pages_url: https://quokkify.github.io/q4j
 allure_publish_pages: true
 allure_report: true
 components: []
 docker: false
-project_name: Autokit
+project_name: Q4J
 release_please: false
 renovate: true
 renovate_config_repository: quokkify/renovate-presets

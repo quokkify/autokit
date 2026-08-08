@@ -1,9 +1,5 @@
 description = "Jira core integration"
 
-ext {
-    artifactId = "jira-core"
-}
-
 dependencies {
     implementation project(":common-utils:core")
     implementation project(":common-utils:config")

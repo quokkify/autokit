@@ -71,7 +71,7 @@
         <module name="CustomImportOrder">
             <property name="customImportOrderRules"
                       value="STANDARD_JAVA_PACKAGE###SPECIAL_IMPORTS###THIRD_PARTY_PACKAGE###STATIC"/>
-            <property name="specialImportsRegExp" value="^(io.starter)\."/>
+            <property name="specialImportsRegExp" value="^dev\.quokkify\."/>
             <property name="sortImportsInGroupAlphabetically" value="true"/>
             <property name="separateLineBetweenGroups" value="true"/>
             <property name="tokens" value="IMPORT, STATIC_IMPORT, PACKAGE_DEF"/>

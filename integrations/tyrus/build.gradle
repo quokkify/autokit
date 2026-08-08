@@ -1,9 +1,5 @@
 description = "Tyrus WebSocket client wrapper for test automation"
 
-ext {
-    artifactId = "tyrus"
-}
-
 dependencies {
     implementation project(":common-utils:config")
     implementation project(":common-utils:core")

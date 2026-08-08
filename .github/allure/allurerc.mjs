@@ -1,10 +1,10 @@
 export default {
-  name: "Autokit",
+  name: "Q4J",
   output: "./allure-report",
   plugins: {
     awesome: {
       options: {
-        reportName: "Autokit test report",
+        reportName: "Q4J test report",
         singleFile: false,
         reportLanguage: "en",
         groupBy: ["epic", "feature", "story"],
