@@ -1,12 +1,12 @@
 # Publishing Q4J to Maven Central
 
-Q4J publishes signed Java modules under the Maven group `io.github.quokkify`.
-Java source packages use the independent namespace `dev.quokkify`.
+Q4J publishes signed Java modules under the Maven group `dev.quokkify`.
+Java source packages use the same `dev.quokkify` namespace.
 
 ## One-time Central Portal setup
 
-1. Sign in to the [Central Portal](https://central.sonatype.com/) with a GitHub identity that administers the `quokkify` organization.
-2. Add the `io.github.quokkify` namespace manually. Sonatype does **not** auto-provision organization namespaces: when Portal provides a verification key, create the required temporary public repository under `github.com/quokkify/<verification-key>`, complete verification, and then remove that repository.
+1. Sign in to the [Central Portal](https://central.sonatype.com/).
+2. Confirm that the `dev.quokkify` namespace is verified through ownership of `quokkify.dev` before publishing.
 3. Generate a Central Portal user token.
 4. Create a GPG signing key and distribute its public key to a public keyserver.
 5. Create a protected GitHub environment named `maven-central`.

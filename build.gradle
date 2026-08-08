@@ -9,7 +9,7 @@ def q4jVersion = providers.gradleProperty('version')
     .getOrElse("${file('version.txt').text.trim()}-SNAPSHOT")
 
 allprojects {
-    group = 'io.github.quokkify'
+    group = 'dev.quokkify'
     version = q4jVersion
 }
 

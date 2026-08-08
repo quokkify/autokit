@@ -6,7 +6,7 @@
 
 **Q4J** is a modular Java toolkit for test automation and quality engineering. Pick only the libraries needed by a project instead of importing one monolithic framework.
 
-- Maven group: `io.github.quokkify`
+- Maven group: `dev.quokkify`
 - Java packages: `dev.quokkify.*`
 - Java baseline: 21
 - Build: Gradle
@@ -15,14 +15,14 @@
 
 ```kotlin
 dependencies {
-    implementation("io.github.quokkify:q4j-core:<version>")
-    testImplementation("io.github.quokkify:q4j-testng:<version>")
+    implementation("dev.quokkify:q4j-core:<version>")
+    testImplementation("dev.quokkify:q4j-testng:<version>")
 }
 ```
 
 ```groovy
 dependencies {
-    implementation "io.github.quokkify:q4j-rest-assured:<version>"
+    implementation "dev.quokkify:q4j-rest-assured:<version>"
 }
 ```
 
