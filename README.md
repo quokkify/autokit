@@ -215,20 +215,6 @@ The integration modules connect test lifecycle events to ReportPortal, TestRail,
 
 ---
 
-## 🔄 Migrating from Autokit
-
-Q4J replaces the former Autokit identity and `io.automation.*` Java namespace.
-
-```text
-quokkify/autokit      → quokkify/q4j
-io.automation.*       → dev.quokkify.*
-legacy artifact names → dev.quokkify:q4j-*
-```
-
-This is an intentional pre-1.0 breaking change. Update imports, TestNG listener class names, service-provider declarations, and package names stored in configuration.
-
----
-
 ## 🚀 Publishing
 
 Stable releases are signed and published through the Central Publisher Portal.
