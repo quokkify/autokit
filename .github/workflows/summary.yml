@@ -1,4 +1,4 @@
-name: "Test Report"
+name: "Test summary"
 
 on:
   workflow_run:
@@ -29,7 +29,7 @@ jobs:
       ${{ github.event.workflow_run.event == 'pull_request' &&
       github.event.workflow_run.conclusion != 'cancelled' }}
 
-  report:
+  junit:
     needs: detect-runner
     runs-on: ${{ fromJson(needs.detect-runner.outputs.runs_on) }}
     if: >-
@@ -37,9 +37,8 @@ jobs:
       github.event.workflow_run.conclusion != 'cancelled' }}
     permissions:
       actions: read
-      contents: write
       checks: write
-      pull-requests: write
+      contents: read
 
     steps:
       - name: 🔨 Checkout
@@ -47,45 +46,12 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: 🔧 Set up Node
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+      - name: 🔧 Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
         with:
-          node-version: "24"
+          python-version: "3.14"
 
-      - name: 🔨 Prepare Java/Gradle
-        uses: ./.github/actions/setup-java-gradle
-        with:
-          is_self_hosted: ${{ needs.detect-runner.outputs.is_self_hosted }}
-
-      - name: Resolve PR number (GitHub Pages path)
-        id: pr_ctx
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PR_PULLS_JSON: ${{ toJson(github.event.workflow_run.pull_requests) }}
-          REPO: ${{ github.repository }}
-          HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
-        run: |
-          set -euo pipefail
-          PR_NUMBER="$(node -e "const a=JSON.parse(process.env.PR_PULLS_JSON||'[]'); process.stdout.write(String(a[0]?.number??''))")"
-          if [ -z "$PR_NUMBER" ]; then
-            PR_NUMBER="$(gh api "repos/$REPO/commits/$HEAD_SHA/pulls" -q '.[0].number // empty' 2>/dev/null || true)"
-          fi
-          echo "number=$PR_NUMBER" >> "$GITHUB_OUTPUT"
-          if [ -n "$PR_NUMBER" ]; then echo "has_pr=true" >> "$GITHUB_OUTPUT"; else echo "has_pr=false" >> "$GITHUB_OUTPUT"; fi
-
-      - name: Detect fork PR (no Pages preview for cross-repo)
-        id: fork
-        env:
-          HEAD_FULL: ${{ github.event.workflow_run.head_repository.full_name }}
-        run: |
-          REPO="${{ github.repository }}"
-          if [ -z "$HEAD_FULL" ] || [ "$HEAD_FULL" = "$REPO" ]; then
-            echo "fork=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "fork=true" >> "$GITHUB_OUTPUT"
-          fi
-
-      - name: 📦 Download artifacts
+      - name: 📦 Download source-run artifacts
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -102,7 +68,7 @@ jobs:
             echo "No JUnit XML files found. Skipping dorny/test-reporter."
           fi
 
-      - name: 🧩 Merge JUnit XML (junitparser)
+      - name: 🧩 Merge JUnit XML
         if: ${{ steps.junit.outputs.count != '0' }}
         shell: bash
         run: ./tools/scripts/ci/merge_junit_reports.sh artifacts artifacts/_combined/combined-junit.xml
@@ -116,71 +82,13 @@ jobs:
           reporter: java-junit
           fail-on-error: "false"
 
-      - name: Merge Allure results
-        id: allure
-        shell: bash
-        run: |
-          set -euo pipefail
-          mapfile -d '' dirs < <(find artifacts -type d -path '*/build/allure-results' -print0 | sort -z)
-          if ((${#dirs[@]})); then
-            bash scripts/ci/merge-allure-result-dirs.sh \
-              "${{ github.workspace }}/artifacts/allure-results" \
-              "${{ github.workspace }}/artifacts/_merged_ci_env.properties" \
-              "${dirs[@]}"
-          else
-            mkdir -p artifacts/allure-results
-            : > artifacts/_merged_ci_env.properties
-          fi
-          result_count=$(find artifacts/allure-results -maxdepth 1 -name '*-result.json' | wc -l | tr -d ' ')
-          echo "result_count=$result_count"
-          if [[ "$result_count" != "0" ]]; then echo "present=true" >> "$GITHUB_OUTPUT"; else echo "present=false" >> "$GITHUB_OUTPUT"; fi
-
-      - name: Write Allure environment variables
-        if: steps.allure.outputs.present == 'true'
-        env:
-          ALLURE_RESULTS_DIR: ${{ github.workspace }}/artifacts/allure-results
-          ALLURE_VARIABLES_JSON: ${{ github.workspace }}/artifacts/allure-variables.json
-          ALLURE_MERGED_CI_ENV: ${{ github.workspace }}/artifacts/_merged_ci_env.properties
-          REPO_ROOT: ${{ github.workspace }}
-          GITHUB_SHA: ${{ github.event.workflow_run.head_sha }}
-          GITHUB_REF_NAME: ${{ github.event.workflow_run.head_branch }}
-          ALLURE_GITHUB_WORKFLOW: ${{ github.event.workflow_run.name }}
-          ALLURE_SOURCE_RUN_ID: ${{ github.event.workflow_run.id }}
-        run: bash scripts/ci/write-allure-environment.sh
-
-      - name: Generate, publish, and comment Allure report
-        if: steps.allure.outputs.present == 'true'
-        uses: quokkify/project-toolkit/actions/allure-report@734fd9281ffa353e37c768f7bb56bbcd28347916 # v2.10.1
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          results-directory: artifacts/allure-results
-          report-directory: allure-report
-          config-file: scripts/allure/allurerc.mjs
-          categories-file: .github/allure/categories.json
-          allure-version: "3.14.2"
-          pr-number: ${{ steps.pr_ctx.outputs.number }}
-          pages-url: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/allure/pr-${{ steps.pr_ctx.outputs.number }}/?run=${{ github.event.workflow_run.id }}
-          fork-pr: ${{ steps.fork.outputs.fork }}
-          source-run-id: ${{ github.event.workflow_run.id }}
-          comment-marker: "<!-- quokkify-allure-ci -->"
-          publish-pages: ${{ steps.pr_ctx.outputs.has_pr == 'true' && steps.fork.outputs.fork == 'false' }}
-          pages-destination-directory: allure/pr-${{ steps.pr_ctx.outputs.number }}
-
-      - name: Upload Allure HTML report artifact
-        if: steps.allure.outputs.present == 'true'
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
-        with:
-          name: allure-report
-          path: allure-report/
-          retention-days: 14
-
       - name: Mirror Run tests conclusion
         if: always()
         run: |
           case '${{ github.event.workflow_run.conclusion }}' in
             success) exit 0 ;;
             *)
-              echo "::error::Run tests ended as ${{ github.event.workflow_run.conclusion }}. Reports above still ran; see PR comment, Checks tab, and source artifacts."
+              echo "::error::Run tests ended as ${{ github.event.workflow_run.conclusion }}. JUnit reporting still ran; see the Checks tab and source artifacts."
               exit 1
               ;;
           esac

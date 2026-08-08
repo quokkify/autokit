@@ -45,6 +45,27 @@ jobs:
           renovate_path = Path(".github/renovate.json")
           if answers.get("renovate") and not renovate_path.is_file():
               raise SystemExit("renovate=true requires .github/renovate.json")
+          allure_paths = (
+              Path(".github/workflows/allure-report.yml"),
+              Path(".github/allure/allurerc.mjs"),
+              Path(".github/allure/safe_extract.py"),
+          )
+          if answers.get("allure_report") and any(not path.is_file() for path in allure_paths):
+              raise SystemExit("allure_report=true requires its generated workflow, config, and bounded extractor")
+          components = answers.get("components")
+          if answers.get("allure_report") and not components:
+              source_path = Path(str(answers.get("allure_external_workflow_path", "")))
+              if not source_path.is_file():
+                  raise SystemExit("external Allure reporting requires its configured source workflow")
+              minimum = answers.get("allure_external_artifact_min_count")
+              maximum = answers.get("allure_external_artifact_max_count")
+              if not isinstance(minimum, int) or not isinstance(maximum, int) or not 1 <= minimum <= maximum <= 50:
+                  raise SystemExit("external Allure artifact counts must satisfy 1 <= minimum <= maximum <= 50")
+          categories_file = answers.get("allure_categories_file")
+          if categories_file and not Path(str(categories_file)).is_file():
+              raise SystemExit("configured Allure categories file does not exist")
+          if answers.get("allure_publish_pages") and not answers.get("allure_report"):
+              raise SystemExit("allure_publish_pages=true requires allure_report=true")
           for path in (renovate_path, Path(".github/release-please/config.json"), Path(".github/release-please/manifest.json")):
               if path.exists():
                   json.loads(path.read_text())
@@ -59,18 +80,6 @@ jobs:
                       pinned_release = len(reference) == 40 and all(char in "0123456789abcdef" for char in reference) and comment == answers["toolkit_version"]
                       if reference != answers["toolkit_version"] and not pinned_release:
                           raise SystemExit(f"{path} uses toolkit {reference}, expected {answers['toolkit_version']}")
-
-          summary = Path(".github/workflows/summary.yml").read_text()
-          if "uses: quokkify/project-toolkit/actions/allure-report@" not in summary:
-              raise SystemExit("summary workflow must reuse project-toolkit/actions/allure-report")
-          deprecated_reporting_files = (
-              Path(".github/actions/deploy-gh-pages-subdir/action.yml"),
-              Path(".github/actions/deploy-gh-pages-subdir/deploy-gh-pages-subdir.sh"),
-              Path(".github/scripts/allure-ci.mjs"),
-          )
-          for path in deprecated_reporting_files:
-              if path.exists():
-                  raise SystemExit(f"deprecated local reporting implementation still exists: {path}")
           PY
       - name: Install actionlint
         env:
