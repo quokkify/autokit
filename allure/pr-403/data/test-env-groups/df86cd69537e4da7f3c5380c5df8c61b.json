@@ -1,0 +1,1 @@
+{"id":"df86cd69537e4da7f3c5380c5df8c61b","fullName":"io.automation.model.JsonPojoTest.testEmptyConstructorCreatesEmptyJson","name":"Verify empty constructor creates empty json object","status":"passed","testResultsByEnv":{"common-utils-jackson-json":"6140fa424d8ea5225c2b2272b156222e"}}

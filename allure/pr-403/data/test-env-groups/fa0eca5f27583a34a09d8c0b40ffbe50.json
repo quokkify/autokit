@@ -1,0 +1,1 @@
+{"id":"fa0eca5f27583a34a09d8c0b40ffbe50","fullName":"io.automation.model.JsonPojoTest.testSetEachAtThrowsWhenNotArray","name":"Verify set value in each array element rejects non array node","status":"passed","testResultsByEnv":{"common-utils-jackson-json":"e929f7a19e470296797f6f761ae65f02"}}

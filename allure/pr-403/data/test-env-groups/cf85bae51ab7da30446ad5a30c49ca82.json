@@ -1,0 +1,1 @@
+{"id":"cf85bae51ab7da30446ad5a30c49ca82","fullName":"io.automation.test.CsvParserTest.testParseCsvFileToObjectHeader","name":"Verify parse CSV file with header to record model","status":"passed","testResultsByEnv":{"common-utils-jackson-csv":"1c202d1a52119a7db9ff0fd72dcc174f"}}
