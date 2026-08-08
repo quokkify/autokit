@@ -1,1 +1,1 @@
-{"id":"6c683918477faaddad6f4a7e9e46a80d","fullName":"io.automation.test.ApiTest.testPojoConverter","name":"Verify pojo 'Converter'","status":"passed","testResultsByEnv":{"integrations-rest-assured":"7dc2c4f876cbbb279a36b7542b41d04a"}}
+{"id":"6c683918477faaddad6f4a7e9e46a80d","fullName":"io.automation.test.ApiTest.testPojoConverter","name":"Verify pojo 'Converter'","status":"passed","testResultsByEnv":{"integrations-rest-assured":"e87485a1660b784a7f7b846a9b1ed782"}}

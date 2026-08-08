@@ -1,1 +1,1 @@
-{"id":"e7c71fc5f8637d027eb52f3065529403","fullName":"io.automation.test.ApiTest.testValidateSchemaByPojoClass","name":"Verify scheme validation by Pojo class","status":"passed","testResultsByEnv":{"integrations-rest-assured":"c7d8c9d90c8d47886bf228bbddef69cf"}}
+{"id":"e7c71fc5f8637d027eb52f3065529403","fullName":"io.automation.test.ApiTest.testValidateSchemaByPojoClass","name":"Verify scheme validation by Pojo class","status":"passed","testResultsByEnv":{"integrations-rest-assured":"5c850acb6231601dfec3b26a23b70870"}}
