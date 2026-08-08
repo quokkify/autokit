@@ -1,0 +1,1 @@
+{"id":"dc00d5c89ad1ae3a6bf58811cb66ccbc","fullName":"io.automation.converter.CsvConverterModuleDiscoveryTest.shouldFailDeserializeCustomFormattedEnumWhenModuleNotRegistered","name":"Verify CSV deserialization fails without discovered custom module","status":"passed","testResultsByEnv":{"common-utils-jackson-csv":"1b443131093b610c752f99eca2aa475d"}}

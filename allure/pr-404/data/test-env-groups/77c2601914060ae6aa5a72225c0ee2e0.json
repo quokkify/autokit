@@ -1,0 +1,1 @@
+{"id":"77c2601914060ae6aa5a72225c0ee2e0","fullName":"io.automation.test.SqlConverterTest.checkInWithNumericCollection","name":"IN: numeric collection should render without quotes","status":"passed","testResultsByEnv":{"data-utils-sql":"6630ff7c61c856ca5f7734818e95f04b"}}

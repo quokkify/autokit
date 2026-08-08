@@ -1,0 +1,1 @@
+{"id":"6806f27907b297a0b27fd97bfe91e552","fullName":"io.automation.model.JsonPojoTest.testAsJsonArrayWrapsSinglePojo","name":"Verify instance json array serialization wraps underlying json","status":"passed","testResultsByEnv":{"common-utils-jackson-json":"fb9df8d1b2d8cc8e5f347e1e7e51c64e"}}

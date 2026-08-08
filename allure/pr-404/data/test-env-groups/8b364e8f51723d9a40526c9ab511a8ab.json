@@ -1,0 +1,1 @@
+{"id":"8b364e8f51723d9a40526c9ab511a8ab","fullName":"io.automation.model.JsonPojoTest.testSetAtReplacesArrayElement","name":"Verify set value by json pointer with array index","status":"passed","testResultsByEnv":{"common-utils-jackson-json":"5663a1298acb76c6927e2549130d71bc"}}
