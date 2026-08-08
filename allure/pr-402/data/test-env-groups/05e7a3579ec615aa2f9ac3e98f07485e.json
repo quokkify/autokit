@@ -1,0 +1,1 @@
+{"id":"05e7a3579ec615aa2f9ac3e98f07485e","fullName":"io.automation.util.JsonConverterModuleDiscoveryTest.shouldSerializeWithTypeFieldWhenCustomModuleRegistered","name":"Verify serialization contains type discriminator when module discovery is enabled","status":"passed","testResultsByEnv":{"common-utils-jackson-json":"55311cb262ef4ba77d92f01cd8ad128b"}}
