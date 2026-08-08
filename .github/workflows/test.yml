@@ -183,6 +183,7 @@ jobs:
           if [[ "$found" == "false" ]]; then
             module_dir="${MODULE_PATH#:}"
             module_dir="${module_dir//:/\/}"
+            module_dir="${module_dir:-.}"
             mkdir -p "$module_dir/build/allure-results"
             bash scripts/ci/write-allure-ci-env-fragment.sh "Common ${{ matrix.name }}" "$module_dir/build/allure-results"
           fi
@@ -309,6 +310,7 @@ jobs:
           if [[ "$found" == "false" ]]; then
             module_dir="${MODULE_PATH#:}"
             module_dir="${module_dir//:/\/}"
+            module_dir="${module_dir:-.}"
             mkdir -p "$module_dir/build/allure-results"
             bash scripts/ci/write-allure-ci-env-fragment.sh "Data ${{ matrix.name }}" "$module_dir/build/allure-results"
           fi
@@ -448,6 +450,7 @@ jobs:
           if [[ "$found" == "false" ]]; then
             module_dir="${MODULE_PATH#:}"
             module_dir="${module_dir//:/\/}"
+            module_dir="${module_dir:-.}"
             mkdir -p "$module_dir/build/allure-results"
             bash scripts/ci/write-allure-ci-env-fragment.sh "Integrations ${{ matrix.name }}" "$module_dir/build/allure-results"
           fi
