@@ -55,7 +55,7 @@ jobs:
             echo "Tag $RELEASE_TAG does not match version.txt ($file_version)" >&2
             exit 1
           }
-          test "$(git tag --points-at HEAD | grep -Fx "$RELEASE_TAG" | wc -l)" -eq 1 || {
+          git tag --points-at HEAD | grep -Fxq "$RELEASE_TAG" || {
             echo "Checked-out commit is not tagged exactly with $RELEASE_TAG" >&2
             exit 1
           }
