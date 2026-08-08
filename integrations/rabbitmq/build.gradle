@@ -1,9 +1,5 @@
 description = "RabbitMQ integration"
 
-ext {
-    artifactId = "rabbitmq"
-}
-
 dependencies {
     implementation project(":common-utils:config")
     implementation project(":common-utils:core")

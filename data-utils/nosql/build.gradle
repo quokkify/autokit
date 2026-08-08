@@ -1,5 +1,1 @@
-ext {
-    artifactId = "nosql"
-}
-
 // Parent aggregator module for NoSQL subprojects (morphia, redis).

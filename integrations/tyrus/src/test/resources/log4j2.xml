@@ -32,7 +32,7 @@
             <AppenderRef ref="ConsoleAppender"/>
         </Root>
 
-        <Logger name="io.automation" level="debug" additivity="false">
+        <Logger name="dev.quokkify" level="debug" additivity="false">
             <AppenderRef ref="ConsoleAppender"/>
             <AppenderRef ref="RoutingFileAppender"/>
         </Logger>

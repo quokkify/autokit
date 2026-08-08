@@ -1,9 +1,5 @@
 description = "Wrapper around Selenide for user interface testing"
 
-ext {
-    artifactId = "selenide"
-}
-
 dependencies {
     implementation project(":common-utils:config")
     implementation project(":common-utils:core")

@@ -1,6 +1,6 @@
 # Changelog
 
-## [0.1.0](https://github.com/quokkify/autokit/releases/tag/v0.1.0) (2026-08-08)
+## [0.1.0](https://github.com/quokkify/q4j/releases/tag/v0.1.0) (2026-08-08)
 
 ### ✨ Features
 
@@ -10,5 +10,5 @@
 
 ### 📝 Release status
 
-- AutoKit is under active development and is not yet considered production-ready.
+- Q4J is under active development and is not yet considered production-ready.
 - Versioning has been restarted at `0.1.0`; breaking changes may be introduced in future `0.x` releases.

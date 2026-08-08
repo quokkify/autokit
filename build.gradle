@@ -2,11 +2,15 @@ plugins {
     id 'checkstyle'
     id 'java-platform'
     id 'com.github.spotbugs' version '6.5.8'
+    id 'com.vanniktech.maven.publish' version '0.37.0' apply false
 }
 
+def q4jVersion = providers.gradleProperty('version')
+    .getOrElse("${file('version.txt').text.trim()}-SNAPSHOT")
+
 allprojects {
-    group = 'io.quokkify'
-    version = '1.0.0-SNAPSHOT'
+    group = 'io.github.quokkify'
+    version = q4jVersion
 }
 
 subprojects {
@@ -21,5 +25,7 @@ apply from: 'gradle/code-analysis.gradle'
 apply from: 'gradle/dependencies.gradle'
 apply from: 'gradle/tests.gradle'
 apply from: 'gradle/aspectj.gradle'
+apply from: 'gradle/module-metadata.gradle'
+apply from: 'gradle/publishing.gradle'
 
 defaultTasks 'check'

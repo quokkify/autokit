@@ -1,9 +1,5 @@
 description = "Extensions for TestNG"
 
-ext {
-    artifactId = "testng-extensions"
-}
-
 dependencies {
     implementation project(":common-utils:core")
     implementation project(":common-utils:config")

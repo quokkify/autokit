@@ -1,9 +1,5 @@
 description = "ReportPortal TestNG integration"
 
-ext {
-    artifactId = "reportportal-testng"
-}
-
 dependencies {
     implementation project(":integrations:reportportal:reportportal-core")
     implementation project(":common-utils:core")

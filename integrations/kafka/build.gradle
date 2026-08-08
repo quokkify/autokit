@@ -1,9 +1,5 @@
 description = "Kafka integration"
 
-ext {
-    artifactId = "kafka"
-}
-
 dependencies {
     implementation project(":common-utils:config")
     implementation project(":common-utils:core")

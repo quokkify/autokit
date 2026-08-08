@@ -1,8 +1,0 @@
-package io.automation.testrail.models;
-
-public enum TestRailRunType {
-  TEST_RUN,
-  TEST_SUITE,
-  TEST_PLAN,
-  INVALID_TYPE
-}

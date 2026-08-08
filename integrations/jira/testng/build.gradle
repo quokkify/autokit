@@ -1,9 +1,5 @@
 description = "Jira TestNG integration"
 
-ext {
-    artifactId = "jira-testng"
-}
-
 dependencies {
     implementation project(":integrations:jira:jira-core")
     implementation project(":common-utils:core")

@@ -1,1 +1,1 @@
-io.automation.listener.lifecycle.SuiteListener
+dev.quokkify.listener.lifecycle.SuiteListener

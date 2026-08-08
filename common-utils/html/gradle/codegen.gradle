@@ -10,7 +10,7 @@ def generatedSrcDir = layout.buildDirectory.dir('generated/sources/codegen')
 def metaFile = layout.buildDirectory.file('bcd/meta/latest_url.txt')
 
 def classnamesTxt = file('custom_attributes.txt')
-def targetPackage = 'io.automation.html.model'
+def targetPackage = 'dev.quokkify.html.model'
 
 sourceSets.main.java.srcDir(generatedSrcDir)
 

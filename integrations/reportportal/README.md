@@ -44,8 +44,8 @@ Stop infrastructure:
 
 ### Adding a custom provider
 
-1. Implement `io.automation.reportportal.spi.TmsDescriptionProvider`.
-2. Register it in `src/main/resources/META-INF/services/io.automation.reportportal.spi.TmsDescriptionProvider`.
+1. Implement `dev.quokkify.reportportal.spi.TmsDescriptionProvider`.
+2. Register it in `src/main/resources/META-INF/services/dev.quokkify.reportportal.spi.TmsDescriptionProvider`.
 3. Add your module as a runtime dependency alongside `reportportal:testng`.
 
 ### Enabling the TestRail provider

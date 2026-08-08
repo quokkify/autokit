@@ -216,7 +216,7 @@ jobs:
             const reportRun = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
             const sourceRun = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${run.id}`;
             let body = `${marker}\n## Allure test report\n\nThe report was generated in a read-only job from validated artifacts for \`${run.head_sha.slice(0, 12)}\`.\n\n- [Download the Allure HTML artifact](${reportRun})\n- [Open the source validation run](${sourceRun})`;
-            const pagesBaseUrl = "https://quokkify.github.io/autokit";
+            const pagesBaseUrl = "https://quokkify.github.io/q4j";
             if (pull.head.repo.full_name === pull.base.repo.full_name &&
                 pull.user?.login !== "dependabot[bot]") {
               body += `\n- [Open the published report](${pagesBaseUrl}/allure/pr-${prNumber}/)`;

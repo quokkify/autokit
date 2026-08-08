@@ -50,7 +50,7 @@ Configuration:
         - ref: ConsoleAppender
           level: ${env:LOGGER_LEVEL:-info}
     Logger:
-      - name: io.automation
+      - name: dev.quokkify
         level: debug
         AppenderRef:
           - ref: RoutingFileAppender

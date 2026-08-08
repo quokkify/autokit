@@ -53,8 +53,8 @@ src/test/resources/META-INF/services/org.testng.ITestNGListener
 List one listener class per line:
 
 ```
-io.automation.listener.lifecycle.SuiteListener
-io.automation.listener.retry.RetryListener
+dev.quokkify.listener.lifecycle.SuiteListener
+dev.quokkify.listener.retry.RetryListener
 ```
 
 TestNG reads this file at runtime and automatically activates every listener in the list — no
@@ -71,7 +71,7 @@ src/test/resources/META-INF/services/org.testng.ITestNGListener
 containing:
 
 ```
-io.automation.listener.lifecycle.SuiteListener
+dev.quokkify.listener.lifecycle.SuiteListener
 ```
 
 Because `testng-extensions` is added as `testImplementation` to every module via
@@ -85,9 +85,9 @@ To register additional listeners in a specific module, create your own SPI file 
 listeners you need:
 
 ```
-io.automation.listener.lifecycle.SuiteListener
-io.automation.listener.retry.RetryListener
-io.automation.listener.extension.SingleGroupListener
+dev.quokkify.listener.lifecycle.SuiteListener
+dev.quokkify.listener.retry.RetryListener
+dev.quokkify.listener.extension.SingleGroupListener
 ```
 
 ### SPI vs `@Listeners`

@@ -4,7 +4,7 @@
 useDefault = true
 
 [allowlist]
-description = "Autokit non-production fixtures and documentation"
+description = "Q4J non-production fixtures and documentation"
 paths = [
   '''^common-utils/signature/src/main/java/io/automation/generator/SignatureGenerator\.java$''',
   '''^common-utils/signature/src/main/java/io/automation/formatter/KeyPairFormatter\.java$''',
