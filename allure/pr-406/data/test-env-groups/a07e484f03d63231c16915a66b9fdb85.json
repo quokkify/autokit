@@ -1,0 +1,1 @@
+{"id":"a07e484f03d63231c16915a66b9fdb85","fullName":"io.automation.test.CustomExternalServiceLogFilterTest.filter_withErrorStatus_callsProcessFilter","name":"Filter logs request/response when status code is 400 or above","status":"passed","testResultsByEnv":{"integrations-rest-assured":"ee338ff0b2ae5f094a6b264e82e0ce24"}}

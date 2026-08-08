@@ -1,0 +1,1 @@
+{"id":"4f00fdf00a692f4719f8365bcea6bc6c","fullName":"io.automation.reportportal.services.ParamOverrideTestNgServiceTest.testCaseId_threadLocal_isSetAndRemovedCorrectly","name":"TEST_CASE_ID ThreadLocal is correctly set and then removed","status":"passed","testResultsByEnv":{"integrations-reportportal-testng":"6a8280300228016b077bfef4b510f1de"}}
