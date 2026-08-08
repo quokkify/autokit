@@ -1,0 +1,1 @@
+{"id":"824e9f054be5e1eecd5d32d58b29e1c8","fullName":"io.automation.model.JsonPojoTest.testReadAtTypedPojo","name":"Verify read typed value by json pointer","status":"passed","testResultsByEnv":{"common-utils-jackson-json":"3b4f5bde992a79c5e772a92fc0021669"}}

@@ -1,0 +1,1 @@
+{"id":"4f45594cb0f6f4c76ac6f54e9d9523bd","fullName":"io.automation.converter.XmlConverterModuleDiscoveryTest.shouldUseDefaultDiscoveredJavaTimeModule","name":"Verify default discovered modules support Java Time serialization and deserialization for XML","status":"passed","testResultsByEnv":{"common-utils-jackson-xml":"8a16f44adcc237f884f01c8de9e5128f"}}

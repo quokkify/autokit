@@ -1,0 +1,1 @@
+{"id":"da59f1dc426ca133123621469096c876","fullName":"io.automation.model.JsonPojoTest.testRequiredAtThrowsForAbsentPath","name":"Verify get required node by absent json pointer fails with jackson exception","status":"passed","testResultsByEnv":{"common-utils-jackson-json":"b5cb511aa41e2d202088c6d4c04c1c6a"}}
