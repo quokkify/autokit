@@ -327,4 +327,3 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           publish-dir: allure-report
           destination-dir: allure/pr-${{ needs.resolve.outputs.pr-number }}
-
