@@ -1,1 +1,0 @@
-{"id":"6d25f5ac848ea01b56ef24d55750540a","fullName":"io.automation.reportportal.test.ReportPortalConnectionTest.shouldAttachTxtFileToReportPortal","name":"Verify text file attachment can be sent to ReportPortal","status":"passed","testResultsByEnv":{"integrations-reportportal-testng":"1daa6e8e8a4bc8831c3501a1d971b545"}}
