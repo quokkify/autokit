@@ -1,1 +1,0 @@
-{"id":"4c0755c5e0c44345e79ae947f36eecad","fullName":"io.automation.model.JsonPojoTest.testAsJsonRoundTrip","name":"Verify custom pojo json round trip","status":"passed","testResultsByEnv":{"common-utils-jackson-json":"2053b4373ad8042097c7a998b85313cc"}}

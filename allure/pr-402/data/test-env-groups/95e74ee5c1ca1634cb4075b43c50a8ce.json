@@ -1,1 +1,0 @@
-{"id":"95e74ee5c1ca1634cb4075b43c50a8ce","fullName":"io.automation.test.RedisSmokeTest.shouldStoreAndReadBasicTypes","name":"shouldStoreAndReadBasicTypes","status":"passed","testResultsByEnv":{"data-utils-nosql-redis":"613a23092bce61a6531cc310d1f88a45"}}

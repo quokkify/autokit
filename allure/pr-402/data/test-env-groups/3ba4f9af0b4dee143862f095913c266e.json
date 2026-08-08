@@ -1,1 +1,0 @@
-{"id":"3ba4f9af0b4dee143862f095913c266e","fullName":"io.automation.test.CsvParserTest.testParseCsvFileToObjectNoHeaderPositional","name":"Verify parse CSV without header using enum-defined positional schema","status":"passed","testResultsByEnv":{"common-utils-jackson-csv":"31d7dfc32f16752192931f14fc7fe7ff"}}

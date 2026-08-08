@@ -1,1 +1,0 @@
-{"id":"d97ccd515838fd57d893638d2e822484","fullName":"io.automation.model.JsonPojoTest.testFindFirstObjectByFieldValueWithNullValue","name":"Verify find first object by null field value returns empty without exception","status":"passed","testResultsByEnv":{"common-utils-jackson-json":"fcfcdb3489151b5e2365b167ab9e8e6b"}}

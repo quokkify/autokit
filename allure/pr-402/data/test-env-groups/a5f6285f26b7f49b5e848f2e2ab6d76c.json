@@ -1,1 +1,0 @@
-{"id":"a5f6285f26b7f49b5e848f2e2ab6d76c","fullName":"io.automation.model.JsonPojoTest.testRequiredAtReturnsNode","name":"Verify get required node by json pointer","status":"passed","testResultsByEnv":{"common-utils-jackson-json":"4001d301fbd7dc908226c28ea7fd9a2a"}}
