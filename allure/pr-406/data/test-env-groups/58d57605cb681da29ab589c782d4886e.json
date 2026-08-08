@@ -1,1 +1,1 @@
-{"id":"58d57605cb681da29ab589c782d4886e","fullName":"io.automation.test.DatabaseNoSqlTest.checkSelect","name":"Check select record from database","status":"passed","testResultsByEnv":{"data-utils-nosql-morphia":"54280bde40b50b6506872bb2d0cbcd0e"}}
+{"id":"58d57605cb681da29ab589c782d4886e","fullName":"io.automation.test.DatabaseNoSqlTest.checkSelect","name":"Check select record from database","status":"passed","testResultsByEnv":{"data-utils-nosql-morphia":"ec4aed9b517fbfb21ead9cc2e77b961f"}}

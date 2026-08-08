@@ -1,1 +1,1 @@
-{"id":"4c0755c5e0c44345e79ae947f36eecad","fullName":"io.automation.model.JsonPojoTest.testAsJsonRoundTrip","name":"Verify custom pojo json round trip","status":"passed","testResultsByEnv":{"common-utils-jackson-json":"88303991a99e1db10565ed562aec1142"}}
+{"id":"4c0755c5e0c44345e79ae947f36eecad","fullName":"io.automation.model.JsonPojoTest.testAsJsonRoundTrip","name":"Verify custom pojo json round trip","status":"passed","testResultsByEnv":{"common-utils-jackson-json":"7e63a7e56b4263033dc4e8bb55173b76"}}

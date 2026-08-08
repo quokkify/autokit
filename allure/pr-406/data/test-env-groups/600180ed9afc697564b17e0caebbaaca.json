@@ -1,1 +1,1 @@
-{"id":"600180ed9afc697564b17e0caebbaaca","fullName":"io.automation.test.UiTableTest.testVerifyRow","name":"Verify 'Cell' in 'Row' found by several values","status":"passed","testResultsByEnv":{"integrations-selenide":"52d5c90bbe9e136377a97085e197d4ce"}}
+{"id":"600180ed9afc697564b17e0caebbaaca","fullName":"io.automation.test.UiTableTest.testVerifyRow","name":"Verify 'Cell' in 'Row' found by several values","status":"passed","testResultsByEnv":{"integrations-selenide":"5d95653fd78a934b28053b74ff6a3ea6"}}

@@ -1,1 +1,1 @@
-{"id":"bf4770b2be585f0a750de671aa889285","fullName":"io.automation.test.DatabaseSqlTest.checkDelete","name":"Check delete record from database","status":"passed","testResultsByEnv":{"data-utils-sql":"1e3ada6c230649d6b2d14b55bf59a797"}}
+{"id":"bf4770b2be585f0a750de671aa889285","fullName":"io.automation.test.DatabaseSqlTest.checkDelete","name":"Check delete record from database","status":"passed","testResultsByEnv":{"data-utils-sql":"b50b94939f524ba686859bff992c5981"}}
