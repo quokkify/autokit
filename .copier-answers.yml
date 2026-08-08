@@ -2,7 +2,7 @@ _commit: v2.11.1
 _src_path: https://github.com/quokkify/project-toolkit.git
 allure_categories_file: .github/allure/categories.json
 allure_external_artifact_max_count: 50
-allure_external_artifact_min_count: 1
+allure_external_artifact_min_count: 24
 allure_external_artifact_prefix: allure-results-
 allure_external_workflow_name: Run tests
 allure_external_workflow_path: .github/workflows/test.yml

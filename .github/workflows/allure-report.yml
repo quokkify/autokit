@@ -41,7 +41,7 @@ jobs:
           script: |
             const run = context.payload.workflow_run;
             const artifactPrefix = "allure-results-";
-            const minimumArtifacts = 1;
+            const minimumArtifacts = 24;
             const maximumArtifacts = 50;
 
             const skip = (message) => {
