@@ -5,12 +5,13 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 
+import dev.quokkify.elements.base.Component;
+import dev.quokkify.factory.ElementDecorateProperties;
+
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.impl.ElementFinder;
-import dev.quokkify.elements.base.Component;
-import dev.quokkify.factory.ElementDecorateProperties;
 
 /**
  * Default UI elements collection source.

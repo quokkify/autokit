@@ -7,6 +7,7 @@ import java.util.Map;
 
 import dev.quokkify.listener.lifecycle.SuiteListener;
 import dev.quokkify.provider.DatabaseStage;
+
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.LogEvent;

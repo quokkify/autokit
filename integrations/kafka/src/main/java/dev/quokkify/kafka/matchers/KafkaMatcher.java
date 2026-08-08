@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.function.Predicate;
 
 import dev.quokkify.kafka.steps.models.KafkaMessageValue;
+
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 

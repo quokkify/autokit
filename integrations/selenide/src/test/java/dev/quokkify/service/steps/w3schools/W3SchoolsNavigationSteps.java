@@ -3,6 +3,7 @@ package dev.quokkify.service.steps.w3schools;
 import dev.quokkify.model.Navigation;
 import dev.quokkify.page.w3school.HtmlHorizontalTablePage;
 import dev.quokkify.page.w3school.HtmlTablesPage;
+
 import io.qameta.allure.Step;
 
 public class W3SchoolsNavigationSteps extends Navigation {

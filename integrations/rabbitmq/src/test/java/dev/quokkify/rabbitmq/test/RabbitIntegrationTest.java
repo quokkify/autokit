@@ -3,11 +3,12 @@ package dev.quokkify.rabbitmq.test;
 import java.io.IOException;
 import java.util.Optional;
 
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.MessageProperties;
 import dev.quokkify.rabbitmq.clients.RabbitMessage;
 import dev.quokkify.rabbitmq.clients.RabbitSteps;
 import dev.quokkify.rabbitmq.services.RabbitService;
+
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.MessageProperties;
 import io.qameta.allure.TmsLink;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

@@ -3,6 +3,7 @@ package dev.quokkify.service.steps.google;
 import dev.quokkify.model.PageSteps;
 import dev.quokkify.page.google.SearchResultPage;
 import dev.quokkify.service.verifications.google.SearchResultPageVerification;
+
 import io.qameta.allure.Step;
 
 public class SearchResultPageSteps

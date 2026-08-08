@@ -4,6 +4,7 @@ import dev.quokkify.impl.Page;
 import dev.quokkify.impl.StepCreator;
 import dev.quokkify.service.Browser;
 import dev.quokkify.step.AbstractSteps;
+
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.qameta.allure.Step;
 

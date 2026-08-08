@@ -4,6 +4,7 @@ import java.util.List;
 
 import dev.quokkify.tyrus.client.WsClient;
 import dev.quokkify.tyrus.client.WsMessage;
+
 import io.qameta.allure.Step;
 
 public final class WsSteps extends AbstractWsSteps<WsVerifier> {

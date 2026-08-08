@@ -6,13 +6,14 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.ElementsCollection;
-import com.codeborne.selenide.SelenideElement;
 import dev.quokkify.elements.base.BaseTable;
 import dev.quokkify.elements.table.classic.Row;
 import dev.quokkify.ex.TableRowException;
 import dev.quokkify.html.model.HtmlTag;
+
+import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.ElementsCollection;
+import com.codeborne.selenide.SelenideElement;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 

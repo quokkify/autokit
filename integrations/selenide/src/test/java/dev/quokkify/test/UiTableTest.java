@@ -3,6 +3,7 @@ package dev.quokkify.test;
 import java.util.Map;
 
 import dev.quokkify.page.w3school.HtmlTablesPage;
+
 import io.qameta.allure.TmsLink;
 import org.testng.annotations.Test;
 

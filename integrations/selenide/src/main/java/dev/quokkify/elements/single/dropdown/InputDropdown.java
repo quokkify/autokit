@@ -3,11 +3,12 @@ package dev.quokkify.elements.single.dropdown;
 import java.util.List;
 import java.util.Objects;
 
+import dev.quokkify.html.model.HtmlAttribute;
+import dev.quokkify.html.model.HtmlTag;
+
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.WebElementCondition;
-import dev.quokkify.html.model.HtmlAttribute;
-import dev.quokkify.html.model.HtmlTag;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;

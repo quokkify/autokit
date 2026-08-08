@@ -2,9 +2,10 @@ package dev.quokkify.jpa;
 
 import java.util.List;
 
+import dev.quokkify.converter.SqlConverter;
+
 import com.querydsl.core.NonUniqueResultException;
 import com.querydsl.jpa.impl.JPAQuery;
-import dev.quokkify.converter.SqlConverter;
 import io.qameta.allure.Attachment;
 import io.qameta.allure.Step;
 import jakarta.persistence.EntityManager;

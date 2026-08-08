@@ -2,10 +2,11 @@ package dev.quokkify.util;
 
 import java.time.LocalDateTime;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.quokkify.annotation.TestGroup;
 import dev.quokkify.util.support.PolymorphicJsonTypeTestModule.Cat;
 import dev.quokkify.util.support.PolymorphicJsonTypeTestModule.Pet;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.qameta.allure.TmsLink;
 import org.assertj.core.api.Assertions;
 import org.testng.annotations.Test;

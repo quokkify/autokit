@@ -4,13 +4,14 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Optional;
 
+import dev.quokkify.model.JsonPojo;
+import dev.quokkify.model.JsonValidation;
+import dev.quokkify.parser.RegexParser;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.reinert.jjschema.v1.JsonSchemaV4Factory;
-import dev.quokkify.model.JsonPojo;
-import dev.quokkify.model.JsonValidation;
-import dev.quokkify.parser.RegexParser;
 import io.restassured.http.Header;
 import io.restassured.module.jsv.JsonSchemaValidator;
 import io.restassured.path.json.exception.JsonPathException;

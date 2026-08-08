@@ -2,8 +2,9 @@ package dev.quokkify.elements.table.horizontal;
 
 import java.util.function.Function;
 
-import com.codeborne.selenide.Condition;
 import dev.quokkify.model.ConstantFormat;
+
+import com.codeborne.selenide.Condition;
 import org.openqa.selenium.By;
 
 /**

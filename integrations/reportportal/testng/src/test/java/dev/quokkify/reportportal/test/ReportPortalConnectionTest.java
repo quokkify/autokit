@@ -6,6 +6,7 @@ import java.util.Base64;
 
 import dev.quokkify.model.JsonPojo;
 import dev.quokkify.reportportal.config.ReportPortalConnectionConfig;
+
 import io.qameta.allure.TmsLink;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;

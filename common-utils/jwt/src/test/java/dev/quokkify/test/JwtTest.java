@@ -14,6 +14,7 @@ import dev.quokkify.model.JwtKeyPair;
 import dev.quokkify.model.JwtToken;
 import dev.quokkify.model.Payload;
 import dev.quokkify.util.JsonConverter;
+
 import io.qameta.allure.TmsLink;
 import net.datafaker.Faker;
 import org.assertj.core.api.SoftAssertions;

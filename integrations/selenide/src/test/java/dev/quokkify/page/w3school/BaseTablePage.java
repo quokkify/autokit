@@ -1,8 +1,9 @@
 package dev.quokkify.page.w3school;
 
-import com.codeborne.selenide.Condition;
 import dev.quokkify.elements.single.Button;
 import dev.quokkify.impl.Page;
+
+import com.codeborne.selenide.Condition;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 

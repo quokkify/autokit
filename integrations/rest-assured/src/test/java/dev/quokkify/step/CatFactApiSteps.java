@@ -2,6 +2,7 @@ package dev.quokkify.step;
 
 import dev.quokkify.helper.MockApiHelper;
 import dev.quokkify.model.CatFactPojo;
+
 import io.qameta.allure.Step;
 
 public class CatFactApiSteps extends ApiSteps<CatFactApiVerification> {

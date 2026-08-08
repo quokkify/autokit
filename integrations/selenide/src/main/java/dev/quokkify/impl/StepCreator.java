@@ -3,8 +3,9 @@ package dev.quokkify.impl;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 
-import com.codeborne.selenide.Selenide;
 import dev.quokkify.model.PageSteps;
+
+import com.codeborne.selenide.Selenide;
 
 public interface StepCreator {
 

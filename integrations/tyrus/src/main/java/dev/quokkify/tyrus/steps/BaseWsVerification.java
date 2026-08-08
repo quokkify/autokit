@@ -5,11 +5,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import dev.quokkify.tyrus.client.WsClient;
 import dev.quokkify.tyrus.client.WsMessage;
 import dev.quokkify.util.JsonConverter;
 import dev.quokkify.util.Waiter;
+
+import com.fasterxml.jackson.databind.JsonNode;
 import io.qameta.allure.Step;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

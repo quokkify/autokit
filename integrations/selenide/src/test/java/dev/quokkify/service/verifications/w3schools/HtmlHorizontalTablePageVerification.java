@@ -3,6 +3,7 @@ package dev.quokkify.service.verifications.w3schools;
 import dev.quokkify.model.Verification;
 import dev.quokkify.page.w3school.HtmlHorizontalTablePage;
 import dev.quokkify.service.steps.w3schools.HtmlHorizontalTablePageSteps;
+
 import io.qameta.allure.Step;
 
 public class HtmlHorizontalTablePageVerification

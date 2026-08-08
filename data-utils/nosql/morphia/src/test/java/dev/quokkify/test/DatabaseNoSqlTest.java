@@ -2,13 +2,14 @@ package dev.quokkify.test;
 
 import java.util.List;
 
+import dev.quokkify.entity.nosql.DatabaseTestUserMongo;
+import dev.quokkify.service.NoSqlFactory;
+import dev.quokkify.steps.MongoDatabaseSteps;
+
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import dev.morphia.query.filters.Filters;
 import dev.morphia.query.updates.UpdateOperators;
-import dev.quokkify.entity.nosql.DatabaseTestUserMongo;
-import dev.quokkify.service.NoSqlFactory;
-import dev.quokkify.steps.MongoDatabaseSteps;
 import io.qameta.allure.TmsLink;
 import org.assertj.core.api.Assertions;
 import org.testng.annotations.AfterClass;

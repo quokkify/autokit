@@ -4,13 +4,14 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.NoSuchElementException;
 
-import com.codeborne.selenide.Configuration;
-import de.sstoehr.harreader.model.Har;
 import dev.quokkify.annotation.SingleThread;
 import dev.quokkify.config.ConfigRegistry;
 import dev.quokkify.config.TestNGExtension;
 import dev.quokkify.parser.HarParser;
 import dev.quokkify.service.ProxyBrowser;
+
+import com.codeborne.selenide.Configuration;
+import de.sstoehr.harreader.model.Har;
 import io.qameta.allure.TmsLink;
 import org.assertj.core.api.Assertions;
 import org.testng.SkipException;

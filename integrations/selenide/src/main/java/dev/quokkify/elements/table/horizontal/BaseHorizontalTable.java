@@ -6,10 +6,11 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import com.codeborne.selenide.SelenideElement;
 import dev.quokkify.elements.base.BaseTable;
 import dev.quokkify.html.model.HtmlTag;
 import dev.quokkify.model.ConstantFormat;
+
+import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
 
 /**

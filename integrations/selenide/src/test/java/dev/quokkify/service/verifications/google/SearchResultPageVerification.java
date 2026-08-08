@@ -8,6 +8,7 @@ import dev.quokkify.page.google.SearchResultPage;
 import dev.quokkify.service.Browser;
 import dev.quokkify.service.steps.google.SearchResultPageSteps;
 import dev.quokkify.util.Waiter;
+
 import io.qameta.allure.Step;
 import org.assertj.core.api.Assertions;
 

@@ -7,6 +7,7 @@ import dev.quokkify.kafka.configs.KafkaConfiguration;
 import dev.quokkify.kafka.steps.KafkaConsumerSteps;
 import dev.quokkify.kafka.steps.KafkaProducerSteps;
 import dev.quokkify.util.FileUtils;
+
 import org.apache.kafka.common.security.auth.SecurityProtocol;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;

@@ -4,10 +4,11 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.Function;
 
-import com.codeborne.selenide.ElementsCollection;
 import dev.quokkify.elements.table.classic.base.BaseColumn;
 import dev.quokkify.elements.table.classic.base.BaseRow;
 import dev.quokkify.html.model.HtmlTag;
+
+import com.codeborne.selenide.ElementsCollection;
 import org.openqa.selenium.By;
 
 /**

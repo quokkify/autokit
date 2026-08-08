@@ -3,6 +3,7 @@ package dev.quokkify.kafka.converters;
 import dev.quokkify.kafka.clients.KafkaMessage;
 import dev.quokkify.kafka.steps.models.KafkaMessageValue;
 import dev.quokkify.util.JsonConverter;
+
 import org.apache.commons.lang3.StringUtils;
 
 /**

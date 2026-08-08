@@ -8,6 +8,7 @@ import dev.quokkify.kafka.clients.ConnectionProperties;
 import dev.quokkify.kafka.clients.KafkaMessage;
 import dev.quokkify.kafka.steps.KafkaConsumerSteps;
 import dev.quokkify.kafka.steps.KafkaProducerSteps;
+
 import io.qameta.allure.TmsLink;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;

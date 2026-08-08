@@ -3,6 +3,7 @@ package dev.quokkify.model;
 import java.time.Duration;
 
 import dev.quokkify.impl.Page;
+
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 @SuppressFBWarnings("URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD")

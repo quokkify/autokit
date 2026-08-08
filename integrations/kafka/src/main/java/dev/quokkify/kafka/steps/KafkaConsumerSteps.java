@@ -8,6 +8,7 @@ import java.util.Objects;
 import dev.quokkify.kafka.clients.ClientConsumer;
 import dev.quokkify.kafka.clients.ConnectionProperties;
 import dev.quokkify.kafka.clients.KafkaMessage;
+
 import io.qameta.allure.Step;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.serialization.Deserializer;

@@ -5,12 +5,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import com.atlassian.jira.rest.client.api.domain.Issue;
 import dev.quokkify.config.ConfigRegistry;
 import dev.quokkify.constant.BugExecutionScope;
 import dev.quokkify.jira.configs.JiraConfiguration;
 import dev.quokkify.jira.services.JiraService;
 import dev.quokkify.util.TestUtils;
+
+import com.atlassian.jira.rest.client.api.domain.Issue;
 import io.qameta.allure.Allure;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.model.Link;

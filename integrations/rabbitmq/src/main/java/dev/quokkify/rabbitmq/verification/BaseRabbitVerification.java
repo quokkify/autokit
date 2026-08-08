@@ -9,6 +9,7 @@ import java.util.function.Supplier;
 import dev.quokkify.rabbitmq.clients.RabbitClient;
 import dev.quokkify.rabbitmq.clients.RabbitMessage;
 import dev.quokkify.util.Waiter;
+
 import io.qameta.allure.Step;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

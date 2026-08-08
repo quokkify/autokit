@@ -5,6 +5,7 @@ import java.util.Objects;
 import dev.quokkify.kafka.clients.ClientProducer;
 import dev.quokkify.kafka.clients.ConnectionProperties;
 import dev.quokkify.kafka.clients.KafkaMessage;
+
 import io.qameta.allure.Step;
 import org.apache.kafka.common.serialization.Serializer;
 import org.apache.logging.log4j.LogManager;

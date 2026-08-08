@@ -8,6 +8,7 @@ import dev.quokkify.config.Configuration;
 import dev.quokkify.service.Browser;
 import dev.quokkify.service.steps.google.GoogleNavigationSteps;
 import dev.quokkify.service.steps.w3schools.W3SchoolsNavigationSteps;
+
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeSuite;
 

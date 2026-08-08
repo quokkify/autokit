@@ -1,7 +1,8 @@
 package dev.quokkify.elements.table.horizontal;
 
-import com.codeborne.selenide.SelenideElement;
 import dev.quokkify.elements.table.classic.base.BaseCell;
+
+import com.codeborne.selenide.SelenideElement;
 
 /**
  * Horizontal table cell UI element and methods of working with it.

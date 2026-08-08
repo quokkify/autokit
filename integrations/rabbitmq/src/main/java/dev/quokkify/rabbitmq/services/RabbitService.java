@@ -5,6 +5,7 @@ import java.util.Objects;
 import dev.quokkify.config.ConfigRegistry;
 import dev.quokkify.rabbitmq.clients.RabbitSteps;
 import dev.quokkify.rabbitmq.configs.RabbitMqConfiguration;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

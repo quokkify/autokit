@@ -4,9 +4,10 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 
-import com.codeborne.selenide.SelenideElement;
 import dev.quokkify.elements.base.Component;
 import dev.quokkify.elements.base.ComponentsCollection;
+
+import com.codeborne.selenide.SelenideElement;
 
 /**
  * Class for wrapping {@link SelenideElement} to {@link ComponentsCollection} collection element.

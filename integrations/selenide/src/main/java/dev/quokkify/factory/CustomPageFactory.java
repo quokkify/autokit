@@ -5,11 +5,12 @@ import java.lang.reflect.Type;
 import javax.annotation.CheckReturnValue;
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import dev.quokkify.elements.base.Component;
+import dev.quokkify.elements.base.ComponentsCollection;
+
 import com.codeborne.selenide.Driver;
 import com.codeborne.selenide.impl.SelenidePageFactory;
 import com.codeborne.selenide.impl.WebElementSource;
-import dev.quokkify.elements.base.Component;
-import dev.quokkify.elements.base.ComponentsCollection;
 import org.jspecify.annotations.Nullable;
 import org.openqa.selenium.By;
 

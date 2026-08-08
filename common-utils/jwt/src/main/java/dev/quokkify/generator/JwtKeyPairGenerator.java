@@ -4,6 +4,7 @@ import java.security.KeyPair;
 
 import dev.quokkify.formatter.KeyPairFormatter;
 import dev.quokkify.model.JwtKeyPair;
+
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.SignatureAlgorithm;
 

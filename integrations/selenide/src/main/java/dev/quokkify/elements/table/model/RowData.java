@@ -9,6 +9,7 @@ import java.util.Objects;
 import java.util.function.Supplier;
 
 import dev.quokkify.formatter.NumberFormatter;
+
 import org.apache.commons.lang3.StringUtils;
 
 /**

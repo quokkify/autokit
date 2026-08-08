@@ -1,10 +1,11 @@
 package dev.quokkify.page.w3school;
 
-import com.codeborne.selenide.Selenide;
 import dev.quokkify.annotation.PageUrl;
 import dev.quokkify.elements.table.horizontal.HorizontalRow;
 import dev.quokkify.elements.table.horizontal.HorizontalTable;
 import dev.quokkify.model.ConstantFormat;
+
+import com.codeborne.selenide.Selenide;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 

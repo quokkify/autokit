@@ -7,9 +7,10 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
-import com.codeborne.selenide.SelenideElement;
 import dev.quokkify.elements.table.classic.base.BaseRow;
 import dev.quokkify.util.LocalDateUtils;
+
+import com.codeborne.selenide.SelenideElement;
 import org.assertj.core.api.Assertions;
 
 /**

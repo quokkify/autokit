@@ -3,6 +3,7 @@ package dev.quokkify.service.steps.google;
 import dev.quokkify.model.Navigation;
 import dev.quokkify.page.google.HomePage;
 import dev.quokkify.page.google.SearchResultPage;
+
 import io.qameta.allure.Step;
 
 public class GoogleNavigationSteps extends Navigation {

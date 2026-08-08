@@ -8,6 +8,7 @@ import dev.quokkify.model.Verification;
 import dev.quokkify.page.w3school.HtmlTablesPage;
 import dev.quokkify.service.steps.w3schools.HtmlTablesPageSteps;
 import dev.quokkify.test.UiTableTest;
+
 import io.qameta.allure.Step;
 
 public class HtmlTablesPageVerification extends Verification<HtmlTablesPageSteps, HtmlTablesPageVerification, HtmlTablesPage> {

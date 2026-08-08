@@ -3,10 +3,11 @@ package dev.quokkify.steps;
 import java.util.List;
 import java.util.function.Supplier;
 
-import com.querydsl.core.types.EntityPath;
-import com.querydsl.jpa.impl.JPAQuery;
 import dev.quokkify.entity.SqlEntityInterface;
 import dev.quokkify.service.SqlFactory;
+
+import com.querydsl.core.types.EntityPath;
+import com.querydsl.jpa.impl.JPAQuery;
 import io.qameta.allure.Step;
 import org.hibernate.Session;
 import org.slf4j.Logger;

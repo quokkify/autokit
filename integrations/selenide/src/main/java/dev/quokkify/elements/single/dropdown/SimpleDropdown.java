@@ -2,10 +2,11 @@ package dev.quokkify.elements.single.dropdown;
 
 import java.util.List;
 
-import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.ElementsCollection;
 import dev.quokkify.elements.base.Component;
 import dev.quokkify.impl.Dropdown;
+
+import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.ElementsCollection;
 import org.openqa.selenium.By;
 
 /**

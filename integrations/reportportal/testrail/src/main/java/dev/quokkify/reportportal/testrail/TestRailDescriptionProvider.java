@@ -4,6 +4,7 @@ import dev.quokkify.config.ConfigRegistry;
 import dev.quokkify.reportportal.spi.TmsDescriptionProvider;
 import dev.quokkify.testrail.configs.TestRailConfiguration;
 import dev.quokkify.testrail.services.TestRailService;
+
 import org.apache.commons.lang3.StringUtils;
 
 public class TestRailDescriptionProvider implements TmsDescriptionProvider {

@@ -1,8 +1,9 @@
 package dev.quokkify.elements.single;
 
+import dev.quokkify.elements.base.Component;
+
 import com.codeborne.selenide.DragAndDropOptions;
 import com.codeborne.selenide.SelenideElement;
-import dev.quokkify.elements.base.Component;
 
 /**
  * Label UI element and methods of working with it.

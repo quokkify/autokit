@@ -3,6 +3,7 @@ package dev.quokkify.reportportal.test;
 import dev.quokkify.reportportal.config.ReportPortalConnectionConfig;
 import dev.quokkify.reportportal.model.ReportPortalItem;
 import dev.quokkify.reportportal.services.ReportPortalApiService;
+
 import io.qameta.allure.TmsLink;
 import org.testng.annotations.Test;
 

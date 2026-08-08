@@ -1,7 +1,8 @@
 package dev.quokkify.elements.single;
 
-import com.codeborne.selenide.Condition;
 import dev.quokkify.elements.base.Component;
+
+import com.codeborne.selenide.Condition;
 
 /**
  * Checkbox UI element and methods of working with it.

@@ -5,9 +5,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import dev.quokkify.converter.CsvConverter;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
-import dev.quokkify.converter.CsvConverter;
 
 /**
  * High-level CSV parser built on top of Jackson CSV.

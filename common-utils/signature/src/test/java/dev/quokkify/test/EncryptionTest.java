@@ -6,6 +6,7 @@ import java.util.Base64;
 import dev.quokkify.annotation.TestGroup;
 import dev.quokkify.config.ConfigRegistry;
 import dev.quokkify.config.TestConfig;
+
 import io.qameta.allure.TmsLink;
 import org.assertj.core.api.Assertions;
 import org.testng.annotations.Test;

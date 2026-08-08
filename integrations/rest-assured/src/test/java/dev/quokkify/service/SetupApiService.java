@@ -1,6 +1,7 @@
 package dev.quokkify.service;
 
 import dev.quokkify.config.app.InnerTestsConfig;
+
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;

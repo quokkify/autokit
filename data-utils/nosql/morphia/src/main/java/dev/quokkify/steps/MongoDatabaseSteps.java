@@ -2,6 +2,10 @@ package dev.quokkify.steps;
 
 import java.util.List;
 
+import dev.quokkify.entity.nosql.MongoEntityInterface;
+import dev.quokkify.service.NoSqlFactory;
+import dev.quokkify.verification.MongoVerifier;
+
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import dev.morphia.DeleteOptions;
@@ -9,9 +13,6 @@ import dev.morphia.UpdateOptions;
 import dev.morphia.query.Query;
 import dev.morphia.query.filters.Filters;
 import dev.morphia.query.updates.UpdateOperator;
-import dev.quokkify.entity.nosql.MongoEntityInterface;
-import dev.quokkify.service.NoSqlFactory;
-import dev.quokkify.verification.MongoVerifier;
 import io.qameta.allure.Step;
 
 public class MongoDatabaseSteps extends AbstractMongoSteps<MongoVerifier> {

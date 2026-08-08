@@ -2,10 +2,11 @@ package dev.quokkify.converter;
 
 import java.time.LocalDateTime;
 
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import dev.quokkify.annotation.TestGroup;
 import dev.quokkify.converter.support.PolymorphicXmlTypeTestModule.Cat;
 import dev.quokkify.converter.support.PolymorphicXmlTypeTestModule.Pet;
+
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import io.qameta.allure.TmsLink;
 import org.assertj.core.api.Assertions;
 import org.testng.annotations.Test;

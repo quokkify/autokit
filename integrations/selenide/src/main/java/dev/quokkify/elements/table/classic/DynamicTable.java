@@ -2,10 +2,11 @@ package dev.quokkify.elements.table.classic;
 
 import java.util.function.Function;
 
-import com.codeborne.selenide.Condition;
 import dev.quokkify.elements.table.classic.base.BaseClassicTable;
 import dev.quokkify.html.model.HtmlTag;
 import dev.quokkify.model.ConstantFormat;
+
+import com.codeborne.selenide.Condition;
 import org.openqa.selenium.By;
 
 /**

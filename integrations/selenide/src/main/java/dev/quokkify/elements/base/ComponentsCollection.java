@@ -8,14 +8,6 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import com.codeborne.selenide.CheckResult;
-import com.codeborne.selenide.CollectionCondition;
-import com.codeborne.selenide.Driver;
-import com.codeborne.selenide.WebDriverRunner;
-import com.codeborne.selenide.WebElementsCondition;
-import com.codeborne.selenide.ex.UIAssertionError;
-import com.codeborne.selenide.impl.SelenidePageFactory;
-import com.codeborne.selenide.impl.WebElementSource;
 import dev.quokkify.constant.PollingInterval;
 import dev.quokkify.constant.StringConstant;
 import dev.quokkify.ex.ElementNotFoundAssertionError;
@@ -25,6 +17,15 @@ import dev.quokkify.impl.DefaultCollectionSource;
 import dev.quokkify.impl.ElementsSource;
 import dev.quokkify.impl.FilteredElementsSource;
 import dev.quokkify.util.Waiter;
+
+import com.codeborne.selenide.CheckResult;
+import com.codeborne.selenide.CollectionCondition;
+import com.codeborne.selenide.Driver;
+import com.codeborne.selenide.WebDriverRunner;
+import com.codeborne.selenide.WebElementsCondition;
+import com.codeborne.selenide.ex.UIAssertionError;
+import com.codeborne.selenide.impl.SelenidePageFactory;
+import com.codeborne.selenide.impl.WebElementSource;
 import org.openqa.selenium.WebElement;
 
 /**

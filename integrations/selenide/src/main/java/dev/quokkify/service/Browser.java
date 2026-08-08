@@ -3,14 +3,15 @@ package dev.quokkify.service;
 import java.time.Duration;
 import java.util.Objects;
 
+import dev.quokkify.config.BrowserConfiguration;
+import dev.quokkify.config.ConfigRegistry;
+
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.FileDownloadMode;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.WebDriverRunner;
-import dev.quokkify.config.BrowserConfiguration;
-import dev.quokkify.config.ConfigRegistry;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.MutableCapabilities;

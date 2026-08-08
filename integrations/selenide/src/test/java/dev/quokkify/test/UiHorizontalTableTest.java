@@ -1,6 +1,7 @@
 package dev.quokkify.test;
 
 import dev.quokkify.page.w3school.HtmlHorizontalTablePage;
+
 import io.qameta.allure.TmsLink;
 import org.testng.annotations.Test;
 

@@ -1,6 +1,7 @@
 package dev.quokkify.service;
 
 import dev.quokkify.filter.CustomApiTestLogFilter;
+
 import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;

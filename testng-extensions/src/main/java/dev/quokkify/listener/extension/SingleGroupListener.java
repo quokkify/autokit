@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import dev.quokkify.annotation.TestGroup;
 import dev.quokkify.config.ConfigRegistry;
 import dev.quokkify.config.TestNGExtension;
+
 import org.testng.IAlterSuiteListener;
 import org.testng.annotations.Test;
 import org.testng.xml.XmlClass;

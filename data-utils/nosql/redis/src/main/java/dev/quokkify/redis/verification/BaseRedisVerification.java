@@ -3,6 +3,7 @@ package dev.quokkify.redis.verification;
 import java.time.Duration;
 
 import dev.quokkify.util.Waiter;
+
 import io.qameta.allure.Step;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

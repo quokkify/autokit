@@ -5,6 +5,12 @@ import java.util.Objects;
 import java.util.ServiceLoader;
 import java.util.function.Supplier;
 
+import dev.quokkify.constant.StringConstant;
+import dev.quokkify.reportportal.configs.ReportPortalConfig;
+import dev.quokkify.reportportal.spi.NoOpTmsDescriptionProvider;
+import dev.quokkify.reportportal.spi.TmsDescriptionProvider;
+import dev.quokkify.util.TestUtils;
+
 import com.epam.reportportal.listeners.ItemStatus;
 import com.epam.reportportal.listeners.ListenerParameters;
 import com.epam.reportportal.service.Launch;
@@ -15,11 +21,6 @@ import com.epam.ta.reportportal.ws.model.FinishTestItemRQ;
 import com.epam.ta.reportportal.ws.model.StartTestItemRQ;
 import com.epam.ta.reportportal.ws.model.launch.Mode;
 import com.epam.ta.reportportal.ws.model.launch.StartLaunchRQ;
-import dev.quokkify.constant.StringConstant;
-import dev.quokkify.reportportal.configs.ReportPortalConfig;
-import dev.quokkify.reportportal.spi.NoOpTmsDescriptionProvider;
-import dev.quokkify.reportportal.spi.TmsDescriptionProvider;
-import dev.quokkify.util.TestUtils;
 import io.qameta.allure.TmsLink;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;

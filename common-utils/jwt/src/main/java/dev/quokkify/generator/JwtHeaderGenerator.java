@@ -1,6 +1,7 @@
 package dev.quokkify.generator;
 
 import dev.quokkify.model.Header;
+
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.SignatureAlgorithm;
 

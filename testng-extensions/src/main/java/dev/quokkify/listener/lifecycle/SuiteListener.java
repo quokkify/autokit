@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import dev.quokkify.annotation.SingleThread;
 import dev.quokkify.config.ConfigRegistry;
 import dev.quokkify.config.TestNGExtension;
+
 import org.apache.commons.lang3.StringUtils;
 import org.testng.IAlterSuiteListener;
 import org.testng.annotations.Test;

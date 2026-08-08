@@ -15,6 +15,7 @@ import java.util.Objects;
 
 import dev.quokkify.constant.StringConstant;
 import dev.quokkify.model.ConstantFormat;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

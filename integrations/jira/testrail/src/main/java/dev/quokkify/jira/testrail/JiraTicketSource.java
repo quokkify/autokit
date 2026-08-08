@@ -4,11 +4,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import com.atlassian.jira.rest.client.api.domain.Issue;
 import dev.quokkify.config.ConfigRegistry;
 import dev.quokkify.jira.configs.JiraConfiguration;
 import dev.quokkify.jira.services.JiraService;
 import dev.quokkify.testrail.tickets.TicketSource;
+
+import com.atlassian.jira.rest.client.api.domain.Issue;
 import org.apache.commons.lang3.StringUtils;
 
 public class JiraTicketSource implements TicketSource {

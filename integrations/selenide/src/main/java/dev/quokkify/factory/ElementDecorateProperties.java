@@ -3,8 +3,9 @@ package dev.quokkify.factory;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 
-import com.codeborne.selenide.impl.WebElementSource;
 import dev.quokkify.elements.base.Component;
+
+import com.codeborne.selenide.impl.WebElementSource;
 import org.openqa.selenium.By;
 
 /**

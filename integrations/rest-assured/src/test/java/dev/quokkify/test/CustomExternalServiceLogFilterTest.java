@@ -2,6 +2,7 @@ package dev.quokkify.test;
 
 import dev.quokkify.annotation.SingleThread;
 import dev.quokkify.filter.CustomExternalServiceLogFilter;
+
 import io.qameta.allure.TmsLink;
 import io.restassured.filter.FilterContext;
 import io.restassured.response.Response;

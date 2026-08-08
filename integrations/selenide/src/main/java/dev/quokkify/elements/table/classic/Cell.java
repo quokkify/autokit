@@ -1,7 +1,8 @@
 package dev.quokkify.elements.table.classic;
 
-import com.codeborne.selenide.SelenideElement;
 import dev.quokkify.elements.table.classic.base.BaseCell;
+
+import com.codeborne.selenide.SelenideElement;
 
 /**
  * Classic table cell UI element and methods of working with it.

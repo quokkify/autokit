@@ -4,10 +4,11 @@ import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.Objects;
 
-import com.codeborne.selenide.BasicAuthCredentials;
-import com.codeborne.selenide.Selenide;
 import dev.quokkify.annotation.PageUrl;
 import dev.quokkify.impl.Page;
+
+import com.codeborne.selenide.BasicAuthCredentials;
+import com.codeborne.selenide.Selenide;
 import io.qameta.allure.Allure;
 
 /**

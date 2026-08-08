@@ -1,6 +1,7 @@
 package dev.quokkify.jira.configs;
 
 import dev.quokkify.constant.BugExecutionScope;
+
 import org.aeonbits.owner.Config;
 
 @Config.LoadPolicy(Config.LoadType.MERGE)

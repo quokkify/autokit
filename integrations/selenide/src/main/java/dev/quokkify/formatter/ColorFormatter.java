@@ -1,7 +1,8 @@
 package dev.quokkify.formatter;
 
-import com.codeborne.selenide.SelenideElement;
 import dev.quokkify.elements.base.Component;
+
+import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.support.Color;
 
 /**

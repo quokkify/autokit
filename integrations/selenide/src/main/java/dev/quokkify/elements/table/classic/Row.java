@@ -6,12 +6,13 @@ import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.function.Function;
 
-import com.codeborne.selenide.SelenideElement;
 import dev.quokkify.elements.table.classic.base.BaseRow;
 import dev.quokkify.elements.table.model.CheckType;
 import dev.quokkify.elements.table.model.RowData;
 import dev.quokkify.html.model.HtmlTag;
 import dev.quokkify.util.LocalDateUtils;
+
+import com.codeborne.selenide.SelenideElement;
 import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.SoftAssertions;

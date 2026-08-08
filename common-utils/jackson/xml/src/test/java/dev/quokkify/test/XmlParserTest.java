@@ -2,11 +2,12 @@ package dev.quokkify.test;
 
 import java.util.List;
 
+import dev.quokkify.annotation.TestGroup;
+import dev.quokkify.parser.XmlParser;
+
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-import dev.quokkify.annotation.TestGroup;
-import dev.quokkify.parser.XmlParser;
 import io.qameta.allure.TmsLink;
 import org.assertj.core.api.Assertions;
 import org.testng.annotations.Test;

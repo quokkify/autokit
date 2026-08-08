@@ -3,10 +3,11 @@ package dev.quokkify.elements.table.classic.base;
 import java.io.File;
 import javax.annotation.Nonnull;
 
-import com.codeborne.selenide.SelenideElement;
 import dev.quokkify.elements.base.Component;
 import dev.quokkify.html.model.HtmlAttribute;
 import dev.quokkify.html.model.HtmlTag;
+
+import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
 
 /**

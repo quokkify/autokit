@@ -16,6 +16,7 @@ import dev.quokkify.service.DatabaseService;
 import dev.quokkify.service.SqlFactory;
 import dev.quokkify.steps.DatabaseUserDbSteps;
 import dev.quokkify.steps.SqlDatabaseSteps;
+
 import io.qameta.allure.TmsLink;
 import org.assertj.core.api.Assertions;
 import org.testng.annotations.AfterClass;

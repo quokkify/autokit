@@ -5,6 +5,7 @@ import dev.quokkify.reportportal.configs.ReportPortalConfig;
 import dev.quokkify.reportportal.model.ReportPortalItem;
 import dev.quokkify.service.ApiService;
 import dev.quokkify.util.JsonConverter;
+
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;

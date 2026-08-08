@@ -1,6 +1,7 @@
 package dev.quokkify.provider;
 
 import dev.quokkify.parser.RegexParser;
+
 import org.hibernate.jpa.boot.spi.PersistenceUnitDescriptor;
 
 /**

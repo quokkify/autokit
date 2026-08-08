@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 
 import dev.quokkify.constant.StringConstant;
 import dev.quokkify.parser.RegexParser;
+
 import io.hypersistence.utils.hibernate.query.SQLExtractor;
 import jakarta.persistence.Parameter;
 import jakarta.persistence.Query;

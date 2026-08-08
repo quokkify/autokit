@@ -10,6 +10,7 @@ import java.util.Properties;
 import javax.sql.DataSource;
 
 import dev.quokkify.entity.SqlEntityInterface;
+
 import io.github.classgraph.ClassGraph;
 import jakarta.persistence.Entity;
 import jakarta.persistence.SharedCacheMode;

@@ -1,8 +1,9 @@
 package dev.quokkify.model;
 
-import de.sstoehr.harreader.model.Har;
 import dev.quokkify.impl.Page;
 import dev.quokkify.service.ProxyBrowser;
+
+import de.sstoehr.harreader.model.Har;
 import io.qameta.allure.Step;
 
 /**

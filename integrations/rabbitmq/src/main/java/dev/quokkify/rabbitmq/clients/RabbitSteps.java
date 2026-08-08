@@ -6,6 +6,7 @@ import java.util.Optional;
 import dev.quokkify.rabbitmq.configs.RabbitMqConfiguration;
 import dev.quokkify.rabbitmq.verification.RabbitVerifier;
 import dev.quokkify.step.AbstractSteps;
+
 import io.qameta.allure.Step;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

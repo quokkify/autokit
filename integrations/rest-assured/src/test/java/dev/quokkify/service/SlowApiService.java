@@ -3,6 +3,7 @@ package dev.quokkify.service;
 import java.util.List;
 
 import dev.quokkify.filter.CustomApiTestLogFilter;
+
 import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.config.HttpClientConfig;

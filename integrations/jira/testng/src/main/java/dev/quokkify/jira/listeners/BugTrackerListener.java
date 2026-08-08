@@ -7,13 +7,14 @@ import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import com.atlassian.jira.rest.client.api.domain.Issue;
 import dev.quokkify.config.ConfigRegistry;
 import dev.quokkify.constant.BugExecutionScope;
 import dev.quokkify.constant.StringConstant;
 import dev.quokkify.jira.configs.JiraConfiguration;
 import dev.quokkify.jira.services.JiraService;
 import dev.quokkify.util.TestUtils;
+
+import com.atlassian.jira.rest.client.api.domain.Issue;
 import io.qameta.allure.TmsLink;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;

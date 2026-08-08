@@ -4,11 +4,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
-import com.querydsl.jpa.impl.JPAQuery;
 import dev.quokkify.constant.PollingInterval;
 import dev.quokkify.constant.Timeout;
 import dev.quokkify.entity.SqlEntityInterface;
 import dev.quokkify.util.Waiter;
+
+import com.querydsl.jpa.impl.JPAQuery;
 import org.hamcrest.Matchers;
 
 /**

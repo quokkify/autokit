@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import dev.quokkify.config.ConfigRegistry;
 import dev.quokkify.testrail.configs.TestRailConfiguration;
 import dev.quokkify.testrail.models.CaseFields;
@@ -23,6 +21,9 @@ import dev.quokkify.testrail.models.TestRunFromSuite;
 import dev.quokkify.testrail.models.TestSuite;
 import dev.quokkify.testrail.utils.TestRailDataGenerator;
 import dev.quokkify.testrail.utils.TestRailHelper;
+
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import feign.Feign;
 import feign.FeignException;
 import feign.RequestInterceptor;

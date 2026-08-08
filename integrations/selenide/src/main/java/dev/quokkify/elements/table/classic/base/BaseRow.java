@@ -2,8 +2,9 @@ package dev.quokkify.elements.table.classic.base;
 
 import javax.annotation.Nonnull;
 
-import com.codeborne.selenide.SelenideElement;
 import dev.quokkify.elements.base.Component;
+
+import com.codeborne.selenide.SelenideElement;
 
 /**
  * Abstract class to work with table row.

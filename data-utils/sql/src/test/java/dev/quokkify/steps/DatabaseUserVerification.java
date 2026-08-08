@@ -2,6 +2,7 @@ package dev.quokkify.steps;
 
 import dev.quokkify.entity.DatabaseTestUser;
 import dev.quokkify.verification.DatabaseVerification;
+
 import io.qameta.allure.Step;
 import org.assertj.core.api.Assertions;
 

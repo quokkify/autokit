@@ -3,13 +3,14 @@ package dev.quokkify.model;
 import java.util.Objects;
 import java.util.Optional;
 
+import dev.quokkify.util.JsonConverter;
+
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import dev.quokkify.util.JsonConverter;
 
 /**
  * Schema-less pojo backed by Jackson {@link ObjectNode}.

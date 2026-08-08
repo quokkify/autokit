@@ -3,6 +3,7 @@ package dev.quokkify.service.steps.google;
 import dev.quokkify.model.PageSteps;
 import dev.quokkify.page.google.HomePage;
 import dev.quokkify.service.verifications.google.HomePageVerification;
+
 import io.qameta.allure.Step;
 
 public class HomePageSteps extends PageSteps<HomePageSteps, HomePageVerification, HomePage> {
